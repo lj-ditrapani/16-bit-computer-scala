@@ -44,18 +44,31 @@ object Config {
   }
 
   def handleFile(value: String, config: Config): IfConfig = {
+    val msg = """binary file must contain only 16-bit values
+                | (must have an even number of bytes)
+                |""".stripMargin.replaceAll("\n", "")
+
+    def bytePair2Char(pair: Array[Byte]): Char =
+      ((pair(0) << 8) + pair(1)).toChar
+
+    def byteArray2IfConfig(byte_array: Array[Byte]): IfConfig = {
+      byte_array.size % 2 == 0 match {
+        case false => Left(msg)
+        case true =>
+          Right(
+            config.copy(
+              binary_set = true,
+              binary = byte_array.grouped(2).map(bytePair2Char).toArray
+            )
+          )
+      }
+    }
+
     Try(Files.readAllBytes(Paths.get(value))) match {
       case Failure(exception) =>
         Left(exception.toString())
       case Success(byte_array) => {
-        def bytePair2Char(pair: Array[Byte]): Char =
-          ((pair(0) << 8) + pair(1)).toChar
-        Right(
-          config.copy(
-            binary_set = true,
-            binary = byte_array.grouped(2).map(bytePair2Char).toArray
-          )
-        )
+        byteArray2IfConfig(byte_array)
       }
     }
   }

@@ -12,7 +12,9 @@ class ConfigSpec extends FunSpec with Matchers {
 
   describe("Config Object") {
     describe("load") {
-      val bin_path = "src/test/resources/abcd.bin"
+      val prefix = "src/test/resources"
+      val bin_path = s"${prefix}/abcd.bin"
+
       describe("--help") {
         it("returns Left") {
           Config.load(List("--help"), Map()) should === (
@@ -34,7 +36,7 @@ class ConfigSpec extends FunSpec with Matchers {
       }
 
       describe("--f") {
-        it("returns Left if not set") {
+        it("returns Left if --f not set") {
           Config.load(List(), Map()) should === (
             Left("Must define a binary file to execute with --f")
           )
@@ -61,14 +63,23 @@ class ConfigSpec extends FunSpec with Matchers {
         }
 
         it("returns a Left if --f is not a file") {
-          val f = "src/main/resources/"
           val msg = "java.io.IOException: Is a directory"
-          Config.load(List(), Map("f" -> f)) should === (Left(msg))
+          Config.load(List(), Map("f" -> prefix)) should === (Left(msg))
         }
+
+        it("returns a Left if file is not made of only 16-bit values") {
+          val bin_path = s"${prefix}/abc.bin"
+          val msg = """binary file must contain only 16-bit values
+                      | (must have an even number of bytes)
+                      |""".stripMargin.replaceAll("\n", "")
+          Config.load(List(), Map("f" -> bin_path)) should === (Left(msg))
+        }
+
+        it("returns a Left if file is empty") (pending)
       }
 
       describe("--m") {
-        it("returns a Left if not a number") {
+        it("returns a Left if --m not a number") {
           Config.load(List(), Map("f" -> bin_path, "m" -> "foo")) should === (
             Left("--m must be an integer between 1 and 64")
           )
