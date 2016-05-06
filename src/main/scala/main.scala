@@ -8,6 +8,7 @@ import scalafx.animation.AnimationTimer
 import scala.util.{Try, Success, Failure}
 
 object Life extends JFXApp {
+  /*
   Config.load(parameters.unnamed, Map(parameters.named.toSeq: _*)) match {
     case Left(s) => printErrorHelpAndExit(s)
     case Right(config) => loadAndRun(config)
@@ -100,4 +101,5 @@ object Life extends JFXApp {
       }
     }
   }
+  */
 }
