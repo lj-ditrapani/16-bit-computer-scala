@@ -12,6 +12,7 @@ class ConfigSpec extends FunSpec with Matchers {
 
   describe("Config Object") {
     describe("load") {
+      val bin_path = "src/test/resources/abcd.bin"
       describe("--help") {
         it("returns Left") {
           Config.load(List("--help"), Map()) should === (
@@ -27,7 +28,7 @@ class ConfigSpec extends FunSpec with Matchers {
       }
 
       it("returns Left if unknown parameters found in params") {
-        Config.load(List(), Map("f" -> "abcd.bin", "a" -> "")) should === (
+        Config.load(List(), Map("f" -> bin_path, "a" -> "")) should === (
           Left("Unknown command line parameter '--a'")
         )
       }
@@ -35,58 +36,53 @@ class ConfigSpec extends FunSpec with Matchers {
       describe("--f") {
         it("returns Left if not set") {
           Config.load(List(), Map()) should === (
-            Left("Must define --f as binary file source")
+            Left("Must define a binary file to execute with --f")
           )
         }
 
         it("returns a Right if --f and --m are set") {
-          Config.load(List(), Map("f" -> "abcd.bin", "m" -> "2")) should === (
-            Right(
-              Config.emptyConfig.copy(
-                binary_set = true,
-                binary = Array('\u6162', '\u6364'),
-                pixel_multiplier = 2
-              )
-            )
-          )
+          Config.load(List(), Map("f" -> bin_path, "m" -> "2")) match {
+            case Right(Config(binary_set, binary, multiplier)) => {
+              binary_set should === (true)
+              binary should === (Array('\u6162', '\u6364'))
+              multiplier should === (2)
+            }
+          }
         }
 
         it("returns a Right if --f is set") {
-          val f = "src/main/resources/blinker.txt"
-          Config.load(List(), Map("f" -> "abcd.bin")) should === (
-            Right(
-              Config.emptyConfig.copy(
-                binary_set = true,
-                binary = Array('\u6162', '\u6364')
-              )
-            )
-          )
+          Config.load(List(), Map("f" -> bin_path)) match {
+            case Right(Config(binary_set, binary, multiplier)) => {
+              binary_set should === (true)
+              binary should === (Array('\u6162', '\u6364'))
+              multiplier should === (4)
+            }
+          }
         }
 
         it("returns a Left if --f is not a file") {
           val f = "src/main/resources/"
-          val msg = """java.io.FileNotFoundException: src/main/resources
-                      |(Is a directory)""".stripMargin.replaceAll("\n", " ")
+          val msg = "java.io.IOException: Is a directory"
           Config.load(List(), Map("f" -> f)) should === (Left(msg))
         }
       }
 
       describe("--m") {
         it("returns a Left if not a number") {
-          Config.load(List(), Map("f" -> "abcd.bin", "t" -> "foo")) should === (
-            Left("--m must be an integer between 1 and 256")
+          Config.load(List(), Map("f" -> bin_path, "m" -> "foo")) should === (
+            Left("--m must be an integer between 1 and 64")
           )
         }
 
         it("returns a Left if --m is 0") {
-          Config.load(List(), Map("f" -> "abcd.bin", "m" -> "0")) should === (
-            Left("--m must be an integer between 1 and 256")
+          Config.load(List(), Map("f" -> bin_path, "m" -> "0")) should === (
+            Left("--m must be an integer between 1 and 64")
           )
         }
 
         it("returns a Left if --m is negative") {
-          Config.load(List(), Map("f" -> "abcd.bin", "m" -> "-1")) should === (
-            Left("--t must be an integer between 1 and 256")
+          Config.load(List(), Map("f" -> bin_path, "m" -> "-1")) should === (
+            Left("--m must be an integer between 1 and 64")
           )
         }
       }

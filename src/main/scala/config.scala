@@ -1,6 +1,7 @@
 package info.ditrapani.gameoflife
 
 import scala.util.{Try, Success, Failure}
+import java.nio.file.{Files, Paths}
 
 case class Config(
   binary_set: Boolean,
@@ -43,14 +44,16 @@ object Config {
   }
 
   def handleFile(value: String, config: Config): IfConfig = {
-    Try(scala.io.Source.fromFile(value).mkString) match {
+    Try(Files.readAllBytes(Paths.get(value))) match {
       case Failure(exception) =>
         Left(exception.toString())
-      case Success(binary_string) => {
+      case Success(byte_array) => {
+        def bytePair2Char(pair: Array[Byte]): Char =
+          ((pair(0) << 8) + pair(1)).toChar
         Right(
           config.copy(
             binary_set = true,
-            binary = Array()
+            binary = byte_array.grouped(2).map(bytePair2Char).toArray
           )
         )
       }
@@ -58,7 +61,7 @@ object Config {
   }
 
   def handlePixelMultiplier(value: String, config: Config): IfConfig = {
-    parseIntAndDo(value, 0, 16, "--m") {
+    parseIntAndDo(value, 1, 64, "--m") {
       (i) => config.copy(pixel_multiplier = i.toByte)
     }
   }
