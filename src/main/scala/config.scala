@@ -4,15 +4,15 @@ import scala.util.{Try, Success, Failure}
 
 case class Config(
   binary_set: Boolean,
-  binary: Vector[Char],
-  pixel_multiplier: Byte,
+  binary: Array[Char],
+  pixel_multiplier: Byte
 )
 
 object Config {
   type IfConfig = Either[String, Config]
   type IfInt = Either[String, Int]
 
-  val emptyConfig: Config = Config(false, Vector(), 4)
+  val emptyConfig: Config = Config(false, Array(), 4)
 
   def load(help_params: Seq[String], params: Map[String,String]): IfConfig = {
     if (help_params.exists(p => p == "--help")) {
@@ -50,7 +50,7 @@ object Config {
         Right(
           config.copy(
             binary_set = true,
-            binary = Vector()
+            binary = Array()
           )
         )
       }
@@ -59,11 +59,11 @@ object Config {
 
   def handlePixelMultiplier(value: String, config: Config): IfConfig = {
     parseIntAndDo(value, 0, 16, "--m") {
-      (i) => config.copy(pixel_multiplier = i)
+      (i) => config.copy(pixel_multiplier = i.toByte)
     }
   }
 
-  def parseByte(value: String, lower: Int, upper: Int, prefix: String): IfByte = {
+  def parseInt(value: String, lower: Int, upper: Int, prefix: String): IfInt = {
     val left = Left(prefix + s" must be an integer between $lower and $upper")
     def onSuccess(num: Int): IfInt = {
       (num < lower || num > upper) match {
@@ -72,7 +72,7 @@ object Config {
       }
     }
 
-    Try(value.toByte) match {
+    Try(value.toInt) match {
       case Failure(_) => left
       case Success(num) => onSuccess(num)
     }
