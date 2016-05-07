@@ -80,8 +80,6 @@ class ConfigSpec extends FunSpec with Matchers {
           val msg = "binary file must not be empty"
           Config.load(List(), Map("f" -> bin_path)) should === (Left(msg))
         }
-
-        it("returns a Left if file is greater than 256 KB") (pending)
       }
 
       describe("--m") {
