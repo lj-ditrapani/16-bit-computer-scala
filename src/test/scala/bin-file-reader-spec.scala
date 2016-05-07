@@ -43,7 +43,7 @@ class ByteProcessorSpec extends FunSpec with Matchers {
   }
 }
 
-class BytesCheckSpec extends FunSpec with Matchers {
+class BinCheckSpec extends FunSpec with Matchers {
   val fail_check = BinFileReader.Fail("foo")
 
   describe("Fail class") {

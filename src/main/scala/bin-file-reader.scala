@@ -4,10 +4,9 @@ import scala.util.{Try, Success, Failure}
 import java.nio.file.{Files, Paths}
 
 object BinFileReader {
-  type StrOption = Option[String]
-  type Maybe = Either[String, Unit]
-  type IfBytes = Either[String, Array[Byte]]
   type IfChars = Either[String, Array[Char]]
+  type Result = (Boolean, String)
+  type StrOption = Option[String]
 
   def read(value: String): IfChars = {
     Try(Files.readAllBytes(Paths.get(value))) match {
@@ -18,55 +17,54 @@ object BinFileReader {
 
   class ByteProcessor(val byte_array: Array[Byte]) {
     def process(): IfChars = {
-      notEmpty()
-        .right.flatMap(notTooBig)
-        .right.flatMap(evenNumberOfBytes)
-        .right.map(makeChars)
+      val bytes_check = Pass
+        .check(notEmpty)
+        .check(notTooBig)
+        .check(evenNumberOfBytes)
+
+      bytes_check.get match {
+        case None => Right(makeChars)
+        case Some(msg) => Left(msg)
+      }
     }
 
-    def notEmpty(): Maybe =
-      wrapInMaybe(!byte_array.isEmpty, "binary file must not be empty")
+    def notEmpty: Result =
+      (!byte_array.isEmpty, "binary file must not be empty")
 
-    def notTooBig(x: Unit): Maybe = {
+    def notTooBig: Result = {
       val msg = "binary file must be less than or equal to 256 KB (128 KW)"
-      wrapInMaybe(byte_array.size <= (256 * 1024), msg)
+      (byte_array.size <= (256 * 1024), msg)
     }
 
-    def evenNumberOfBytes(x: Unit): Maybe = {
+    def evenNumberOfBytes: Result = {
       val msg = """binary file must contain only 16-bit values
                   | (must have an even number of bytes)
                   |""".stripMargin.replaceAll("\n", "")
 
-      wrapInMaybe(byte_array.size % 2 == 0, msg)
+      (byte_array.size % 2 == 0, msg)
     }
 
-    def wrapInMaybe(is_right: Boolean, msg: String): Maybe = {
-      is_right match {
-        case true => Right()
-        case false => Left(msg)
-      }
-    }
-
-    def makeChars(x: Unit): Array[Char] = {
+    def makeChars: Array[Char] = {
       byte_array.grouped(2).map(bytePair2Char).toArray
     }
   }
 
   def bytePair2Char(pair: Array[Byte]): Char = ((pair(0) << 8) + pair(1)).toChar
 
-  sealed abstract class BytesCheck {
-    def check(pair: (Boolean, String)): BytesCheck
+  sealed abstract class BinCheck {
+    def check(pair: (Boolean, String)): BinCheck
+
     def get: StrOption
   }
 
-  case class Fail(msg: String) extends BytesCheck {
-    override def check(pair: (Boolean, String)): BytesCheck = this
+  final case class Fail(msg: String) extends BinCheck {
+    override def check(pair: Result): BinCheck = this
 
     override def get: StrOption = Some(msg)
   }
 
-  object Pass extends BytesCheck {
-    override def check(pair: (Boolean, String)): BytesCheck = pair match {
+  object Pass extends BinCheck {
+    override def check(pair: (Boolean, String)): BinCheck = pair match {
       case (true, _) => this
       case (false, msg) => new Fail(msg)
     }
