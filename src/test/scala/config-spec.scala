@@ -75,7 +75,13 @@ class ConfigSpec extends FunSpec with Matchers {
           Config.load(List(), Map("f" -> bin_path)) should === (Left(msg))
         }
 
-        it("returns a Left if file is empty") (pending)
+        it("returns a Left if file is empty") {
+          val bin_path = s"${prefix}/empty.bin"
+          val msg = "binary file must not be empty"
+          Config.load(List(), Map("f" -> bin_path)) should === (Left(msg))
+        }
+
+        it("returns a Left if file is greater than 256 KB") (pending)
       }
 
       describe("--m") {
