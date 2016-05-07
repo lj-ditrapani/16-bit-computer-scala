@@ -1,4 +1,4 @@
-package info.ditrapani.gameoflife
+package info.ditrapani.ljdcomputer
 
 import org.scalatest.{FunSpec, Matchers}
 

@@ -1,4 +1,4 @@
-package info.ditrapani.gameoflife
+package info.ditrapani.ljdcomputer
 
 import scala.util.{Try, Success, Failure}
 

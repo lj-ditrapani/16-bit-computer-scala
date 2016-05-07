@@ -1,9 +1,10 @@
-package info.ditrapani.gameoflife
+package info.ditrapani.ljdcomputer
 
 import scala.util.{Try, Success, Failure}
 import java.nio.file.{Files, Paths}
 
 object BinFileReader {
+  type StrOption = Option[String]
   type Maybe = Either[String, Unit]
   type IfBytes = Either[String, Array[Byte]]
   type IfChars = Either[String, Array[Char]]
@@ -11,11 +12,18 @@ object BinFileReader {
   def read(value: String): IfChars = {
     Try(Files.readAllBytes(Paths.get(value))) match {
       case Failure(exception) => Left(exception.toString())
-      case Success(byte_array) => processBytes(byte_array)
+      case Success(byte_array) => new ByteProcessor(byte_array).process()
     }
   }
 
-  def processBytes(byte_array: Array[Byte]): IfChars = {
+  class ByteProcessor(val byte_array: Array[Byte]) {
+    def process(): IfChars = {
+      notEmpty()
+        .right.flatMap(notTooBig)
+        .right.flatMap(evenNumberOfBytes)
+        .right.map(makeChars)
+    }
+
     def notEmpty(): Maybe =
       wrapInMaybe(!byte_array.isEmpty, "binary file must not be empty")
 
@@ -42,32 +50,27 @@ object BinFileReader {
     def makeChars(x: Unit): Array[Char] = {
       byte_array.grouped(2).map(bytePair2Char).toArray
     }
-
-    notEmpty()
-      .right.flatMap(notTooBig)
-      .right.flatMap(evenNumberOfBytes)
-      .right.map(makeChars)
   }
 
   def bytePair2Char(pair: Array[Byte]): Char = ((pair(0) << 8) + pair(1)).toChar
 
   sealed abstract class BytesCheck {
-    def check(is_good: Boolean, msg: String): BytesCheck
-    def get: IfBytes
+    def check(pair: (Boolean, String)): BytesCheck
+    def get: StrOption
   }
 
   case class Fail(msg: String) extends BytesCheck {
-    override def check(is_good: Boolean, msg: String): BytesCheck = this
+    override def check(pair: (Boolean, String)): BytesCheck = this
 
-    override def get: IfBytes = Left(msg)
+    override def get: StrOption = Some(msg)
   }
 
-  case class Pass(byte_array: Array[Byte]) extends BytesCheck {
-    override def check(is_good: Boolean, msg: String): BytesCheck = is_good match {
-      case true => this
-      case false => new Fail(msg)
+  object Pass extends BytesCheck {
+    override def check(pair: (Boolean, String)): BytesCheck = pair match {
+      case (true, _) => this
+      case (false, msg) => new Fail(msg)
     }
 
-    override def get: IfBytes = Right(byte_array)
+    override def get: StrOption = None
   }
 }

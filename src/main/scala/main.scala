@@ -1,4 +1,4 @@
-package info.ditrapani.gameoflife
+package info.ditrapani.ljdcomputer
 
 import scalafx.application.JFXApp
 import scalafx.scene.canvas.{Canvas, GraphicsContext}
@@ -69,7 +69,7 @@ object Life extends JFXApp {
     gc.fillRect(0, 0, canvas_width, canvas_height)
 
     stage = new JFXApp.PrimaryStage {
-      title = "Game of Life by L. J. Di Trapani"
+      title = "ljd 16-bit computer by L. J. Di Trapani"
       scene = new Scene(canvas_width, canvas_height) {
         content = canvas
       }
