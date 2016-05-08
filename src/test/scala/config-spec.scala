@@ -46,7 +46,7 @@ class ConfigSpec extends FunSpec with Matchers {
           Config.load(List(), Map("f" -> bin_path, "m" -> "2")) match {
             case Right(Config(binary_set, binary, multiplier)) => {
               binary_set should === (true)
-              binary should === (Array('\u6162', '\u6364'))
+              binary should === (Vector('\u6162', '\u6364'))
               multiplier should === (2)
             }
           }
@@ -56,7 +56,7 @@ class ConfigSpec extends FunSpec with Matchers {
           Config.load(List(), Map("f" -> bin_path)) match {
             case Right(Config(binary_set, binary, multiplier)) => {
               binary_set should === (true)
-              binary should === (Array('\u6162', '\u6364'))
+              binary should === (Vector('\u6162', '\u6364'))
               multiplier should === (4)
             }
           }

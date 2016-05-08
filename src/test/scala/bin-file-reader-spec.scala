@@ -4,10 +4,10 @@ import org.scalatest.{FunSpec, Matchers}
 
 class BinFileReaderSpec extends FunSpec with Matchers {
   describe("read") {
-    it("returns Success(byte_array) if no issues") {
+    it("returns Success(byte_vector) if no issues") {
       val file = "src/test/resources/abcd.bin"
       BinFileReader.read(file) match {
-        case Right(array) => array.length should === (2)
+        case Right(vector) => vector.length should === (2)
       }
     }
 
@@ -49,7 +49,7 @@ class ByteProcessorSpec extends FunSpec with Matchers {
 
     it("returns Right if byte_array passes all checks") {
       process(Array(0x61, 0x62)) match {
-        case Right(Array(x)) => x should === (24930.toChar)
+        case Right(Vector(x)) => x should === (24930.toChar)
       }
     }
   }

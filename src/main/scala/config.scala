@@ -4,7 +4,7 @@ import scala.util.{Try, Success, Failure}
 
 case class Config(
   binary_set: Boolean,
-  binary: Array[Char],
+  binary: Vector[Char],
   pixel_multiplier: Byte
 )
 
@@ -12,7 +12,7 @@ object Config {
   type IfConfig = Either[String, Config]
   type IfInt = Either[String, Int]
 
-  val emptyConfig: Config = Config(false, Array(), 4)
+  val emptyConfig: Config = Config(false, Vector(), 4)
 
   def load(help_params: Seq[String], params: Map[String,String]): IfConfig = {
     if (help_params.exists(p => p == "--help")) {

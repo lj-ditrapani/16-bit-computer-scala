@@ -14,7 +14,6 @@ Show help
 TODO
 ----
 
-- Use immutable Vector instead of Array for program binary
 - Use immutable Vector for ROM (duh!)
 - RAM: Vector or Array...not sure which.  Each instruction that writes to RAM would generate
 

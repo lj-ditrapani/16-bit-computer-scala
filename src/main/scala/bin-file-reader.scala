@@ -4,7 +4,7 @@ import scala.util.{Try, Success, Failure}
 import java.nio.file.{Files, Paths}
 
 object BinFileReader {
-  type IfChars = Either[String, Array[Char]]
+  type IfChars = Either[String, Vector[Char]]
   type Result = (Boolean, String)
   type StrOption = Option[String]
 
@@ -44,8 +44,8 @@ object BinFileReader {
       (byte_array.size % 2 == 0, msg)
     }
 
-    def makeChars: Array[Char] = {
-      byte_array.grouped(2).map(bytePair2Char).toArray
+    def makeChars: Vector[Char] = {
+      byte_array.grouped(2).map(bytePair2Char).toVector
     }
   }
 
