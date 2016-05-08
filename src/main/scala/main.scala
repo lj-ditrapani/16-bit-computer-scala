@@ -7,8 +7,7 @@ import scalafx.scene.paint.Color
 import scalafx.animation.AnimationTimer
 import scala.util.{Try, Success, Failure}
 
-object Life extends JFXApp {
-  /*
+object Main extends JFXApp {
   Config.load(parameters.unnamed, Map(parameters.named.toSeq: _*)) match {
     case Left(s) => printErrorHelpAndExit(s)
     case Right(config) => loadAndRun(config)
@@ -21,56 +20,48 @@ object Life extends JFXApp {
     val input_stream = getClass.getResourceAsStream("/help.txt")
     val help_text = scala.io.Source.fromInputStream(input_stream).mkString
     println(help_text)
-    for ((name, index) <- Config.boards.zipWithIndex) {
-      println(s"    ${index + 1}  $name")
-    }
-    println("\n")
     System.exit(0)
   }
 
   def loadAndRun(config: Config): Unit = {
-    Grid.build(config.board_str) match {
-      case Left(s) => printErrorHelpAndExit(s)
-      case Right(grid) => startGfx(grid, config)
-    }
+    startGfx(config)
   }
 
-  def startGfx(grid: Grid, config: Config): Unit = {
-    var curr_grid = grid
-    val time_delta: Long = config.time_delta * 1000000L
-    val gc = makeGfxContext(grid, config)
+  def startGfx(config: Config): Unit = {
+    val time_delta: Long = 100 * 1000000L
+    val gc = makeGfxContext(config)
     val drawScene = makeSceneDrawer(config, gc)
 
-    drawScene(curr_grid)
+    drawScene(true)
 
+    var color_choice: Boolean = true
     var last_time = System.nanoTime()
 
     AnimationTimer(curr_time => {
       if (curr_time - last_time > time_delta) {
         last_time = curr_time
-        curr_grid = curr_grid.next
-        drawScene(curr_grid)
+        // should get next video buffer
+        // call video.draw(gc)?
+        color_choice = !color_choice
+        drawScene(color_choice)
       }
     }).start()
   }
 
-  def makeGfxContext(grid: Grid, config: Config): GraphicsContext = {
-    val width = config.width
-    val margin = config.margin
-    val canvas_height = (width + margin) * grid.height + margin
-    val canvas_width = (width + margin) * grid.width + margin
-    val canvas = new Canvas(canvas_width, canvas_height)
+  def makeGfxContext(config: Config): GraphicsContext = {
+    val width = 256 * config.pixel_multiplier
+    val height = 240 * config.pixel_multiplier
+    val canvas = new Canvas(width, height)
     val gc = canvas.graphicsContext2D
     canvas.translateX = 0
     canvas.translateY = 0
 
-    val (r, g, b) = config.bg_color
-    gc.setFill(Color.rgb(r, g, b))
-    gc.fillRect(0, 0, canvas_width, canvas_height)
+    gc.setFill(Color.rgb(100, 200, 255))
+    gc.fillRect(0, 0, width, height)
 
     stage = new JFXApp.PrimaryStage {
       title = "ljd 16-bit computer by L. J. Di Trapani"
-      scene = new Scene(canvas_width, canvas_height) {
+      scene = new Scene(width.toDouble, height.toDouble) {
         content = canvas
       }
     }
@@ -78,28 +69,15 @@ object Life extends JFXApp {
     gc
   }
 
-  def makeSceneDrawer(config: Config, gc: GraphicsContext): Grid => Unit = {
-    val f: (Int, Int, Int) => Color = Color.rgb _
-    def tupleRgb = Function.tupled(f)
-    val alive_color = tupleRgb(config.alive_color)
-    val dead_color = tupleRgb(config.dead_color)
-    val margin = config.margin
-    val width = config.width
+  def makeSceneDrawer(config: Config, gc: GraphicsContext): Boolean => Unit = {
+    val color1 = Color.rgb(200, 150, 150)
+    val color2 = Color.rgb(20, 20, 20)
+    val m = config.pixel_multiplier
 
-    (grid) => {
-      var x = width * -1
-      var y = width * -1
-      for (row <- grid.cells) {
-        x = width * -1
-        y += (width + margin)
-        for (cell <- row) {
-          x += (width + margin)
-          val color = if (cell.alive) alive_color else dead_color
-          gc.setFill(color)
-          gc.fillRect(x, y, width, width)
-        }
-      }
+    (color_choice) => {
+      val color = if (color_choice) color1 else color2
+      gc.setFill(color)
+      gc.fillRect(50 * m,  50 * m, 100 * m, 100 * m)
     }
   }
-  */
 }
