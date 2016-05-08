@@ -55,12 +55,5 @@ key_press: Byte = get_key_press()
 video_buffer: Vector[Vector[Color]], new_computer = computer.run_frame(key_press)
 render(video_buffer)
 
-
-computer.run_frame(key_press)
------------------------------
-ram2 = add_key_press(key_press, ram)
-ram3, new_cpu = cpu.step(400000, ram2)
-new_video, ram4 = swap_video_ram(video, ram3)
-new_computer = new Computer(new_cpu, ram4, new_video)
-(new_video.buffer, new_computer)
+Rom is part of cpu
 ```
