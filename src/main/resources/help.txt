@@ -1,4 +1,9 @@
 ljd 16-bit Computer Help Text
+=============================
+
+
+Usage
+-----
 
 java -jar ljd-16-bit-computer-x.x.x.jar --f=<file> [--m=<n>]
 
@@ -10,3 +15,10 @@ java -jar ljd-16-bit-computer-x.x.x.jar --f=<file> [--m=<n>]
         Can be any integer between 1 and 64 inclusive.
 
 --help  Show this help text.
+
+
+Examples
+--------
+
+    java -jar ljd-16-bit-computer-x.x.x.jar --f=~/programs/hello.bin
+    java -jar ljd-16-bit-computer-x.x.x.jar --f=tic-tac-toe.bin --m=2
