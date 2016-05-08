@@ -1,21 +1,19 @@
 LJD 16-bit Computer in Scala & JavaFX
 
-Just started; not working yet.
+Just started working on this.
 
-Planned cli interface
+cli interface
 
-    java -jar ljd-computer.jar --f=binary-executable.bin
+    java -jar ljd-16-bit-computer-x.x.x.jar --f=binary-executable.bin
 
 Show help
 
-    java -jar ljd-computer.jar --help
+    java -jar ljd-16-bit-computer-x.x.x.jar --help
 
 
 TODO
 ----
 
-- How do I set the name of the assembly jar?
-- write help text/usage in main/resources/help.txt
 - Use immutable Vector instead of Array for program binary
 - Use immutable Vector for ROM (duh!)
 - RAM: Vector or Array...not sure which.  Each instruction that writes to RAM would generate
