@@ -1,0 +1,10 @@
+ljd 16-bit Computer Help Text
+
+java -jar ljd-computer.jar --f=<file> [--m=<n>]
+
+--f     Path to the binary file to execute.
+
+--m     Pixel multiplier.  Mapping of ljd computer pixels to physical screen.
+        --m=2 will make the pixels apear as 2x2 pixel boxes.
+        --m=8 will make the pixels appear as 8x8 pixel boxes.
+        Can be any integer between 1 and 64 inclusive.
