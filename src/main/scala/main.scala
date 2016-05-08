@@ -8,6 +8,8 @@ import scalafx.animation.AnimationTimer
 import scala.util.{Try, Success, Failure}
 
 object Main extends JFXApp {
+  type VideoBuffer = Vector[Vector[Color]]
+
   Config.load(parameters.unnamed, Map(parameters.named.toSeq: _*)) match {
     case Left(s) => printErrorHelpAndExit(s)
     case Right(config) => loadAndRun(config)
@@ -32,18 +34,17 @@ object Main extends JFXApp {
     val gc = makeGfxContext(config)
     val drawScene = makeSceneDrawer(config, gc)
 
-    drawScene(true)
-
-    var color_choice: Boolean = true
+    var computer: Computer = Computer.load(config.binary)
     var last_time = System.nanoTime()
 
     AnimationTimer(curr_time => {
       if (curr_time - last_time > time_delta) {
         last_time = curr_time
-        // should get next video buffer
-        // call video.draw(gc)?
-        color_choice = !color_choice
-        drawScene(color_choice)
+        // val key_press: Byte = get_key_press()
+        val key_press: Byte = 0.toByte
+        val (video_buffer, new_computer) = computer.runFrame(key_press)
+        drawScene(video_buffer)
+        computer = new_computer
       }
     }).start()
   }
@@ -69,14 +70,13 @@ object Main extends JFXApp {
     gc
   }
 
-  def makeSceneDrawer(config: Config, gc: GraphicsContext): Boolean => Unit = {
+  def makeSceneDrawer(config: Config, gc: GraphicsContext): VideoBuffer => Unit = {
     val color1 = Color.rgb(200, 150, 150)
     val color2 = Color.rgb(20, 20, 20)
     val m = config.pixel_multiplier
 
-    (color_choice) => {
-      val color = if (color_choice) color1 else color2
-      gc.setFill(color)
+    (VideoBuffer) => {
+      gc.setFill(color1)
       gc.fillRect(50 * m,  50 * m, 100 * m, 100 * m)
     }
   }

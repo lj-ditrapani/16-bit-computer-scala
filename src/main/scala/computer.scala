@@ -17,3 +17,14 @@ case class Computer(cpu: Cpu, ram: Vector[Char], video: Video) {
 
   def swapVideoRam(new_ram: Vector[Char]): (Video, Vector[Char]) = (video, new_ram)
 }
+
+object Computer {
+  def load(binary: Vector[Char]): Computer = {
+    // val (rom, ram, video_ram) = populateMemories(binary)
+    // then use to create
+    // Computer(Cpu(rom), ram, Video(video_ram))
+    Computer(Cpu(Vector()), Vector(), Video(Vector()))
+  }
+
+  // def populateMemories(binary: Vector[Char]): (Vector[Char], Vector[Char], Vector[Char]) = {}
+}
