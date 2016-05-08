@@ -9,3 +9,10 @@ Planned cli interface
 Show help
 
     java -jar ljd-computer.jar --help
+
+
+TODO
+----
+
+How do I set the name of the assembly jar?
+write help text/usage in main/resources/help.txt
