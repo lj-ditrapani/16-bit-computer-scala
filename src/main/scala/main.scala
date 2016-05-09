@@ -71,13 +71,15 @@ object Main extends JFXApp {
   }
 
   def makeSceneDrawer(config: Config, gc: GraphicsContext): VideoBuffer => Unit = {
-    val color1 = Color.rgb(200, 150, 150)
-    val color2 = Color.rgb(20, 20, 20)
     val m = config.pixel_multiplier
 
     (VideoBuffer) => {
-      gc.setFill(color1)
-      gc.fillRect(50 * m,  50 * m, 100 * m, 100 * m)
+      for ((row: Vector[Color], j: Int) <- VideoBuffer.zipWithIndex) {
+        for ((color: Color, i: Int) <- row.zipWithIndex) {
+          gc.setFill(color)
+          gc.fillRect(i * m,  j * m, m, m)
+        }
+      }
     }
   }
 }
