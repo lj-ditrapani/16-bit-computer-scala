@@ -20,11 +20,10 @@ case class Computer(cpu: Cpu, ram: Vector[Char], video: Video) {
 
 object Computer {
   def load(binary: Vector[Char]): Computer = {
-    // val (rom, ram, video_ram) = populateMemories(binary)
-    // then use to create
-    // Computer(Cpu(rom), ram, Video(video_ram))
-    Computer(Cpu(Vector()), Vector(), Video(Vector()))
+    val end = 64 * 1024
+    val rom = binary.slice(0, end).padTo(end, 0.toChar)
+    val ram = binary.slice(end, binary.length).padTo(end, 0.toChar)
+    val video_ram = ram.slice(0xF000, 0xFFFFF).padTo(0x1000, 0.toChar)
+    Computer(Cpu(rom), ram, Video(video_ram))
   }
-
-  // def populateMemories(binary: Vector[Char]): (Vector[Char], Vector[Char], Vector[Char]) = {}
 }
