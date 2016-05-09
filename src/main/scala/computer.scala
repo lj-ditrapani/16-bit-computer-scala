@@ -23,7 +23,7 @@ object Computer {
     val end = 64 * 1024
     val rom = binary.slice(0, end).padTo(end, 0.toChar)
     val ram = binary.slice(end, binary.length).padTo(end, 0.toChar)
-    val video_ram = ram.slice(0xF000, 0xFFFFF).padTo(0x1000, 0.toChar)
+    val video_ram = ram.slice(0xF000, 0xFFFFF)
     Computer(Cpu(rom), ram, Video(video_ram))
   }
 }
