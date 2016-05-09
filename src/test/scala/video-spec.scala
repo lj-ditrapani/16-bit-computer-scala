@@ -1,10 +1,22 @@
 package info.ditrapani.ljdcomputer
 
 import org.scalatest.{FunSpec, Matchers}
+import scalafx.scene.paint.Color
 
 class VideoSpec extends FunSpec with Matchers {
   describe("Video class") {
     describe("buffer") {
+      it("returns all disabledBuffer if video is disabled") {
+        val ram = Vector.fill(0x10000)(0.toChar)
+        val video = Video.make(ram)
+        val buffer = video.buffer
+        buffer should === (Video.disabledBuffer)
+        buffer.size should === (240)
+        buffer(0).size should === (256)
+        buffer.last.size should === (256)
+        buffer(0)(0) should === (Color.rgb(0, 0, 0))
+        buffer.last.last should === (Color.rgb(0, 0, 0))
+      }
     }
   }
 
@@ -50,6 +62,17 @@ class VideoSpec extends FunSpec with Matchers {
         }
 
         tests.map { runTest(_) }
+      }
+    }
+
+    describe("disabledBuffer") {
+      it("returns all black buffer") {
+        val buffer = Video.disabledBuffer
+        buffer.size should === (240)
+        buffer(0).size should === (256)
+        buffer.last.size should === (256)
+        buffer(0)(0) should === (Color.rgb(0, 0, 0))
+        buffer.last.last should === (Color.rgb(0, 0, 0))
       }
     }
   }
