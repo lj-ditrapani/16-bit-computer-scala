@@ -19,4 +19,3 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
-Video needs to take 2 bool flags for enable bits: built-in tile sets & video enable
