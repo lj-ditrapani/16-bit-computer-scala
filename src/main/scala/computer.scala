@@ -15,7 +15,8 @@ case class Computer(cpu: Cpu, ram: Vector[Char], video: Video) {
 
   def addKeyPress(key_press: Byte): Vector[Char] = ram
 
-  def swapVideoRam(new_ram: Vector[Char]): (Video, Vector[Char]) = (video, new_ram)
+  def swapVideoRam(new_ram: Vector[Char]): (Video, Vector[Char]) =
+    (video, new_ram)
 }
 
 object Computer {
@@ -23,7 +24,6 @@ object Computer {
     val end = 64 * 1024
     val rom = binary.slice(0, end).padTo(end, 0.toChar)
     val ram = binary.slice(end, binary.length).padTo(end, 0.toChar)
-    val video_ram = ram.slice(0xF000, 0xFFFFF)
-    Computer(Cpu(rom), ram, Video(video_ram))
+    Computer(Cpu(rom), ram, Video.make(ram))
   }
 }
