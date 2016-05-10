@@ -7,7 +7,15 @@ case class Video(video_ram: Vector[Char], enable: Boolean, custom_tiles: Boolean
 
   def buffer: VideoBuffer =
     if (enable)
-      // if custom_tiles use ram tile-set, else use built-in tile-set
+      // val (ram_tiles, cells, colors, sprites) = expload(video_ram)
+      // tiles =
+      //   if (custom_tiles)
+      //     ram_tiles
+      //   else
+      //     built_in_tiles
+      // Maybe VideoState instead of VideoRam?  VideoRam is confusing
+      // video_state = VideoRam.make(tiles, cells, colors, sprites)
+      // video_state.buffer
       (for (i <- 0 until 240) yield {
         (for (j <- 0 until 256) yield Color.rgb(200, 200, 255)).to[Vector]
       }).to[Vector]
