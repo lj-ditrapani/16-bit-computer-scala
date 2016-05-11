@@ -19,7 +19,6 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
-- Change VideoRam to VideoState
 - VideoState.make(tiles, cells, colors, sprites)
 - components of VideoState
     - large_tiles: Vector[LargeTile],
@@ -33,5 +32,7 @@ TODO
     - small_sprites: Vector[Sprite]
 - VideoState.make
     - expload ram into ram blocks
-    - make Vector of components from ram block (makeVector method on object)
-    - make component from ram cells (make method on object)
+    - make Vector of components from ram block
+      (makeVector method on component object)
+    - make component from ram cells
+      (make method on component object)

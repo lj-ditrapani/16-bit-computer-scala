@@ -76,6 +76,59 @@ class VideoSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("makeLargeTile") {
+      it("fails if tile_ram < 32") {
+        a [java.lang.AssertionError] should be thrownBy {
+          Video.makeLargeTile(Vector.fill(31)(0.toChar))
+        }
+      }
+
+      it("fails if tile_ram > 32") {
+        a [java.lang.AssertionError] should be thrownBy {
+          Video.makeLargeTile(Vector.fill(33)(0.toChar))
+        }
+      }
+
+      it("returns a 16 x 16 tile of 2-bit per pixel values") {
+        val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
+        val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
+        val incThenDec = Integer.parseInt(inc + dec, 2).toChar
+        val decThenInc = Integer.parseInt(dec + inc, 2).toChar
+        val tile = Video.makeLargeTile(
+          Vector(incThenDec, decThenInc) ++
+          Vector.fill(28)(0xF0F0.toChar) ++
+          Vector(decThenInc, incThenDec)
+        )
+        tile.size should === (16)
+        tile(0).size should === (16)
+        tile(15).size should === (16)
+        tile(0) should === (Vector(
+          (false, false), (false, true), (true, false), (true, true),
+          (true, true), (true, false), (false, true), (false, false),
+          (true, true), (true, false), (false, true), (false, false),
+          (false, false), (false, true), (true, false), (true, true)
+        ))
+        tile(1) should === (Vector(
+          (true, true), (true, true), (false, false), (false, false),
+          (true, true), (true, true), (false, false), (false, false),
+          (true, true), (true, true), (false, false), (false, false),
+          (true, true), (true, true), (false, false), (false, false)
+        ))
+        tile(14) should === (Vector(
+          (true, true), (true, true), (false, false), (false, false),
+          (true, true), (true, true), (false, false), (false, false),
+          (true, true), (true, true), (false, false), (false, false),
+          (true, true), (true, true), (false, false), (false, false)
+        ))
+        tile(15) should === (Vector(
+          (true, true), (true, false), (false, true), (false, false),
+          (false, false), (false, true), (true, false), (true, true),
+          (false, false), (false, true), (true, false), (true, true),
+          (true, true), (true, false), (false, true), (false, false)
+        ))
+      }
+    }
+
     describe("Color8 class") {
       describe("toColor") {
         type SixInts = (Int, Int, Int, Int, Int, Int)

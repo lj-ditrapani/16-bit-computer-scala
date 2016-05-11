@@ -13,8 +13,7 @@ case class Video(video_ram: Vector[Char], enable: Boolean, custom_tiles: Boolean
       //     ram_tiles
       //   else
       //     built_in_tiles
-      // Maybe VideoState instead of VideoRam?  VideoRam is confusing
-      // video_state = VideoRam.make(tiles, cells, colors, sprites)
+      // video_state = VideoState.make(tiles, cells, colors, sprites)
       // video_state.buffer
       (for (i <- 0 until 240) yield {
         (for (j <- 0 until 256) yield Color.rgb(200, 200, 255)).to[Vector]
@@ -42,7 +41,7 @@ object Video {
       (for (j <- 0 until 256) yield Color.rgb(0, 0, 0)).to[Vector]
     }).to[Vector]
 
-  case class VideoRam(
+  case class VideoState(
     large_tiles: Vector[LargeTile],
     small_tiles: Vector[SmallTile],
     text_char_tiles: Vector[TextCharTile],
@@ -54,6 +53,21 @@ object Video {
     small_sprites: Vector[Sprite]
   ) {
     def buffer: VideoBuffer = Vector(Vector())
+  }
+
+  def makeLargeTile(tile_ram: Vector[Char]): LargeTile = {
+    assert(tile_ram.size == 32)
+    (for (j <- 0 until 16) yield {
+      (for (i <- 0 until 16) yield {
+        val char = tile_ram((j * 2) + i / 8)
+        val bit_index = (i % 8) * 2
+        val shift_ammount = 15 - bit_index
+        (
+          ((char >> shift_ammount) & 1) > 0,
+          ((char >> (shift_ammount - 1)) & 1) > 0
+        )
+      }).to[Vector]
+    }).to[Vector]
   }
 
   case class BgCell(
