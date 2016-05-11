@@ -57,17 +57,18 @@ object Video {
 
   def makeLargeTile(tile_ram: Vector[Char]): LargeTile = {
     assert(tile_ram.size == 32)
-    (for (j <- 0 until 16) yield {
-      (for (i <- 0 until 16) yield {
-        val char = tile_ram((j * 2) + i / 8)
-        val bit_index = (i % 8) * 2
-        val shift_ammount = 15 - bit_index
-        (
-          ((char >> shift_ammount) & 1) > 0,
-          ((char >> (shift_ammount - 1)) & 1) > 0
-        )
-      }).to[Vector]
-    }).to[Vector]
+
+    def toBits(c: Char): Seq[Boolean] = {
+      15 to 0 by -1 map { (i) => ((c >> i) & 1) > 0 }
+    }
+
+    def toPixelRow(c: Char): Iterator[(Boolean, Boolean)] = {
+      toBits(c).grouped(2).map { (v) => (v(0), v(1)) }
+    }
+
+    tile_ram.grouped(2).map { (pair) =>
+      (toPixelRow(pair(0)) ++ toPixelRow(pair(1))).toVector
+    }.toVector
   }
 
   case class BgCell(
