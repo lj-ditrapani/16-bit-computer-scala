@@ -114,6 +114,14 @@ object VideoState {
     (((word >> 8) & mask).toByte, (word & mask).toByte)
   }
 
+  def makeLargeSprite(word_pair: Vector[Char]): Sprite = {
+    makeSprite(word_pair, true)
+  }
+
+  def makeSmallSprite(word_pair: Vector[Char]): Sprite = {
+    makeSprite(word_pair, false)
+  }
+
   def makeSprite(word_pair: Vector[Char], large_sprite: Boolean): Sprite = {
     assert(word_pair.size == 2)
     val (w1, w2) = (word_pair(0), word_pair(1))
