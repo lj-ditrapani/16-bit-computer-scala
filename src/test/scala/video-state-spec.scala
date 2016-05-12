@@ -149,6 +149,16 @@ class VideoStateSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("makeBgCell") {
+      it("creates a BgCell") {
+        //        15       14    true  false      60
+        val s = "1111" + "1110" + "1" + "0" + "111100"
+        val c = Integer.parseInt(s, 2).toChar
+        VideoState.makeBgCell(c) should === (
+          VideoState.BgCell(15, 14, true, false, 60)
+        )
+      }
+    }
 
     describe("Color8 class") {
       describe("toColor") {

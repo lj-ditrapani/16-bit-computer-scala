@@ -68,6 +68,15 @@ object VideoState {
     large_tile_index: Byte
   )
 
+  def makeBgCell(word: Char): BgCell = {
+    val color_pair_1 = (word >> 12).toByte
+    val color_pair_2 = ((word >> 8) & 0xF).toByte
+    val x_flip = ((word >> 7) & 1) > 0
+    val y_flip = ((word >> 6) & 1) > 0
+    val tile_index = (word & 0x3F).toByte
+    BgCell(color_pair_1, color_pair_2, x_flip, y_flip, tile_index)
+  }
+
   case class TextCell(
     text_char_tile_index: Byte,
     on: Boolean
