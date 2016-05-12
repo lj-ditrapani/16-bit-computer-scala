@@ -26,7 +26,6 @@ object VideoState {
     15 to 0 by -1 map { (i) => ((c >> i) & 1) > 0 }
   }
 
-
   def makeLargeTile(tile_ram: Vector[Char]): LargeTile = {
     assert(tile_ram.size == 32)
 
@@ -47,6 +46,18 @@ object VideoState {
     }
 
     tile_ram.map { Vector() ++ toPixelRow(_) }.toVector
+  }
+
+  def makeTextCharTile(tile_ram: Vector[Char]): TextCharTile = {
+    assert(tile_ram.size == 4)
+
+    def toPixelRow(c: Int): Vector[Boolean] = {
+      (7 to 0 by -1 map { (i: Int) => ((c >> i) & 1) > 0 }).to[Vector]
+    }
+
+    tile_ram.flatMap {
+      (char) => Vector(toPixelRow(char >> 8), toPixelRow(char >> 0))
+    }.toVector
   }
 
   case class BgCell(

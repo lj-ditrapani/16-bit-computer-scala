@@ -107,6 +107,49 @@ class VideoStateSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("makeTextCharTile") {
+      it("fails if tile_ram < 4") {
+        a [java.lang.AssertionError] should be thrownBy {
+          VideoState.makeTextCharTile(Vector.fill(3)(0.toChar))
+        }
+      }
+
+      it("fails if tile_ram > 4") {
+        a [java.lang.AssertionError] should be thrownBy {
+          VideoState.makeTextCharTile(Vector.fill(5)(0.toChar))
+        }
+      }
+
+      it("returns an 8 x 8 tile of 1-bit per pixel values") {
+        val r1 = Integer.parseInt("0110011001100110", 2).toChar
+        val r2 = Integer.parseInt("0000000011111111", 2).toChar
+        val tile = VideoState.makeTextCharTile(
+          Vector(r1) ++
+          Vector.fill(2)(0xF0F0.toChar) ++
+          Vector(r2)
+        )
+        tile.size should === (8)
+        tile(0).size should === (8)
+        tile(7).size should === (8)
+        tile(0) should === (Vector(
+          false, true, true, false, false, true, true, false
+        ))
+        tile(1) should === (Vector(
+          false, true, true, false, false, true, true, false
+        ))
+        tile(2) should === (Vector(
+          true, true, true, true, false, false, false, false
+        ))
+        tile(6) should === (Vector(
+          false, false, false, false, false, false, false, false
+        ))
+        tile(7) should === (Vector(
+          true, true, true, true, true, true, true, true
+        ))
+      }
+    }
+
+
     describe("Color8 class") {
       describe("toColor") {
         type SixInts = (Int, Int, Int, Int, Int, Int)
