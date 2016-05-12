@@ -163,9 +163,37 @@ class VideoStateSpec extends FunSpec with Matchers {
     describe("makeTextCharCell") {
       it("creates a TextCharCell") {
         //                  on = true  index = 120 = 0x78
-        val c = Integer.parseInt("1" + "01111000", 2).toChar
+        val c = Integer.parseInt("1" + "1111000", 2).toChar
         VideoState.makeTextCharCell(c) should === (
           VideoState.TextCharCell(true, 120.toByte)
+        )
+      }
+    }
+
+    describe("makeSprite") {
+      it("fails if word_pair < 2") {
+        a [java.lang.AssertionError] should be thrownBy {
+          VideoState.makeSprite(Vector.fill(1)(0.toChar), false)
+        }
+      }
+
+      it("fails if word_pair > 2") {
+        a [java.lang.AssertionError] should be thrownBy {
+          VideoState.makeSprite(Vector.fill(3)(0.toChar), false)
+        }
+      }
+
+      it("creates a sprite") {
+        //       cp1 7    cp2 8   xflip  yflip index 19
+        val w1 = "0111" + "1000" + "0" + "1" + "010011"
+        //         XX    xpos 31   true   XX     ypos 27
+        val w2 = "000" + "11111" + "1" + "00" +  "11011"
+        val word_pair = Vector(
+          Integer.parseInt(w1, 2).toChar,
+          Integer.parseInt(w2, 2).toChar
+        )
+        VideoState.makeSprite(word_pair, false) should === (
+          VideoState.Sprite(7.toByte, 8.toByte, false, true, 19, 31, 27, true)
         )
       }
     }

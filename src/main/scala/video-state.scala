@@ -68,12 +68,18 @@ object VideoState {
     large_tile_index: Byte
   )
 
-  def makeBgCell(word: Char): BgCell = {
+  def getColorXYandIndex(word: Char): (Byte, Byte, Boolean, Boolean, Byte) = {
     val color_pair_1 = (word >> 12).toByte
     val color_pair_2 = ((word >> 8) & 0xF).toByte
     val x_flip = ((word >> 7) & 1) > 0
     val y_flip = ((word >> 6) & 1) > 0
     val tile_index = (word & 0x3F).toByte
+    (color_pair_1, color_pair_2, x_flip, y_flip, tile_index)
+  }
+
+  def makeBgCell(word: Char): BgCell = {
+    val (color_pair_1, color_pair_2, x_flip, y_flip, tile_index) =
+      getColorXYandIndex(word)
     BgCell(color_pair_1, color_pair_2, x_flip, y_flip, tile_index)
   }
 
@@ -83,6 +89,8 @@ object VideoState {
   )
 
   def makeTextCharCell(byte: Int): TextCharCell = {
+    assert(byte < 256)
+    assert(byte > -1)
     TextCharCell((byte >> 7) > 0, (byte & 0x7F).toByte)
   }
 
@@ -96,6 +104,28 @@ object VideoState {
     y_position: Byte,
     on: Boolean
   )
+
+  def getXYpos(word: Char, large_sprite: Boolean): (Byte, Byte) = {
+    val mask =
+      if (large_sprite)
+        0x0F
+      else
+        0x1F
+    (((word >> 8) & mask).toByte, (word & mask).toByte)
+  }
+
+  def makeSprite(word_pair: Vector[Char], large_sprite: Boolean): Sprite = {
+    assert(word_pair.size == 2)
+    val (w1, w2) = (word_pair(0), word_pair(1))
+    val (color_pair_1, color_pair_2, x_flip, y_flip, tile_index) =
+      getColorXYandIndex(w1)
+    val (x_position, y_position) = getXYpos(w2, large_sprite)
+    val on: Boolean = ((w2 >> 7) & 1) > 0
+    Sprite(
+      color_pair_1, color_pair_2, x_flip, y_flip,
+      tile_index, x_position, y_position, on
+    )
+  }
 
   case class Color8(red: Byte, green: Byte, blue: Byte) {
     def toColor: Color = Color.rgb(
