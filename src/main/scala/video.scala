@@ -6,7 +6,7 @@ case class Video(video_ram: Vector[Char], enable: Boolean, custom_tiles: Boolean
   type VideoBuffer = Vector[Vector[Color]]
 
   def buffer: VideoBuffer =
-    if (enable)
+    if (enable) {
       // val (ram_tiles, cells, colors, sprites) = expload(video_ram)
       // tiles =
       //   if (custom_tiles)
@@ -18,8 +18,9 @@ case class Video(video_ram: Vector[Char], enable: Boolean, custom_tiles: Boolean
       (for (i <- 0 until 240) yield {
         (for (j <- 0 until 256) yield Color.rgb(200, 200, 255)).to[Vector]
       }).to[Vector]
-    else
+    } else {
       Video.disabledBuffer
+    }
 }
 
 object Video {
@@ -69,6 +70,20 @@ object Video {
     tile_ram.grouped(2).map { (pair) =>
       (toPixelRow(pair(0)) ++ toPixelRow(pair(1))).toVector
     }.toVector
+  }
+
+  def makeSmallTile(tile_ram: Vector[Char]): SmallTile = {
+    assert(tile_ram.size == 8)
+
+    def toBits(c: Char): Seq[Boolean] = {
+      15 to 0 by -1 map { (i) => ((c >> i) & 1) > 0 }
+    }
+
+    def toPixelRow(c: Char): Iterator[(Boolean, Boolean)] = {
+      toBits(c).grouped(2).map { (v) => (v(0), v(1)) }
+    }
+
+    tile_ram.map { Vector() ++ toPixelRow(_) }.toVector
   }
 
   case class BgCell(

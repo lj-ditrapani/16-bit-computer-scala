@@ -61,7 +61,7 @@ class VideoSpec extends FunSpec with Matchers {
           }
         }
 
-        tests.map { runTest(_) }
+        for (test <- tests) runTest(test)
       }
     }
 
@@ -129,6 +129,55 @@ class VideoSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("makeSmallTile") {
+      it("fails if tile_ram < 8") {
+        a [java.lang.AssertionError] should be thrownBy {
+          Video.makeSmallTile(Vector.fill(7)(0.toChar))
+        }
+      }
+
+      it("fails if tile_ram > 8") {
+        a [java.lang.AssertionError] should be thrownBy {
+          Video.makeSmallTile(Vector.fill(9)(0.toChar))
+        }
+      }
+
+      it("returns an 8 x 8 tile of 2-bit per pixel values") {
+        val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
+        val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
+        val incThenDec = Integer.parseInt(inc + dec, 2).toChar
+        val decThenInc = Integer.parseInt(dec + inc, 2).toChar
+        val tile = Video.makeSmallTile(
+          Vector(incThenDec, decThenInc) ++
+          Vector.fill(4)(0xF0F0.toChar) ++
+          Vector(decThenInc, incThenDec)
+        )
+        tile.size should === (8)
+        tile(0).size should === (8)
+        tile(7).size should === (8)
+        tile(0) should === (Vector(
+          (false, false), (false, true), (true, false), (true, true),
+          (true, true), (true, false), (false, true), (false, false)
+        ))
+        tile(1) should === (Vector(
+          (true, true), (true, false), (false, true), (false, false),
+          (false, false), (false, true), (true, false), (true, true)
+        ))
+        tile(2) should === (Vector(
+          (true, true), (true, true), (false, false), (false, false),
+          (true, true), (true, true), (false, false), (false, false)
+        ))
+        tile(6) should === (Vector(
+          (true, true), (true, false), (false, true), (false, false),
+          (false, false), (false, true), (true, false), (true, true)
+        ))
+        tile(7) should === (Vector(
+          (false, false), (false, true), (true, false), (true, true),
+          (true, true), (true, false), (false, true), (false, false)
+        ))
+      }
+    }
+
     describe("Color8 class") {
       describe("toColor") {
         type SixInts = (Int, Int, Int, Int, Int, Int)
@@ -148,7 +197,7 @@ class VideoSpec extends FunSpec with Matchers {
           }
         }
 
-        tests.map(runTest)
+        for (test <- tests) runTest(test)
       }
     }
 
@@ -177,7 +226,7 @@ class VideoSpec extends FunSpec with Matchers {
           }
         }
 
-        tests.map(runTest)
+        for (test <- tests) runTest(test)
       }
 
       describe("convert3bitTo8bit") {
@@ -199,7 +248,7 @@ class VideoSpec extends FunSpec with Matchers {
           }
         }
 
-        tests.map(runTest)
+        for (test <- tests) runTest(test)
       }
     }
   }
