@@ -7,7 +7,7 @@ case class VideoState(
   small_tiles: Vector[VideoState.SmallTile],
   text_char_tiles: Vector[VideoState.TextCharTile],
   bg_cells: Vector[Vector[VideoState.BgCell]],
-  text_cells: Vector[Vector[VideoState.TextCell]],
+  text_cells: Vector[Vector[VideoState.TextCharCell]],
   bg_colors: Vector[(VideoState.Color8, VideoState.Color8)],
   fg_colors: Vector[(VideoState.Color8, VideoState.Color8)],
   large_sprites: Vector[VideoState.Sprite],
@@ -77,10 +77,14 @@ object VideoState {
     BgCell(color_pair_1, color_pair_2, x_flip, y_flip, tile_index)
   }
 
-  case class TextCell(
-    text_char_tile_index: Byte,
-    on: Boolean
+  case class TextCharCell(
+    on: Boolean,
+    text_char_tile_index: Byte
   )
+
+  def makeTextCharCell(byte: Int): TextCharCell = {
+    TextCharCell((byte >> 7) > 0, (byte & 0x7F).toByte)
+  }
 
   case class Sprite(
     color_pair_1: Byte,

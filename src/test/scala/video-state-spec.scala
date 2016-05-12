@@ -160,6 +160,16 @@ class VideoStateSpec extends FunSpec with Matchers {
       }
     }
 
+    describe("makeTextCharCell") {
+      it("creates a TextCharCell") {
+        //                  on = true  index = 120 = 0x78
+        val c = Integer.parseInt("1" + "01111000", 2).toChar
+        VideoState.makeTextCharCell(c) should === (
+          VideoState.TextCharCell(true, 120.toByte)
+        )
+      }
+    }
+
     describe("Color8 class") {
       describe("toColor") {
         type SixInts = (Int, Int, Int, Int, Int, Int)
