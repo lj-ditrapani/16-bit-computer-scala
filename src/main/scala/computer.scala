@@ -1,5 +1,6 @@
 package info.ditrapani.ljdcomputer
 
+import info.ditrapani.ljdcomputer.video.Video
 import scalafx.scene.paint.Color
 
 case class Computer(cpu: Cpu, ram: Vector[Char], video: Video) {

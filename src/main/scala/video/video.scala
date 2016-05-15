@@ -1,4 +1,4 @@
-package info.ditrapani.ljdcomputer
+package info.ditrapani.ljdcomputer.video
 
 import scalafx.scene.paint.Color
 

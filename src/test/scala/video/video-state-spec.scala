@@ -1,4 +1,4 @@
-package info.ditrapani.ljdcomputer
+package info.ditrapani.ljdcomputer.video
 
 import org.scalatest.{FunSpec, Matchers}
 import scalafx.scene.paint.Color
@@ -162,7 +162,7 @@ class VideoStateSpec extends FunSpec with Matchers {
         //        15       14    true  false      60
         val s1 = "1111" + "1110" + "1" + "0" + "111100"
         runTest(s1, 15, 14, true, false, 60)
-        //        14       13    false  true      6 
+        //        14       13    false  true      6
         val s2 = "1110" + "1101" + "0" + "1" + "000110"
         runTest(s2, 14, 13, false, true, 6)
       }

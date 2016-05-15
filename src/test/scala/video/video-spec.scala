@@ -1,4 +1,4 @@
-package info.ditrapani.ljdcomputer
+package info.ditrapani.ljdcomputer.video
 
 import org.scalatest.{FunSpec, Matchers}
 import scalafx.scene.paint.Color

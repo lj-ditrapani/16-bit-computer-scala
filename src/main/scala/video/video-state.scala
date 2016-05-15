@@ -1,4 +1,4 @@
-package info.ditrapani.ljdcomputer
+package info.ditrapani.ljdcomputer.video
 
 import scalafx.scene.paint.Color
 
@@ -21,6 +21,13 @@ object VideoState {
   type LargeTile = Vector[Vector[(Boolean, Boolean)]]
   type SmallTile = Vector[Vector[(Boolean, Boolean)]]
   type TextCharTile = Vector[Vector[Boolean]]
+  type Ram = Vector[Char]
+
+  /*
+  def make(tiles: Ram, cells: Ram, colors: Ram, sprites: Ram): VideoState = {
+    VideoState(Vector(), Vector(), Vector(), Vector(Vector())
+  }
+  */
 
   def toBits(c: Char): Seq[Boolean] = {
     15 to 0 by -1 map { (i) => ((c >> i) & 1) > 0 }
