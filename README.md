@@ -19,7 +19,6 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
-- Split VideoState file into video package sub files (tile, cell, sprite color)
 - Make base Spec class that all spec classes inherit from; refactor
 - VideoState.make(tiles, cells, colors, sprites)
 - components of VideoState
