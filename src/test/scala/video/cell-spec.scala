@@ -1,8 +1,6 @@
 package info.ditrapani.ljdcomputer.video
 
-import org.scalatest.{FunSpec, Matchers}
-
-class VideoCellSpec extends FunSpec with Matchers {
+class VideoCellSpec extends Spec {
   describe("BgCell.make") {
     it("creates a BgCell") {
       def runTest(

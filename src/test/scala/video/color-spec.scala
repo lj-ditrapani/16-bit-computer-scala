@@ -1,9 +1,8 @@
 package info.ditrapani.ljdcomputer.video
 
-import org.scalatest.{FunSpec, Matchers}
 import scalafx.scene.paint.Color
 
-class VideoColorSpec extends FunSpec with Matchers {
+class VideoColorSpec extends Spec {
   describe("Color8 class") {
     describe("toColor") {
       type SixInts = (Int, Int, Int, Int, Int, Int)

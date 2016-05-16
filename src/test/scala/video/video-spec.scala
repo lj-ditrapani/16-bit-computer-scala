@@ -1,9 +1,8 @@
 package info.ditrapani.ljdcomputer.video
 
-import org.scalatest.{FunSpec, Matchers}
 import scalafx.scene.paint.Color
 
-class VideoSpec extends FunSpec with Matchers {
+class VideoSpec extends Spec {
   describe("Video class") {
     describe("buffer") {
       it("returns all disabledBuffer if video is disabled") {

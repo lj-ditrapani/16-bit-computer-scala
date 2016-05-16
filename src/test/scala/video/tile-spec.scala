@@ -1,8 +1,6 @@
 package info.ditrapani.ljdcomputer.video
 
-import org.scalatest.{FunSpec, Matchers}
-
-class VideoTileSpec extends FunSpec with Matchers {
+class VideoTileSpec extends Spec {
   describe("makeLargeTile") {
     it("fails if tile_ram < 32") {
       a [AssertionError] should be thrownBy {

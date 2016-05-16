@@ -1,8 +1,6 @@
 package info.ditrapani.ljdcomputer
 
-import org.scalatest.{FunSpec, Matchers}
-
-class ComputerSpec extends FunSpec with Matchers {
+class ComputerSpec extends Spec {
   describe("Computer object") {
     type LoadTest = (Vector[Char], Int, Int, Int, Int, Int, Int, Int, String)
     val rom_size = 64 * 1024

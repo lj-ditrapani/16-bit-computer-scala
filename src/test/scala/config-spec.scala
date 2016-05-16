@@ -1,8 +1,6 @@
 package info.ditrapani.ljdcomputer
 
-import org.scalatest.{FunSpec, Matchers}
-
-class ConfigSpec extends FunSpec with Matchers {
+class ConfigSpec extends Spec {
   describe("Config Class") {
     it("has instance values") {
       val config = Config.emptyConfig

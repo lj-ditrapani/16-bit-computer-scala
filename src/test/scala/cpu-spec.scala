@@ -1,13 +1,4 @@
-package info.ditrapani.computer16bit
+package info.ditrapani.ljdcomputer
 
-import org.scalatest.{FunSpec, Matchers}
-
-class Cpu extends FunSpec with Matchers {
-  describe("Greeter") {
-    describe("greet") {
-      it("greets") {
-        true should be (true)
-      }
-    }
-  }
+class CpuSpec extends Spec {
 }

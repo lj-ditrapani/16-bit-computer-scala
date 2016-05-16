@@ -1,8 +1,6 @@
 package info.ditrapani.ljdcomputer
 
-import org.scalatest.{FunSpec, Matchers}
-
-class BinFileReaderSpec extends FunSpec with Matchers {
+class BinFileReaderSpec extends Spec {
   describe("read") {
     it("returns Success(byte_vector) if no issues") {
       val file = "src/test/resources/abcd.bin"
@@ -19,7 +17,7 @@ class BinFileReaderSpec extends FunSpec with Matchers {
   }
 }
 
-class ByteProcessorSpec extends FunSpec with Matchers {
+class ByteProcessorSpec extends Spec {
   def process(byte_array: Array[Byte]): BinFileReader.IfChars = {
     new BinFileReader.ByteProcessor(byte_array).process()
   }
@@ -55,7 +53,7 @@ class ByteProcessorSpec extends FunSpec with Matchers {
   }
 }
 
-class BinCheckSpec extends FunSpec with Matchers {
+class BinCheckSpec extends Spec {
   val fail_check = BinFileReader.Fail("foo")
 
   describe("Fail class") {

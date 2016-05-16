@@ -1,8 +1,6 @@
 package info.ditrapani.ljdcomputer.video
 
-import org.scalatest.{FunSpec, Matchers}
-
-class VideoSpriteSpec extends FunSpec with Matchers {
+class VideoSpriteSpec extends Spec {
   describe("makeSprite") {
     it("fails if word_pair < 2") {
       a [AssertionError] should be thrownBy {
