@@ -3,24 +3,21 @@ package info.ditrapani.ljdcomputer.video
 import scalafx.scene.paint.Color
 
 case class VideoState(
-  large_tiles: Vector[VideoState.LargeTile],
-  small_tiles: Vector[VideoState.SmallTile],
-  text_char_tiles: Vector[VideoState.TextCharTile],
-  bg_cells: Vector[Vector[VideoState.BgCell]],
-  text_cells: Vector[Vector[VideoState.TextCharCell]],
-  bg_colors: Vector[(VideoState.Color8, VideoState.Color8)],
-  fg_colors: Vector[(VideoState.Color8, VideoState.Color8)],
-  large_sprites: Vector[VideoState.Sprite],
-  small_sprites: Vector[VideoState.Sprite]
+  large_tiles: Vector[Tile.LargeTile],
+  small_tiles: Vector[Tile.SmallTile],
+  text_char_tiles: Vector[Tile.TextCharTile],
+  bg_cells: Vector[Vector[Cell.BgCell]],
+  text_cells: Vector[Vector[Cell.TextCharCell]],
+  bg_colors: Vector[(Color8, Color8)],
+  fg_colors: Vector[(Color8, Color8)],
+  large_sprites: Vector[Sprite],
+  small_sprites: Vector[Sprite]
 ) {
   type VideoBuffer = Vector[Vector[Color]]
   def buffer: VideoBuffer = Vector(Vector())
 }
 
 object VideoState {
-  type LargeTile = Vector[Vector[(Boolean, Boolean)]]
-  type SmallTile = Vector[Vector[(Boolean, Boolean)]]
-  type TextCharTile = Vector[Vector[Boolean]]
   type Ram = Vector[Char]
 
   /*
@@ -29,52 +26,6 @@ object VideoState {
   }
   */
 
-  def toBits(c: Char): Seq[Boolean] = {
-    15 to 0 by -1 map { (i) => ((c >> i) & 1) > 0 }
-  }
-
-  def makeLargeTile(tile_ram: Vector[Char]): LargeTile = {
-    assert(tile_ram.size == 32)
-
-    def toPixelRow(c: Char): Iterator[(Boolean, Boolean)] = {
-      toBits(c).grouped(2).map { (v) => (v(0), v(1)) }
-    }
-
-    tile_ram.grouped(2).map { (pair) =>
-      (toPixelRow(pair(0)) ++ toPixelRow(pair(1))).toVector
-    }.toVector
-  }
-
-  def makeSmallTile(tile_ram: Vector[Char]): SmallTile = {
-    assert(tile_ram.size == 8)
-
-    def toPixelRow(c: Char): Iterator[(Boolean, Boolean)] = {
-      toBits(c).grouped(2).map { (v) => (v(0), v(1)) }
-    }
-
-    tile_ram.map { Vector() ++ toPixelRow(_) }.toVector
-  }
-
-  def makeTextCharTile(tile_ram: Vector[Char]): TextCharTile = {
-    assert(tile_ram.size == 4)
-
-    def toPixelRow(c: Int): Vector[Boolean] = {
-      (7 to 0 by -1 map { (i: Int) => ((c >> i) & 1) > 0 }).to[Vector]
-    }
-
-    tile_ram.flatMap {
-      (char) => Vector(toPixelRow(char >> 8), toPixelRow(char >> 0))
-    }.toVector
-  }
-
-  case class BgCell(
-    color_pair_1: Byte,
-    color_pair_2: Byte,
-    x_flip: Boolean,
-    y_flip: Boolean,
-    large_tile_index: Byte
-  )
-
   def getColorXYandIndex(word: Char): (Byte, Byte, Boolean, Boolean, Byte) = {
     val color_pair_1 = (word >> 12).toByte
     val color_pair_2 = ((word >> 8) & 0xF).toByte
@@ -82,86 +33,5 @@ object VideoState {
     val y_flip = ((word >> 6) & 1) > 0
     val tile_index = (word & 0x3F).toByte
     (color_pair_1, color_pair_2, x_flip, y_flip, tile_index)
-  }
-
-  def makeBgCell(word: Char): BgCell = {
-    val (color_pair_1, color_pair_2, x_flip, y_flip, tile_index) =
-      getColorXYandIndex(word)
-    BgCell(color_pair_1, color_pair_2, x_flip, y_flip, tile_index)
-  }
-
-  case class TextCharCell(
-    on: Boolean,
-    text_char_tile_index: Byte
-  )
-
-  def makeTextCharCell(byte: Int): TextCharCell = {
-    assert(byte < 256)
-    assert(byte > -1)
-    TextCharCell((byte >> 7) > 0, (byte & 0x7F).toByte)
-  }
-
-  case class Sprite(
-    color_pair_1: Byte,
-    color_pair_2: Byte,
-    x_flip: Boolean,
-    y_flip: Boolean,
-    tile_index: Byte,
-    x_position: Byte,
-    y_position: Byte,
-    on: Boolean
-  )
-
-  def getXYpos(word: Char, large_sprite: Boolean): (Byte, Byte) = {
-    val mask =
-      if (large_sprite)
-        0x0F
-      else
-        0x1F
-    (((word >> 8) & mask).toByte, (word & mask).toByte)
-  }
-
-  def makeLargeSprite(word_pair: Vector[Char]): Sprite = {
-    makeSprite(word_pair, true)
-  }
-
-  def makeSmallSprite(word_pair: Vector[Char]): Sprite = {
-    makeSprite(word_pair, false)
-  }
-
-  def makeSprite(word_pair: Vector[Char], large_sprite: Boolean): Sprite = {
-    assert(word_pair.size == 2)
-    val (w1, w2) = (word_pair(0), word_pair(1))
-    val (color_pair_1, color_pair_2, x_flip, y_flip, tile_index) =
-      getColorXYandIndex(w1)
-    val (x_position, y_position) = getXYpos(w2, large_sprite)
-    val on: Boolean = ((w2 >> 7) & 1) > 0
-    Sprite(
-      color_pair_1, color_pair_2, x_flip, y_flip,
-      tile_index, x_position, y_position, on
-    )
-  }
-
-  case class Color8(red: Byte, green: Byte, blue: Byte) {
-    def toColor: Color = Color.rgb(
-      Color8.convert3bitTo8bit(red),
-      Color8.convert3bitTo8bit(green),
-      Color8.convert2bitTo8bit(blue)
-    )
-  }
-
-  object Color8 {
-    def make(char: Char): Color8 = {
-      val r = (char >> 5).toByte
-      val g = ((char & 28) >> 2).toByte
-      val b = (char & 3).toByte
-      Color8(r, g, b)
-    }
-
-    def convert3bitTo8bit(byte: Byte): Int =
-      (byte << 5) + (byte << 2) + (byte >> 1)
-
-    def convert2bitTo8bit(byte: Byte): Int =
-      (byte << 6) + (byte << 4) + (byte << 2) + byte
   }
 }
