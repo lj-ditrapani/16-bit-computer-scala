@@ -1,6 +1,177 @@
 package info.ditrapani.ljdcomputer.video
 
 class VideoTileSpec extends Spec {
+  def LargeTestTileRam: Tile.Ram = {
+    val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
+    val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
+    val incThenDec = Integer.parseInt(inc + dec, 2).toChar
+    val decThenInc = Integer.parseInt(dec + inc, 2).toChar
+    Vector(incThenDec, decThenInc) ++
+      Vector.fill(28)(0xF0F0.toChar) ++
+      Vector(decThenInc, incThenDec)
+  }
+
+  def SmallTestTileRam: Tile.Ram = {
+    val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
+    val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
+    val incThenDec = Integer.parseInt(inc + dec, 2).toChar
+    val decThenInc = Integer.parseInt(dec + inc, 2).toChar
+    Vector(incThenDec, decThenInc) ++
+      Vector.fill(4)(0xF0F0.toChar) ++
+      Vector(decThenInc, incThenDec)
+  }
+
+  def TextCharTestTileRam: Tile.Ram = {
+    val r1 = Integer.parseInt("0110011001100110", 2).toChar
+    val r2 = Integer.parseInt("0000000011111111", 2).toChar
+    Vector(r1) ++
+      Vector.fill(2)(0xF0F0.toChar) ++
+      Vector(r2)
+  }
+
+  def checkLargeTile(tile: Tile.LargeTile): Unit = {
+    tile.size should === (16)
+    tile(0).size should === (16)
+    tile(15).size should === (16)
+    tile(0) should === (Vector(
+      (false, false), (false, true), (true, false), (true, true),
+      (true, true), (true, false), (false, true), (false, false),
+      (true, true), (true, false), (false, true), (false, false),
+      (false, false), (false, true), (true, false), (true, true)
+    ))
+    tile(1) should === (Vector(
+      (true, true), (true, true), (false, false), (false, false),
+      (true, true), (true, true), (false, false), (false, false),
+      (true, true), (true, true), (false, false), (false, false),
+      (true, true), (true, true), (false, false), (false, false)
+    ))
+    tile(14) should === (Vector(
+      (true, true), (true, true), (false, false), (false, false),
+      (true, true), (true, true), (false, false), (false, false),
+      (true, true), (true, true), (false, false), (false, false),
+      (true, true), (true, true), (false, false), (false, false)
+    ))
+    tile(15) should === (Vector(
+      (true, true), (true, false), (false, true), (false, false),
+      (false, false), (false, true), (true, false), (true, true),
+      (false, false), (false, true), (true, false), (true, true),
+      (true, true), (true, false), (false, true), (false, false)
+    ))
+  }
+
+  def checkSmallTile(tile: Tile.SmallTile): Unit = {
+    tile.size should === (8)
+    tile(0).size should === (8)
+    tile(7).size should === (8)
+    tile(0) should === (Vector(
+      (false, false), (false, true), (true, false), (true, true),
+      (true, true), (true, false), (false, true), (false, false)
+    ))
+    tile(1) should === (Vector(
+      (true, true), (true, false), (false, true), (false, false),
+      (false, false), (false, true), (true, false), (true, true)
+    ))
+    tile(2) should === (Vector(
+      (true, true), (true, true), (false, false), (false, false),
+      (true, true), (true, true), (false, false), (false, false)
+    ))
+    tile(6) should === (Vector(
+      (true, true), (true, false), (false, true), (false, false),
+      (false, false), (false, true), (true, false), (true, true)
+    ))
+    tile(7) should === (Vector(
+      (false, false), (false, true), (true, false), (true, true),
+      (true, true), (true, false), (false, true), (false, false)
+    ))
+  }
+
+  def checkTextCharTile(tile: Tile.TextCharTile): Unit = {
+    tile.size should === (8)
+    tile(0).size should === (8)
+    tile(7).size should === (8)
+    tile(0) should === (Vector(
+      false, true, true, false, false, true, true, false
+    ))
+    tile(1) should === (Vector(
+      false, true, true, false, false, true, true, false
+    ))
+    tile(2) should === (Vector(
+      true, true, true, true, false, false, false, false
+    ))
+    tile(6) should === (Vector(
+      false, false, false, false, false, false, false, false
+    ))
+    tile(7) should === (Vector(
+      true, true, true, true, true, true, true, true
+    ))
+  }
+
+  describe("makeLargeTileSet") {
+    it("fails if ram < 2,048") {
+      an [AssertionError] should be thrownBy {
+        Tile.makeLargeTileSet(Vector.fill(2047)(0.toChar))
+      }
+    }
+
+    it("fails if ram > 2,048") {
+      an [AssertionError] should be thrownBy {
+        Tile.makeLargeTileSet(Vector.fill(2049)(0.toChar))
+      }
+    }
+
+    it("creates a large tile set") {
+      val ram = 0.until(64).flatMap((i) => LargeTestTileRam).to[Vector]
+      val tile_set = Tile.makeLargeTileSet(ram)
+      tile_set.size should === (64)
+      checkLargeTile(tile_set.head)
+      checkLargeTile(tile_set.last)
+    }
+  }
+
+  describe("makeSmallTileSet") {
+    it("fails if ram < 512") {
+      an [AssertionError] should be thrownBy {
+        Tile.makeSmallTileSet(Vector.fill(511)(0.toChar))
+      }
+    }
+
+    it("fails if ram > 512") {
+      an [AssertionError] should be thrownBy {
+        Tile.makeSmallTileSet(Vector.fill(513)(0.toChar))
+      }
+    }
+
+    it("creates a small tile set") {
+      val ram = 0.until(64).flatMap((i) => SmallTestTileRam).to[Vector]
+      val tile_set = Tile.makeSmallTileSet(ram)
+      tile_set.size should === (64)
+      checkSmallTile(tile_set.head)
+      checkSmallTile(tile_set.last)
+    }
+  }
+
+  describe("makeTextCharTileSet") {
+    it("fails if ram < 512") {
+      an [AssertionError] should be thrownBy {
+        Tile.makeTextCharTileSet(Vector.fill(511)(0.toChar))
+      }
+    }
+
+    it("fails if ram > 512") {
+      an [AssertionError] should be thrownBy {
+        Tile.makeTextCharTileSet(Vector.fill(513)(0.toChar))
+      }
+    }
+
+    it("creates a text char tile set") {
+      val ram = 0.until(128).flatMap((i) => TextCharTestTileRam).to[Vector]
+      val tile_set = Tile.makeTextCharTileSet(ram)
+      tile_set.size should === (128)
+      checkTextCharTile(tile_set.head)
+      checkTextCharTile(tile_set.last)
+    }
+  }
+
   describe("makeLargeTile") {
     it("fails if tile_ram < 32") {
       a [AssertionError] should be thrownBy {
@@ -15,42 +186,8 @@ class VideoTileSpec extends Spec {
     }
 
     it("returns a 16 x 16 tile of 2-bit per pixel values") {
-      val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
-      val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
-      val incThenDec = Integer.parseInt(inc + dec, 2).toChar
-      val decThenInc = Integer.parseInt(dec + inc, 2).toChar
-      val tile = Tile.makeLargeTile(
-        Vector(incThenDec, decThenInc) ++
-        Vector.fill(28)(0xF0F0.toChar) ++
-        Vector(decThenInc, incThenDec)
-      )
-      tile.size should === (16)
-      tile(0).size should === (16)
-      tile(15).size should === (16)
-      tile(0) should === (Vector(
-        (false, false), (false, true), (true, false), (true, true),
-        (true, true), (true, false), (false, true), (false, false),
-        (true, true), (true, false), (false, true), (false, false),
-        (false, false), (false, true), (true, false), (true, true)
-      ))
-      tile(1) should === (Vector(
-        (true, true), (true, true), (false, false), (false, false),
-        (true, true), (true, true), (false, false), (false, false),
-        (true, true), (true, true), (false, false), (false, false),
-        (true, true), (true, true), (false, false), (false, false)
-      ))
-      tile(14) should === (Vector(
-        (true, true), (true, true), (false, false), (false, false),
-        (true, true), (true, true), (false, false), (false, false),
-        (true, true), (true, true), (false, false), (false, false),
-        (true, true), (true, true), (false, false), (false, false)
-      ))
-      tile(15) should === (Vector(
-        (true, true), (true, false), (false, true), (false, false),
-        (false, false), (false, true), (true, false), (true, true),
-        (false, false), (false, true), (true, false), (true, true),
-        (true, true), (true, false), (false, true), (false, false)
-      ))
+      val tile = Tile.makeLargeTile(LargeTestTileRam)
+      checkLargeTile(tile)
     }
   }
 
@@ -68,38 +205,8 @@ class VideoTileSpec extends Spec {
     }
 
     it("returns an 8 x 8 tile of 2-bit per pixel values") {
-      val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
-      val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
-      val incThenDec = Integer.parseInt(inc + dec, 2).toChar
-      val decThenInc = Integer.parseInt(dec + inc, 2).toChar
-      val tile = Tile.makeSmallTile(
-        Vector(incThenDec, decThenInc) ++
-        Vector.fill(4)(0xF0F0.toChar) ++
-        Vector(decThenInc, incThenDec)
-      )
-      tile.size should === (8)
-      tile(0).size should === (8)
-      tile(7).size should === (8)
-      tile(0) should === (Vector(
-        (false, false), (false, true), (true, false), (true, true),
-        (true, true), (true, false), (false, true), (false, false)
-      ))
-      tile(1) should === (Vector(
-        (true, true), (true, false), (false, true), (false, false),
-        (false, false), (false, true), (true, false), (true, true)
-      ))
-      tile(2) should === (Vector(
-        (true, true), (true, true), (false, false), (false, false),
-        (true, true), (true, true), (false, false), (false, false)
-      ))
-      tile(6) should === (Vector(
-        (true, true), (true, false), (false, true), (false, false),
-        (false, false), (false, true), (true, false), (true, true)
-      ))
-      tile(7) should === (Vector(
-        (false, false), (false, true), (true, false), (true, true),
-        (true, true), (true, false), (false, true), (false, false)
-      ))
+      val tile = Tile.makeSmallTile(SmallTestTileRam)
+      checkSmallTile(tile)
     }
   }
 
@@ -117,31 +224,8 @@ class VideoTileSpec extends Spec {
     }
 
     it("returns an 8 x 8 tile of 1-bit per pixel values") {
-      val r1 = Integer.parseInt("0110011001100110", 2).toChar
-      val r2 = Integer.parseInt("0000000011111111", 2).toChar
-      val tile = Tile.makeTextCharTile(
-        Vector(r1) ++
-        Vector.fill(2)(0xF0F0.toChar) ++
-        Vector(r2)
-      )
-      tile.size should === (8)
-      tile(0).size should === (8)
-      tile(7).size should === (8)
-      tile(0) should === (Vector(
-        false, true, true, false, false, true, true, false
-      ))
-      tile(1) should === (Vector(
-        false, true, true, false, false, true, true, false
-      ))
-      tile(2) should === (Vector(
-        true, true, true, true, false, false, false, false
-      ))
-      tile(6) should === (Vector(
-        false, false, false, false, false, false, false, false
-      ))
-      tile(7) should === (Vector(
-        true, true, true, true, true, true, true, true
-      ))
+      val tile = Tile.makeTextCharTile(TextCharTestTileRam)
+      checkTextCharTile(tile)
     }
   }
 }
