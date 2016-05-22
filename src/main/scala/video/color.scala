@@ -11,10 +11,12 @@ case class Color8(red: Byte, green: Byte, blue: Byte) {
 }
 
 object Color8 {
-  def apply(char: Char): Color8 = {
-    val r = (char >> 5).toByte
-    val g = ((char & 28) >> 2).toByte
-    val b = (char & 3).toByte
+  def apply(byte: Int): Color8 = {
+    assert(byte < 256)
+    assert(byte >= 0)
+    val r = (byte >> 5).toByte
+    val g = ((byte & 28) >> 2).toByte
+    val b = (byte & 3).toByte
     Color8(r, g, b)
   }
 
@@ -23,4 +25,11 @@ object Color8 {
 
   def convert2bitTo8bit(byte: Byte): Int =
     (byte << 6) + (byte << 4) + (byte << 2) + byte
+}
+
+object ColorPairs {
+  def apply(ram: Ram): Vector[(Color8, Color8)] = {
+    assert(ram.size == 16)
+    ram.map((char) => (Color8(char >> 8), Color8(char & 0xFF))).to[Vector]
+  }
 }

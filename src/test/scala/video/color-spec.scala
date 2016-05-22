@@ -29,9 +29,9 @@ class VideoColorSpec extends Spec {
   describe("Color8 object") {
     describe("apply") {
       it("creates a Color8") {
-        val char1 = Integer.parseInt("101" + "100" + "11", 2).toChar
+        val char1 = Integer.parseInt("101" + "100" + "11", 2)
         Color8(char1) should ===(Color8(5, 4, 3))
-        val char2 = Integer.parseInt("110" + "111" + "00", 2).toChar
+        val char2 = Integer.parseInt("110" + "111" + "00", 2)
         Color8(char2) should ===(Color8(6, 7, 0))
       }
     }
@@ -74,6 +74,18 @@ class VideoColorSpec extends Spec {
       }
 
       for (test <- tests) runTest(test)
+    }
+  }
+
+  describe("ColorPairs.apply") {
+    it("returns a vector of 16 color pairs") {
+      //         [ R       G       B ]  [ R       G       B ]
+      val bits = "111" + "110" + "11" + "011" + "010" + "01"
+      val char = Integer.parseInt(bits, 2).toChar
+      val ram = Vector.fill(16)(0.toChar).updated(1, char)
+      val color_pairs = ColorPairs(ram)
+      color_pairs.size should ===(16)
+      color_pairs(1) should ===((Color8(7, 6, 3), Color8(3, 2, 1)))
     }
   }
 }

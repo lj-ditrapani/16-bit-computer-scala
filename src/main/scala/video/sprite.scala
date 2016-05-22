@@ -49,10 +49,11 @@ object SmallSprite {
 object Sprite {
   def getXYpos(word: Char, large_sprite: Boolean): (Byte, Byte) = {
     val mask =
-      if (large_sprite)
+      if (large_sprite) {
         0x0F
-      else
+      } else {
         0x1F
+      }
     (((word >> 8) & mask).toByte, (word & mask).toByte)
   }
 
