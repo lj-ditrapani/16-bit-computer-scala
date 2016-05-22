@@ -19,5 +19,6 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
-- Complete Video buffer method
 - Complete VideoState buffer method
+- Video:  make built-in tiles
+- Clean up Video buffer method

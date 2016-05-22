@@ -13,15 +13,18 @@ case class VideoState(
   large_sprites: Vector[Sprite],
   small_sprites: Vector[Sprite]
 ) {
-  def buffer: VideoBuffer = Vector(Vector())
+  def buffer: VideoBuffer =
+    (for (i <- 0 until 240) yield {
+      (for (j <- 0 until 256) yield Color.rgb(200, 200, 255)).to[Vector]
+    }).to[Vector]
 }
 
 object VideoState {
   def apply(tiles: Ram, cells: Ram, colors: Ram, sprites: Ram): VideoState = {
-    assert(tiles.size == 3072)    // 2048 + 512 + 512
-    assert(cells.size == 736)     // 240 + 16 + 480
-    assert(colors.size == 32)     // 16 + 16
-    assert(sprites.size == 256)   // 128 + 128
+    assert(tiles.size == 3072)          // 2048 + 512 + 512
+    assert(cells.size == 736)           // 240 + 16 + 480
+    assert(colors.size == 32)           // 16 + 16
+    assert(sprites.size == 256)         // 128 + 128
     val (large_tiles, other_tiles) = tiles.splitAt(2048)
     val (small_tiles, text_char_tiles) = other_tiles.splitAt(512)
     val (bg_cells, text_cells) = cells.splitAt(256)
