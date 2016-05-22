@@ -3,9 +3,9 @@ package info.ditrapani.ljdcomputer.video
 import scalafx.scene.paint.Color
 
 case class VideoState(
-  large_tiles: Vector[Tile.LargeTile],
-  small_tiles: Vector[Tile.SmallTile],
-  text_char_tiles: Vector[Tile.TextCharTile],
+  large_tiles: Vector[LargeTile],
+  small_tiles: Vector[SmallTile],
+  text_char_tiles: Vector[TextCharTile],
   bg_cells: Vector[Vector[BgCell]],
   text_cells: Vector[Vector[TextCharCell]],
   bg_colors: Vector[(Color8, Color8)],
@@ -13,7 +13,6 @@ case class VideoState(
   large_sprites: Vector[Sprite],
   small_sprites: Vector[Sprite]
 ) {
-  type VideoBuffer = Vector[Vector[Color]]
   def buffer: VideoBuffer = Vector(Vector())
 }
 

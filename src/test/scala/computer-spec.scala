@@ -29,7 +29,7 @@ class ComputerSpec extends Spec {
           ram(ram_size - video_ram_size - 1) should === (mid_ram)
           ram(ram_size - video_ram_size) should === (start_video_ram)
           ram(ram_size - 1) should === (end_video_ram)
-          val video = computer.video
+          val video = computer.video_obj
           val video_ram = video.video_ram
           video_ram.size should === (video_ram_size)
           video_ram(0) should === (start_video_ram)
@@ -94,7 +94,7 @@ class ComputerSpec extends Spec {
                 Vector(enable_bits)
             }
           val computer: Computer = Computer.load(binary)
-          val video = computer.video
+          val video = computer.video_obj
           it(s"is_set $is_set enable $enable custom_tiles $custom_tiles") {
             video.enable should === (enable)
             video.custom_tiles should === (custom_tiles)

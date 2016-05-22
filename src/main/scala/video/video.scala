@@ -3,7 +3,7 @@ package info.ditrapani.ljdcomputer.video
 import scalafx.scene.paint.Color
 
 case class Video(video_ram: Vector[Char], enable: Boolean, custom_tiles: Boolean) {
-  def buffer: Video.VideoBuffer =
+  def buffer: VideoBuffer =
     if (enable) {
       // val (ram_tiles, cells, colors, sprites) = expload(video_ram)
       // tiles =

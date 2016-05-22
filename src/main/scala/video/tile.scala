@@ -1,28 +1,20 @@
 package info.ditrapani.ljdcomputer.video
 
 object Tile {
-  type LargeTileSet = Vector[LargeTile]
-  type SmallTileSet = Vector[SmallTile]
-  type TextCharTileSet = Vector[TextCharTile]
-  type LargeTile = Vector[Vector[(Boolean, Boolean)]]
-  type SmallTile = Vector[Vector[(Boolean, Boolean)]]
-  type TextCharTile = Vector[Vector[Boolean]]
-  type Ram = Vector[Char]
-
   def toBits(c: Char): Seq[Boolean] = {
     15 to 0 by -1 map { (i) => ((c >> i) & 1) > 0 }
   }
 }
 
 object LargeTileSet {
-  def apply(ram: Tile.Ram): Tile.LargeTileSet = {
+  def apply(ram: Ram): LargeTileSet = {
     assert(ram.size == 2048)
     ram.grouped(32).map(LargeTile(_)).to[Vector]
   }
 }
 
 object LargeTile {
-  def apply(tile_ram: Tile.Ram): Tile.LargeTile = {
+  def apply(tile_ram: Ram): LargeTile = {
     assert(tile_ram.size == 32)
 
     def toPixelRow(c: Char): Iterator[(Boolean, Boolean)] = {
@@ -36,14 +28,14 @@ object LargeTile {
 }
 
 object SmallTileSet {
-  def apply(ram: Tile.Ram): Tile.SmallTileSet = {
+  def apply(ram: Ram): SmallTileSet = {
     assert(ram.size == 512)
     ram.grouped(8).map(SmallTile(_)).to[Vector]
   }
 }
 
 object SmallTile {
-  def apply(tile_ram: Tile.Ram): Tile.SmallTile = {
+  def apply(tile_ram: Ram): SmallTile = {
     assert(tile_ram.size == 8)
 
     def toPixelRow(c: Char): Iterator[(Boolean, Boolean)] = {
@@ -55,14 +47,14 @@ object SmallTile {
 }
 
 object TextCharTileSet {
-  def apply(ram: Tile.Ram): Tile.TextCharTileSet = {
+  def apply(ram: Ram): TextCharTileSet = {
     assert(ram.size == 512)
     ram.grouped(4).map(TextCharTile(_)).to[Vector]
   }
 }
 
 object TextCharTile {
-  def apply(tile_ram: Tile.Ram): Tile.TextCharTile = {
+  def apply(tile_ram: Ram): TextCharTile = {
     assert(tile_ram.size == 4)
 
     def toPixelRow(c: Int): Vector[Boolean] = {

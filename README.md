@@ -19,11 +19,6 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
-- Make video package object
-    - package.scala in video dir
-    - package info.ditrapani.ljdcomputer
-    - package object {}
-    - Ram
 - VideoState.make(tiles, cells, colors, sprites)
 - components of VideoState
     - large_tiles: Vector[LargeTile],

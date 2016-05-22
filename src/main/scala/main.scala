@@ -8,7 +8,7 @@ import scalafx.animation.AnimationTimer
 import scala.util.{Try, Success, Failure}
 
 object Main extends JFXApp {
-  type VideoBuffer = Vector[Vector[Color]]
+  type VideoBuffer = video.VideoBuffer
 
   Config.load(parameters.unnamed, Map(parameters.named.toSeq: _*)) match {
     case Left(s) => printErrorHelpAndExit(s)

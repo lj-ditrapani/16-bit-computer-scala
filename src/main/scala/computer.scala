@@ -3,8 +3,8 @@ package info.ditrapani.ljdcomputer
 import info.ditrapani.ljdcomputer.video.Video
 import scalafx.scene.paint.Color
 
-case class Computer(cpu: Cpu, ram: Vector[Char], video: Video) {
-  type VideoBuffer = Vector[Vector[Color]]
+case class Computer(cpu: Cpu, ram: Vector[Char], video_obj: Video) {
+  type VideoBuffer = video.VideoBuffer
 
   def runFrame(key_press: Byte): (VideoBuffer, Computer) = {
     val ram2 = addKeyPress(key_press)
@@ -17,7 +17,7 @@ case class Computer(cpu: Cpu, ram: Vector[Char], video: Video) {
   def addKeyPress(key_press: Byte): Vector[Char] = ram
 
   def swapVideoRam(new_ram: Vector[Char]): (Video, Vector[Char]) =
-    (video, new_ram)
+    (video_obj, new_ram)
 }
 
 object Computer {

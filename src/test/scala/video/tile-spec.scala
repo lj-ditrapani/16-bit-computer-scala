@@ -1,7 +1,7 @@
 package info.ditrapani.ljdcomputer.video
 
 class VideoTileSpec extends Spec {
-  def LargeTestTileRam: Tile.Ram = {
+  def LargeTestTileRam: Ram = {
     val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
     val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
     val incThenDec = Integer.parseInt(inc + dec, 2).toChar
@@ -11,7 +11,7 @@ class VideoTileSpec extends Spec {
       Vector(decThenInc, incThenDec)
   }
 
-  def SmallTestTileRam: Tile.Ram = {
+  def SmallTestTileRam: Ram = {
     val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
     val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
     val incThenDec = Integer.parseInt(inc + dec, 2).toChar
@@ -21,7 +21,7 @@ class VideoTileSpec extends Spec {
       Vector(decThenInc, incThenDec)
   }
 
-  def TextCharTestTileRam: Tile.Ram = {
+  def TextCharTestTileRam: Ram = {
     val r1 = Integer.parseInt("0110011001100110", 2).toChar
     val r2 = Integer.parseInt("0000000011111111", 2).toChar
     Vector(r1) ++
@@ -29,7 +29,7 @@ class VideoTileSpec extends Spec {
       Vector(r2)
   }
 
-  def checkLargeTile(tile: Tile.LargeTile): Unit = {
+  def checkLargeTile(tile: LargeTile): Unit = {
     tile.size should === (16)
     tile(0).size should === (16)
     tile(15).size should === (16)
@@ -59,7 +59,7 @@ class VideoTileSpec extends Spec {
     ))
   }
 
-  def checkSmallTile(tile: Tile.SmallTile): Unit = {
+  def checkSmallTile(tile: SmallTile): Unit = {
     tile.size should === (8)
     tile(0).size should === (8)
     tile(7).size should === (8)
@@ -85,7 +85,7 @@ class VideoTileSpec extends Spec {
     ))
   }
 
-  def checkTextCharTile(tile: Tile.TextCharTile): Unit = {
+  def checkTextCharTile(tile: TextCharTile): Unit = {
     tile.size should === (8)
     tile(0).size should === (8)
     tile(7).size should === (8)
