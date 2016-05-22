@@ -35,13 +35,13 @@ object SpriteArray {
 }
 
 object LargeSprite {
-  def apply(word_pair: Vector[Char]): Sprite = {
+  def apply(word_pair: Ram): Sprite = {
     Sprite(word_pair, true)
   }
 }
 
 object SmallSprite {
-  def apply(word_pair: Vector[Char]): Sprite = {
+  def apply(word_pair: Ram): Sprite = {
     Sprite(word_pair, false)
   }
 }
@@ -57,7 +57,7 @@ object Sprite {
     (((word >> 8) & mask).toByte, (word & mask).toByte)
   }
 
-  def apply(word_pair: Vector[Char], large_sprite: Boolean): Sprite = {
+  def apply(word_pair: Ram, large_sprite: Boolean): Sprite = {
     assert(word_pair.size == 2)
     val (w1, w2) = (word_pair(0), word_pair(1))
     val (color_pair_1, color_pair_2, x_flip, y_flip, tile_index) =

@@ -2,7 +2,7 @@ package info.ditrapani.ljdcomputer.video
 
 import scalafx.scene.paint.Color
 
-case class Video(video_ram: Vector[Char], enable: Boolean, custom_tiles: Boolean) {
+case class Video(video_ram: Ram, enable: Boolean, custom_tiles: Boolean) {
   def buffer: VideoBuffer =
     if (enable) {
       // val (ram_tiles, cells, colors, sprites) = expload(video_ram)
@@ -27,7 +27,7 @@ object Video {
   type SmallTile = Vector[Vector[(Boolean, Boolean)]]
   type TextCharTile = Vector[Vector[Boolean]]
 
-  def make(ram: Vector[Char]): Video = {
+  def make(ram: Ram): Video = {
     val enable_bits = ram(0xDDF3)
     val enable: Boolean = (enable_bits & 2) > 0
     val custom_tiles: Boolean = (enable_bits & 4) > 0
