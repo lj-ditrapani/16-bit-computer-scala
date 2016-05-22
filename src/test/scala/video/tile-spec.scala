@@ -109,19 +109,19 @@ class VideoTileSpec extends Spec {
   describe("makeLargeTileSet") {
     it("fails if ram < 2,048") {
       an [AssertionError] should be thrownBy {
-        Tile.makeLargeTileSet(Vector.fill(2047)(0.toChar))
+        LargeTileSet(Vector.fill(2047)(0.toChar))
       }
     }
 
     it("fails if ram > 2,048") {
       an [AssertionError] should be thrownBy {
-        Tile.makeLargeTileSet(Vector.fill(2049)(0.toChar))
+        LargeTileSet(Vector.fill(2049)(0.toChar))
       }
     }
 
     it("creates a large tile set") {
       val ram = 0.until(64).flatMap((i) => LargeTestTileRam).to[Vector]
-      val tile_set = Tile.makeLargeTileSet(ram)
+      val tile_set = LargeTileSet(ram)
       tile_set.size should === (64)
       checkLargeTile(tile_set.head)
       checkLargeTile(tile_set.last)
@@ -131,19 +131,19 @@ class VideoTileSpec extends Spec {
   describe("makeSmallTileSet") {
     it("fails if ram < 512") {
       an [AssertionError] should be thrownBy {
-        Tile.makeSmallTileSet(Vector.fill(511)(0.toChar))
+        SmallTileSet(Vector.fill(511)(0.toChar))
       }
     }
 
     it("fails if ram > 512") {
       an [AssertionError] should be thrownBy {
-        Tile.makeSmallTileSet(Vector.fill(513)(0.toChar))
+        SmallTileSet(Vector.fill(513)(0.toChar))
       }
     }
 
     it("creates a small tile set") {
       val ram = 0.until(64).flatMap((i) => SmallTestTileRam).to[Vector]
-      val tile_set = Tile.makeSmallTileSet(ram)
+      val tile_set = SmallTileSet(ram)
       tile_set.size should === (64)
       checkSmallTile(tile_set.head)
       checkSmallTile(tile_set.last)
@@ -153,19 +153,19 @@ class VideoTileSpec extends Spec {
   describe("makeTextCharTileSet") {
     it("fails if ram < 512") {
       an [AssertionError] should be thrownBy {
-        Tile.makeTextCharTileSet(Vector.fill(511)(0.toChar))
+        TextCharTileSet(Vector.fill(511)(0.toChar))
       }
     }
 
     it("fails if ram > 512") {
       an [AssertionError] should be thrownBy {
-        Tile.makeTextCharTileSet(Vector.fill(513)(0.toChar))
+        TextCharTileSet(Vector.fill(513)(0.toChar))
       }
     }
 
     it("creates a text char tile set") {
       val ram = 0.until(128).flatMap((i) => TextCharTestTileRam).to[Vector]
-      val tile_set = Tile.makeTextCharTileSet(ram)
+      val tile_set = TextCharTileSet(ram)
       tile_set.size should === (128)
       checkTextCharTile(tile_set.head)
       checkTextCharTile(tile_set.last)
@@ -175,18 +175,18 @@ class VideoTileSpec extends Spec {
   describe("makeLargeTile") {
     it("fails if tile_ram < 32") {
       a [AssertionError] should be thrownBy {
-        Tile.makeLargeTile(Vector.fill(31)(0.toChar))
+        LargeTile(Vector.fill(31)(0.toChar))
       }
     }
 
     it("fails if tile_ram > 32") {
       a [AssertionError] should be thrownBy {
-        Tile.makeLargeTile(Vector.fill(33)(0.toChar))
+        LargeTile(Vector.fill(33)(0.toChar))
       }
     }
 
     it("returns a 16 x 16 tile of 2-bit per pixel values") {
-      val tile = Tile.makeLargeTile(LargeTestTileRam)
+      val tile = LargeTile(LargeTestTileRam)
       checkLargeTile(tile)
     }
   }
@@ -194,18 +194,18 @@ class VideoTileSpec extends Spec {
   describe("makeSmallTile") {
     it("fails if tile_ram < 8") {
       a [AssertionError] should be thrownBy {
-        Tile.makeSmallTile(Vector.fill(7)(0.toChar))
+        SmallTile(Vector.fill(7)(0.toChar))
       }
     }
 
     it("fails if tile_ram > 8") {
       a [AssertionError] should be thrownBy {
-        Tile.makeSmallTile(Vector.fill(9)(0.toChar))
+        SmallTile(Vector.fill(9)(0.toChar))
       }
     }
 
     it("returns an 8 x 8 tile of 2-bit per pixel values") {
-      val tile = Tile.makeSmallTile(SmallTestTileRam)
+      val tile = SmallTile(SmallTestTileRam)
       checkSmallTile(tile)
     }
   }
@@ -213,18 +213,18 @@ class VideoTileSpec extends Spec {
   describe("makeTextCharTile") {
     it("fails if tile_ram < 4") {
       a [AssertionError] should be thrownBy {
-        Tile.makeTextCharTile(Vector.fill(3)(0.toChar))
+        TextCharTile(Vector.fill(3)(0.toChar))
       }
     }
 
     it("fails if tile_ram > 4") {
       a [AssertionError] should be thrownBy {
-        Tile.makeTextCharTile(Vector.fill(5)(0.toChar))
+        TextCharTile(Vector.fill(5)(0.toChar))
       }
     }
 
     it("returns an 8 x 8 tile of 1-bit per pixel values") {
-      val tile = Tile.makeTextCharTile(TextCharTestTileRam)
+      val tile = TextCharTile(TextCharTestTileRam)
       checkTextCharTile(tile)
     }
   }

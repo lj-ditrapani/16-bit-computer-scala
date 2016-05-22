@@ -9,7 +9,7 @@ case class BgCell(
 )
 
 object BgCell {
-  def make(word: Char): BgCell = {
+  def apply(word: Char): BgCell = {
     val (color_pair_1, color_pair_2, x_flip, y_flip, tile_index) =
       VideoState.getColorXYandIndex(word)
     BgCell(color_pair_1, color_pair_2, x_flip, y_flip, tile_index)
@@ -22,7 +22,7 @@ case class TextCharCell(
 )
 
 object TextCharCell {
-  def make(byte: Int): TextCharCell = {
+  def apply(byte: Int): TextCharCell = {
     assert(byte < 256)
     assert(byte > -1)
     TextCharCell((byte >> 7) > 0, (byte & 0x7F).toByte)

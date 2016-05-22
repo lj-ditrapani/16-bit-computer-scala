@@ -11,7 +11,7 @@ case class Color8(red: Byte, green: Byte, blue: Byte) {
 }
 
 object Color8 {
-  def make(char: Char): Color8 = {
+  def apply(char: Char): Color8 = {
     val r = (char >> 5).toByte
     val g = ((char & 28) >> 2).toByte
     val b = (char & 3).toByte

@@ -27,12 +27,12 @@ class VideoColorSpec extends Spec {
   }
 
   describe("Color8 object") {
-    describe("make") {
+    describe("apply") {
       it("creates a Color8") {
         val char1 = Integer.parseInt("101" + "100" + "11", 2).toChar
-        Color8.make(char1) should ===(Color8(5, 4, 3))
+        Color8(char1) should ===(Color8(5, 4, 3))
         val char2 = Integer.parseInt("110" + "111" + "00", 2).toChar
-        Color8.make(char2) should ===(Color8(6, 7, 0))
+        Color8(char2) should ===(Color8(6, 7, 0))
       }
     }
 
