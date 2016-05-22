@@ -17,13 +17,28 @@ case class VideoState(
 }
 
 object VideoState {
-  type Ram = Vector[Char]
-
-  /*
-  def make(tiles: Ram, cells: Ram, colors: Ram, sprites: Ram): VideoState = {
-    VideoState(Vector(), Vector(), Vector(), Vector(Vector())
+  def apply(tiles: Ram, cells: Ram, colors: Ram, sprites: Ram): VideoState = {
+    assert(tiles.size == 3072)    // 2048 + 512 + 512
+    assert(cells.size == 736)     // 240 + 16 + 480
+    assert(colors.size == 32)     // 16 + 16
+    assert(sprites.size == 256)   // 128 + 128
+    val (large_tiles, other_tiles) = tiles.splitAt(2048)
+    val (small_tiles, text_char_tiles) = other_tiles.splitAt(512)
+    val (bg_cells, text_cells) = cells.splitAt(256)
+    val (bg_colors, sprite_colors) = colors.splitAt(16)
+    val (large_sprites, small_sprites) = sprites.splitAt(128)
+    VideoState(
+      LargeTileSet(large_tiles),
+      SmallTileSet(small_tiles),
+      TextCharTileSet(text_char_tiles),
+      BgCellGrid(bg_cells.take(240)),   // 16 unused cells in 256 block
+      TextCharCellGrid(text_cells),
+      ColorPairs(bg_colors),
+      ColorPairs(sprite_colors),
+      LargeSpriteArray(large_sprites),
+      SmallSpriteArray(small_sprites)
+    )
   }
-  */
 
   def getColorXYandIndex(word: Char): (Byte, Byte, Boolean, Boolean, Byte) = {
     val color_pair_1 = (word >> 12).toByte
