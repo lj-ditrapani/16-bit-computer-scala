@@ -19,20 +19,5 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
-- VideoState.make(tiles, cells, colors, sprites)
-- components of VideoState
-    - large_tiles: Vector[LargeTile],
-    - small_tiles: Vector[SmallTile],
-    - text_char_tiles: Vector[TextCharTile],
-    - bg_cells: Vector[Vector[BgCell]],
-    - text_cells: Vector[Vector[TextCell]],
-    - bg_colors: Vector[(Color8, Color8)],
-    - fg_colors: Vector[(Color8, Color8)],
-    - large_sprites: Vector[Sprite],
-    - small_sprites: Vector[Sprite]
-- VideoState.make
-    - expload ram into ram blocks
-    - make Vector of components from ram block
-      (makeVector method on component object)
-    - make component from ram cells
-      (make method on component object)
+- Complete Video buffer method
+- Complete VideoState buffer method
