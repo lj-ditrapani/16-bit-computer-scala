@@ -11,6 +11,29 @@ case class Sprite(
   on: Boolean
 )
 
+object LargeSpriteArray {
+  val makeLargeSprite = LargeSprite.apply _
+
+  def apply(ram: Ram): Vector[Sprite] = {
+    SpriteArray(ram, makeLargeSprite)
+  }
+}
+
+object SmallSpriteArray {
+  val makeSmallSprite = SmallSprite.apply _
+
+  def apply(ram: Ram): Vector[Sprite] = {
+    SpriteArray(ram, makeSmallSprite)
+  }
+}
+
+object SpriteArray {
+  def apply(ram: Ram, f: (Ram) => Sprite): Vector[Sprite] = {
+    assert(ram.size == 128)
+    ram.grouped(2).map(f(_)).to[Vector]
+  }
+}
+
 object LargeSprite {
   def apply(word_pair: Vector[Char]): Sprite = {
     Sprite(word_pair, true)

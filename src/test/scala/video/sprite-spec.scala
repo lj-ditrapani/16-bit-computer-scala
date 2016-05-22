@@ -1,7 +1,34 @@
 package info.ditrapani.ljdcomputer.video
 
 class VideoSpriteSpec extends Spec {
-  describe("makeSprite") {
+  describe("SpriteArray.apply") {
+    it("fails if ram size < 128") {
+      an [AssertionError] should be thrownBy {
+        SpriteArray(Vector.fill(127)(0.toChar), LargeSprite.apply _)
+      }
+    }
+
+    it("fails if ram size > 128") {
+      an [AssertionError] should be thrownBy {
+        SpriteArray(Vector.fill(129)(0.toChar), LargeSprite.apply _)
+      }
+    }
+
+    it("creates an array of sprites") {
+      //          cp1 9    cp2 6    true  false  tile-index 53
+      val bits1 = "1001" + "0110" + "1" + "0" + "110101"
+      //           uuu    x-pos 17  true   uu    y-pos 26
+      val bits2 = "000" + "10001" + "1" + "00" + "11010"
+      val word1 = Integer.parseInt(bits1, 2).toChar
+      val word2 = Integer.parseInt(bits2, 2).toChar
+      val ram = Vector.fill(128)(0.toChar).updated(6, word1).updated(7, word2)
+      val sprites = SmallSpriteArray(ram)
+      sprites.size should ===(64)
+      sprites(3) should ===(Sprite(9, 6, true, false, 53, 17, 26, true))
+    }
+  }
+
+  describe("Sprite.apply") {
     it("fails if word_pair < 2") {
       a [AssertionError] should be thrownBy {
         Sprite(Vector.fill(1)(0.toChar), false)
