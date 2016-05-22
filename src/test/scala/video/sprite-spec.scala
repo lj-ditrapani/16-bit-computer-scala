@@ -4,13 +4,13 @@ class VideoSpriteSpec extends Spec {
   describe("makeSprite") {
     it("fails if word_pair < 2") {
       a [AssertionError] should be thrownBy {
-        Sprite.makeSprite(Vector.fill(1)(0.toChar), false)
+        Sprite(Vector.fill(1)(0.toChar), false)
       }
     }
 
     it("fails if word_pair > 2") {
       a [AssertionError] should be thrownBy {
-        Sprite.makeSprite(Vector.fill(3)(0.toChar), false)
+        Sprite(Vector.fill(3)(0.toChar), false)
       }
     }
 
@@ -23,7 +23,7 @@ class VideoSpriteSpec extends Spec {
         Integer.parseInt(w1, 2).toChar,
         Integer.parseInt(w2, 2).toChar
       )
-      Sprite.makeSmallSprite(word_pair) should === (
+      SmallSprite(word_pair) should === (
         Sprite(7.toByte, 8.toByte, false, true, 19, 31, 27, true)
       )
     }
@@ -37,7 +37,7 @@ class VideoSpriteSpec extends Spec {
         Integer.parseInt(w1, 2).toChar,
         Integer.parseInt(w2, 2).toChar
       )
-      Sprite.makeLargeSprite(word_pair) should === (
+      LargeSprite(word_pair) should === (
         Sprite(7.toByte, 8.toByte, false, true, 19, 14, 11, true)
       )
     }
