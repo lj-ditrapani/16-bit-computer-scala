@@ -11,4 +11,6 @@ package object video {
   type LargeTile = Vector[Vector[(Boolean, Boolean)]]
   type SmallTile = Vector[Vector[(Boolean, Boolean)]]
   type TextCharTile = Vector[Vector[Boolean]]
+  type BgCellGrid = Vector[Vector[BgCell]]
+  type TextCharCellGrid = Vector[Vector[TextCharCell]]
 }
