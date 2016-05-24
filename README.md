@@ -19,6 +19,17 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
+- Use Vector.tabulate for disabled buffer?
+- Buffer could use javaFX PixelWrite/PixelReader
+- 2 Buffer approach
+    - 4 passes: Do each entire layer, then combine the 4 layers
+    - 1 pass:   Do 1 pixel at a time; all 4 pixels then combine to 1 pixel, go to next pixel
+- Mutable vs immutable work buffer for buffer creation.
+    - seems like it would be easier to use a mutable buffer to create the buffer.
+      Then can do one entire cell at a time.  Not limited to work on an entire
+      buffer row at a time.
+    - or do one row in the buffer at a time, selecting the right tile & tile
+      row & cell & cell row for each 8 pixels
 - Complete VideoState buffer method
 - Video:  make built-in tiles
 - Clean up Video buffer method
