@@ -3,7 +3,7 @@ package info.ditrapani.ljdcomputer
 import scalafx.scene.paint.Color
 
 package object video {
-  type VideoBuffer = Vector[Vector[Color]]
+  type VideoBuffer = Seq[Seq[Color]]
   type Ram = Vector[Char]
   type LargeTileSet = Vector[LargeTile]
   type SmallTileSet = Vector[SmallTile]

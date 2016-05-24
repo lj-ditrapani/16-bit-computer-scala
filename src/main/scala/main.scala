@@ -57,7 +57,7 @@ object Main extends JFXApp {
     canvas.translateX = 0
     canvas.translateY = 0
 
-    gc.setFill(Color.rgb(100, 200, 255))
+    gc.setFill(Color.rgb(0, 20, 80))
     gc.fillRect(0, 0, width, height)
 
     stage = new JFXApp.PrimaryStage {
@@ -74,7 +74,7 @@ object Main extends JFXApp {
     val m = config.pixel_multiplier
 
     (VideoBuffer) => {
-      for ((row: Vector[Color], j: Int) <- VideoBuffer.zipWithIndex) {
+      for ((row: Seq[Color], j: Int) <- VideoBuffer.zipWithIndex) {
         for ((color: Color, i: Int) <- row.zipWithIndex) {
           gc.setFill(color)
           gc.fillRect(i * m,  j * m, m, m)

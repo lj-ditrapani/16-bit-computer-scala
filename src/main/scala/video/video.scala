@@ -39,8 +39,5 @@ object Video {
     Video(video_ram, enable, custom_tiles)
   }
 
-  val disabledBuffer: VideoBuffer =
-    (for (i <- 0 until 240) yield {
-      (for (j <- 0 until 256) yield Color.rgb(0, 0, 0)).to[Vector]
-    }).to[Vector]
+  val disabledBuffer: VideoBuffer = Seq.fill(240, 256)(Color.rgb(0, 0, 0))
 }

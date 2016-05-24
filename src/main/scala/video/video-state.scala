@@ -1,5 +1,6 @@
 package info.ditrapani.ljdcomputer.video
 
+import scala.collection.mutable.ArraySeq
 import scalafx.scene.paint.Color
 
 case class VideoState(
@@ -13,10 +14,57 @@ case class VideoState(
   large_sprites: Vector[Sprite],
   small_sprites: Vector[Sprite]
 ) {
-  def buffer: VideoBuffer =
-    (for (i <- 0 until 240) yield {
-      (for (j <- 0 until 256) yield Color.rgb(200, 200, 255)).to[Vector]
-    }).to[Vector]
+  type Buff = ArraySeq[ArraySeq[Color]]
+
+  def buffer: VideoBuffer = {
+    val b = ArraySeq.fill(240, 256)(Color.rgb(0, 0, 0))
+    draw_bg_cells(b)
+    draw_text_cells(b)
+    draw_large_sprites(b)
+    draw_small_splrites(b)
+    b
+  }
+
+  def draw_bg_cells(b: Buff): Unit = {
+    for ((row: Seq[BgCell], j) <- bg_cells.zipWithIndex) {
+      for ((cell: BgCell, i) <- row.zipWithIndex) {
+        draw_bg_cell(b, cell, j * 16, i * 16)
+      }
+    }
+  }
+
+  def draw_bg_cell(b: Buff, cell: BgCell, j: Int, i: Int): Unit = {
+    val tile = large_tiles(cell.large_tile_index)
+    val cp1 = bg_colors(cell.color_pair_1)
+    val cp2 = bg_colors(cell.color_pair_2)
+    for ((row, y) <- tile.zip(j.to(j + 16))) {
+      for ((pixel, x) <- row.zip(i.to(i + 16))) {
+        val (pair, lr) = pixel
+        val cp =
+          if (pair) {
+            cp2
+          } else {
+            cp1
+          }
+        val color =
+          if (lr) {
+            cp._2
+          } else {
+            cp._1
+          }
+        b(y).update(x, color.toColor)
+      }
+    }
+  }
+
+  def draw_text_cells(b: Buff): Unit = {
+  }
+
+  def draw_large_sprites(b: Buff): Unit = {
+  }
+
+  def draw_small_splrites(b: Buff): Unit = {
+  }
 }
 
 object VideoState {
