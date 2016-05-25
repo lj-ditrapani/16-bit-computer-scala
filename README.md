@@ -19,6 +19,11 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
+- bytePair2Char(pair: Array[Byte]): Char
+  Broken on negative bytes, for example,
+  byte pair Array(0xFF, 0xFF) returns char 0xFEFF
+  byte pair Array(0xAA, 0xAA) returns char 0xA9AA
+
 - Use Vector.tabulate for disabled buffer?
 - Buffer could use javaFX PixelWrite/PixelReader
 - 2 Buffer approach
@@ -33,3 +38,4 @@ TODO
 - Complete VideoState buffer method
 - Video:  make built-in tiles
 - Clean up Video buffer method
+- Extra type defs (tile, etc) in Video class; shouldn't be there?

@@ -40,18 +40,14 @@ case class VideoState(
     for ((row, y) <- tile.zip(j.to(j + 16))) {
       for ((pixel, x) <- row.zip(i.to(i + 16))) {
         val (pair, lr) = pixel
-        val cp =
-          if (pair) {
-            cp2
-          } else {
-            cp1
-          }
-        val color =
-          if (lr) {
-            cp._2
-          } else {
-            cp._1
-          }
+        val cp: (Color8, Color8) = pair match {
+          case false => cp1
+          case true => cp2
+        }
+        val color: Color8 = lr match {
+          case false => cp._1
+          case true => cp._2
+        }
         b(y).update(x, color.toColor)
       }
     }

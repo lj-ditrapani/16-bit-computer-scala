@@ -44,12 +44,14 @@ object BinFileReader {
       (byte_array.size % 2 == 0, msg)
     }
 
-    def makeChars: Vector[Char] = {
+    def makeChars: Vector[Char] =
       byte_array.grouped(2).map(bytePair2Char).toVector
-    }
   }
 
-  def bytePair2Char(pair: Array[Byte]): Char = ((pair(0) << 8) + pair(1)).toChar
+  def bytePair2Char(pair: Array[Byte]): Char = {
+    val int_pair = pair.map(_ & 0xFF)
+    ((int_pair(0) << 8) + int_pair(1)).toChar
+  }
 
   sealed abstract class BinCheck {
     def check(pair: (Boolean, String)): BinCheck

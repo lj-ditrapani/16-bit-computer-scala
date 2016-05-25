@@ -2,10 +2,24 @@ package info.ditrapani.ljdcomputer
 
 class BinFileReaderSpec extends Spec {
   describe("read") {
-    it("returns Success(byte_vector) if no issues") {
+    it("returns Success(char_vector) if no issues") {
       val file = "src/test/resources/abcd.bin"
       BinFileReader.read(file) match {
-        case Right(vector) => vector.length should === (2)
+        case Right(vector) => {
+          vector.length should === (2)
+          vector(0) should === (24930.toChar)
+        }
+      }
+    }
+
+    it("returns Success(char_vector) if no issues (negative bytes)") {
+      val file = "src/test/resources/0xFFFFAAAA.bin"
+      BinFileReader.read(file) match {
+        case Right(vector) => {
+          vector.length should === (2)
+          vector(0) should === (0xFFFF.toChar)
+          vector(1) should === (0xAAAA.toChar)
+        }
       }
     }
 
@@ -13,6 +27,18 @@ class BinFileReaderSpec extends Spec {
       BinFileReader.read("not_a_file") match {
         case Left(msg) => msg should include ("NoSuchFileException")
       }
+    }
+  }
+
+  describe("bytePair2Char") {
+    it("handles negative bytes: 0xFF, 0xFF => 0xFFFF") {
+      val bytes: Array[Byte] = Vector(0xFF, 0xFF).map(_.toByte).toArray
+      BinFileReader.bytePair2Char(bytes) should === (0xFFFF.toChar)
+    }
+
+    it("handles negative bytes: 0xAA, 0xAA => 0xAAAA") {
+      val bytes: Array[Byte] = Vector(0xAA, 0xAA).map(_.toByte).toArray
+      BinFileReader.bytePair2Char(bytes) should === (0xAAAA.toChar)
     }
   }
 }

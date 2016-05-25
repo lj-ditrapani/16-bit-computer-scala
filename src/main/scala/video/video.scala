@@ -27,10 +27,6 @@ case class Video(video_ram: Ram, enable: Boolean, custom_tiles: Boolean) {
 }
 
 object Video {
-  type LargeTile = Vector[Vector[(Boolean, Boolean)]]
-  type SmallTile = Vector[Vector[(Boolean, Boolean)]]
-  type TextCharTile = Vector[Vector[Boolean]]
-
   def make(ram: Ram): Video = {
     val enable_bits = ram(0xDDF3)
     val enable: Boolean = (enable_bits & 2) > 0
