@@ -10,7 +10,8 @@ case class Video(video_ram: Ram, enable: Boolean, custom_tiles: Boolean) {
         if (custom_tiles) {
           ram_tiles
         } else {
-          ram_tiles // built_in_tiles
+          // ram_tiles
+          Video.built_in_tiles
         }
       val video_state = VideoState(tiles, cells, colors, sprites)
       video_state.buffer
@@ -36,4 +37,25 @@ object Video {
   }
 
   val disabledBuffer: VideoBuffer = Seq.fill(240, 256)(Color.rgb(0, 0, 0))
+
+  val built_in_tiles: Ram = {
+    import scala.util.{Try, Success, Failure}
+    import java.nio.file.{Files, Paths}
+
+    def bytePair2Char(pair: Array[Byte]): Char = {
+      val int_pair = pair.map(_ & 0xFF)
+      ((int_pair(0) << 8) + int_pair(1)).toChar
+    }
+
+    def toRam(byte_array: Array[Byte]): Ram = {
+      byte_array.grouped(2).map(bytePair2Char).toVector
+    }
+
+    // actually should be loaded from resources like in game-of-life
+    val path = "src/main/resources/tiles.bin"
+    Try(Files.readAllBytes(Paths.get(path))) match {
+      // case Failure(exception) => println(exception)
+      case Success(byte_array) => toRam(byte_array)
+    }
+  }
 }
