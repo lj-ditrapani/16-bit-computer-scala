@@ -29,3 +29,9 @@ TODO
 - Clean up Video buffer method
 - cell: x-y flip
 - makes specs for buffer method?
+
+Overall steps
+- video, built-in tiles
+- video buffer
+- keyboard
+- cpu
