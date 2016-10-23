@@ -11,8 +11,8 @@ lazy val root = (project in file(".")).
 
 scalacOptions += "-target:jvm-1.8"
 
-libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.92-R10"
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.102-R11"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
 wartremoverWarnings ++= Warts.unsafe
 
 assemblyJarName in assembly := s"ljd-${name.value}-${version.value}.jar"
