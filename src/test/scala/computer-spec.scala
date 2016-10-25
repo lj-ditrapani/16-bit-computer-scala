@@ -19,22 +19,22 @@ class ComputerSpec extends Spec {
           ) = test
           val computer: Computer = Computer.load(binary)
           val rom = computer.cpu.rom
-          rom.size should === (rom_size)
-          rom(0) should === (rom0)
-          rom(1) should === (rom1)
-          rom(rom_size - 1) should === (end_rom)
+          rom.size shouldBe rom_size
+          rom(0) shouldBe rom0
+          rom(1) shouldBe rom1
+          rom(rom_size - 1) shouldBe end_rom
           val ram = computer.ram
-          ram.size should === (ram_size)
-          ram(0) should === (start_ram)
-          ram(ram_size - video_ram_size - 1) should === (mid_ram)
-          ram(ram_size - video_ram_size) should === (start_video_ram)
-          ram(ram_size - 1) should === (end_video_ram)
+          ram.size shouldBe ram_size
+          ram(0) shouldBe start_ram
+          ram(ram_size - video_ram_size - 1) shouldBe mid_ram
+          ram(ram_size - video_ram_size) shouldBe start_video_ram
+          ram(ram_size - 1) shouldBe end_video_ram
           val video = computer.video_obj
           val video_ram = video.video_ram
-          video_ram.size should === (video_ram_size)
-          video_ram(0) should === (start_video_ram)
-          video_ram(video_ram_size - 1) should === (end_video_ram)
-          video.custom_tiles should === (false)
+          video_ram.size shouldBe video_ram_size
+          video_ram(0) shouldBe start_video_ram
+          video_ram(video_ram_size - 1) shouldBe end_video_ram
+          video.custom_tiles shouldBe false
         }
 
         val small_program =
