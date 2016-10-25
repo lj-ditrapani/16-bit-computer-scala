@@ -30,20 +30,20 @@ class VideoCellSpec extends Spec {
     }
 
     it("creates a Cell grid") {
-      //          bg=8     fg=4    index=11
-      val bits = "1000" + "0100" + "001011"
+      //          bg=8     fg=4     index=11
+      val bits = "1000" + "0100" + "00001011"
       val cell_word = Integer.parseInt(bits, 2).toChar
       val ram = Vector
         .fill(640)(0.toChar)
         .updated(2, cell_word)
-        .updated(18, cell_word)
+        .updated(34, cell_word)
       val grid = CellGrid(ram)
       grid.size shouldBe 20
       grid(0).size shouldBe 32
-      grid.last.size shouldBe 8
+      grid.last.size shouldBe 32
       val expected_cell = Cell(8, 4, 11)
-      grid(0)(2) should ===(expected_cell)
-      grid(1)(2) should ===(expected_cell)
+      grid(0)(2) shouldBe expected_cell
+      grid(1)(2) shouldBe expected_cell
     }
   }
 }
