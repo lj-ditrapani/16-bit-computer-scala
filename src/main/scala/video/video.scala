@@ -3,9 +3,11 @@ package info.ditrapani.ljdcomputer.video
 import scalafx.scene.paint.Color
 
 case class Video(video_ram: Ram, enable: Boolean, custom_tiles: Boolean) {
+  assert(video_ram.length == 2816)
+
   def buffer: VideoBuffer =
     if (enable) {
-      val (ram_tiles, cells, colors, sprites) = split_ram
+      val (cells, colors, ram_tiles) = split_ram
       val tiles =
         if (custom_tiles) {
           ram_tiles
@@ -13,26 +15,30 @@ case class Video(video_ram: Ram, enable: Boolean, custom_tiles: Boolean) {
           // ram_tiles
           Video.built_in_tiles
         }
-      val video_state = VideoState(tiles, cells, colors, sprites)
+      val video_state = VideoState(cells, colors, tiles)
       video_state.buffer
     } else {
       Video.disabledBuffer
     }
 
-  def split_ram: (Ram, Ram, Ram, Ram) = {
-    val (tiles, rest1) = video_ram.splitAt(3072)
-    val (cells, rest2) = rest1.splitAt(736)
-    val (colors, sprites) = rest2.splitAt(32)
-    (tiles, cells, colors, sprites)
+  def split_ram: (Ram, Ram, Ram) = {
+    val (cells, rest1) = video_ram.splitAt(640)
+    val (_, rest2) = rest1.splitAt(128)
+    val (colors, rest3) = rest2.splitAt(16)
+    val (_, tiles) = rest3.splitAt(496)
+    assert(cells.length == 640)
+    assert(colors.length == 16)
+    assert(tiles.length == 1536)
+    (cells, colors, tiles)
   }
 }
 
 object Video {
   def make(ram: Ram): Video = {
-    val enable_bits = ram(0xDDF3)
+    val enable_bits = ram(0xF403)
     val enable: Boolean = (enable_bits & 2) > 0
     val custom_tiles: Boolean = (enable_bits & 4) > 0
-    val video_ram = ram.slice(0xF000, 0x10000)
+    val video_ram = ram.slice(0xF500, 0x10000)
     Video(video_ram, enable, custom_tiles)
   }
 

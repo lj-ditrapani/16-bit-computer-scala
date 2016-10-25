@@ -26,10 +26,3 @@ object Color8 {
   def convert2bitTo8bit(byte: Byte): Int =
     (byte << 6) + (byte << 4) + (byte << 2) + byte
 }
-
-object ColorPairs {
-  def apply(ram: Ram): Vector[(Color8, Color8)] = {
-    assert(ram.size == 16)
-    ram.map((char) => (Color8(char >> 8), Color8(char & 0xFF))).to[Vector]
-  }
-}

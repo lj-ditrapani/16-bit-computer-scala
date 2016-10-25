@@ -5,12 +5,7 @@ import scalafx.scene.paint.Color
 package object video {
   type VideoBuffer = Seq[Seq[Color]]
   type Ram = Vector[Char]
-  type LargeTileSet = Vector[LargeTile]
-  type SmallTileSet = Vector[SmallTile]
-  type TextCharTileSet = Vector[TextCharTile]
-  type LargeTile = Vector[Vector[(Boolean, Boolean)]]
-  type SmallTile = Vector[Vector[(Boolean, Boolean)]]
-  type TextCharTile = Vector[Vector[Boolean]]
-  type BgCellGrid = Vector[Vector[BgCell]]
-  type TextCharCellGrid = Vector[Vector[TextCharCell]]
+  type TileSet = Vector[Tile]
+  type Tile = Vector[Vector[Boolean]]
+  type CellGrid = Vector[Vector[Cell]]
 }
