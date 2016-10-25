@@ -77,15 +77,30 @@ class VideoColorSpec extends Spec {
     }
   }
 
-  describe("ColorPairs.apply") {
-    it("returns a vector of 16 color pairs") {
-      //         [ R       G       B ]  [ R       G       B ]
-      val bits = "111" + "110" + "11" + "011" + "010" + "01"
-      val char = Integer.parseInt(bits, 2).toChar
-      val ram = Vector.fill(16)(0.toChar).updated(1, char)
-      val color_pairs = ColorPairs(ram)
-      color_pairs.size should ===(16)
-      color_pairs(1) should ===((Color8(7, 6, 3), Color8(3, 2, 1)))
+  describe("Colors.apply") {
+    it("fails if ram size < 16") {
+      an [AssertionError] should be thrownBy {
+        Colors.make(Vector.fill(15)(0.toChar))
+      }
+    }
+
+    it("fails if ram size > 16") {
+      an [AssertionError] should be thrownBy {
+        Colors.make(Vector.fill(17)(0.toChar))
+      }
+    }
+
+    it("returns a vector of 16 Color8") {
+      //         [ R       G       B ]
+      val bits1 = "111" + "110" + "11"
+      val bits2 = "011" + "010" + "01"
+      val char1 = Integer.parseInt(bits1, 2).toChar
+      val char2 = Integer.parseInt(bits2, 2).toChar
+      val ram = Vector.fill(16)(0.toChar).updated(1, char1).updated(14, char2)
+      val colors = Colors.make(ram)
+      colors.size shouldBe 16
+      colors(1) shouldBe Color8(7, 6, 3)
+      colors(14) shouldBe Color8(3, 2, 1)
     }
   }
 }
