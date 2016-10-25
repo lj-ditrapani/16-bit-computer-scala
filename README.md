@@ -19,19 +19,19 @@ Help text [src/main/resources/help.txt](src/main/resources/help.txt)
 TODO
 ----
 
-- Video:  make built-in tiles
-    - could make testing easier
+- Remove use of === in specs
+- Only use apply method as aux constructors in companion objects
+
 - video object built_in_tiles has a lot of duplicate parsing code with
   bin-file-reader.  Refactor
 - video object built_in_tiles actually should be loaded from resources
   like in game-of-life.
 - Complete VideoState buffer method
 - Clean up Video buffer method
-- cell: x-y flip
 - makes specs for buffer method?
 
 Overall steps
 - video, built-in tiles
 - video buffer
-- keyboard
+- gamepad
 - cpu
