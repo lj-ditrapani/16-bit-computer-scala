@@ -15,7 +15,7 @@ case class Video(video_ram: Ram, enable: Boolean, custom_tiles: Boolean) {
           // ram_tiles
           Video.built_in_tiles
         }
-      val video_state = VideoState(cells, colors, tiles)
+      val video_state = VideoState.make(cells, colors, tiles)
       video_state.buffer
     } else {
       Video.disabledBuffer

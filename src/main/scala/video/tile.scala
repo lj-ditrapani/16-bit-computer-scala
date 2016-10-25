@@ -3,7 +3,7 @@ package info.ditrapani.ljdcomputer.video
 object TileSet {
   def apply(ram: Ram): TileSet = {
     assert(ram.size == 256 * 6)
-    ram.grouped(6).map(TextCharTile(_)).to[Vector]
+    ram.grouped(6).map(Tile(_)).to[Vector]
   }
 }
 

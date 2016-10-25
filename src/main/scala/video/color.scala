@@ -26,3 +26,10 @@ object Color8 {
   def convert2bitTo8bit(byte: Byte): Int =
     (byte << 6) + (byte << 4) + (byte << 2) + byte
 }
+
+object Colors {
+  def make(colors: Vector[Char]): Vector[Color8] = {
+    assert(colors.size == 16)
+    colors.map((char) => Color8(char.toInt))
+  }
+}
