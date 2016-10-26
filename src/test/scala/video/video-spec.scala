@@ -9,27 +9,27 @@ class VideoSpec extends Spec {
         val ram = Vector.fill(0x10000)(0.toChar)
         val video = Video.make(ram)
         val buffer = video.buffer
-        buffer should === (Video.disabledBuffer)
-        buffer.size should === (240)
-        buffer(0).size should === (256)
-        buffer.last.size should === (256)
-        buffer(0)(0) should === (Color.rgb(0, 0, 0))
-        buffer.last.last should === (Color.rgb(0, 0, 0))
+        buffer shouldBe Video.disabledBuffer
+        buffer.size shouldBe 240
+        buffer(0).size shouldBe 256
+        buffer.last.size shouldBe 256
+        buffer(0)(0) shouldBe Color.rgb(0, 0, 0)
+        buffer.last.last shouldBe Color.rgb(0, 0, 0)
       }
     }
   }
 
   describe("Video object") {
     describe("make") {
-      val video_ram_size = 4096
+      val video_ram_size = 2816
 
       it("sets video ram correctly") {
         val ram = Vector.fill(0x10000)(7.toChar)
         val video: Video = Video.make(ram)
         val video_ram = video.video_ram
-        video_ram.size should === (video_ram_size)
-        video_ram(0) should === (7)
-        video_ram(video_ram_size - 1) should === (7)
+        video_ram.size shouldBe video_ram_size
+        video_ram(0) shouldBe 7
+        video_ram(video_ram_size - 1) shouldBe 7
       }
 
       describe("sets the enable & custom_tiles flags correctly") {
@@ -52,11 +52,11 @@ class VideoSpec extends Spec {
           val (enable, custom_tiles) = test
           val enable_bits: Char =
             ((bool2int(custom_tiles) << 2) +  (bool2int(enable) << 1)).toChar
-          val ram = Vector.fill(0xDDF3)(7.toChar) ++ Vector(enable_bits)
+          val ram = Vector.fill(0xF403)(7.toChar) ++ Vector(enable_bits)
           val video: Video = Video.make(ram)
           it(s"enable $enable custom_tiles $custom_tiles are set correctly") {
-            video.enable should === (enable)
-            video.custom_tiles should === (custom_tiles)
+            video.enable shouldBe enable
+            video.custom_tiles shouldBe custom_tiles
           }
         }
 
@@ -67,11 +67,11 @@ class VideoSpec extends Spec {
     describe("disabledBuffer") {
       it("returns all black buffer") {
         val buffer = Video.disabledBuffer
-        buffer.size should === (240)
-        buffer(0).size should === (256)
-        buffer.last.size should === (256)
-        buffer(0)(0) should === (Color.rgb(0, 0, 0))
-        buffer.last.last should === (Color.rgb(0, 0, 0))
+        buffer.size shouldBe 240
+        buffer(0).size shouldBe 256
+        buffer.last.size shouldBe 256
+        buffer(0)(0) shouldBe Color.rgb(0, 0, 0)
+        buffer.last.last shouldBe Color.rgb(0, 0, 0)
       }
     }
   }
