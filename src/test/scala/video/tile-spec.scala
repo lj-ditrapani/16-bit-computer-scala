@@ -18,7 +18,7 @@ class VideoTileSpec extends Spec {
 
   def expectDec(tile_row: Vector[Boolean]): Unit =
     tile_row shouldBe Vector(
-      false, false, false, true, true, false, true, true
+      true, true, true, false, false, true, false, false
     )
 
   def expectF0(tile_row: Vector[Boolean]): Unit =
@@ -47,13 +47,13 @@ class VideoTileSpec extends Spec {
   describe("TileSet.apply") {
     it("fails if ram < 1,536") {
       an [AssertionError] should be thrownBy {
-        TileSet(Vector.fill(1536)(0.toChar))
+        TileSet(Vector.fill(1535)(0.toChar))
       }
     }
 
     it("fails if ram > 1,536") {
       an [AssertionError] should be thrownBy {
-        TileSet(Vector.fill(1536)(0.toChar))
+        TileSet(Vector.fill(1537)(0.toChar))
       }
     }
 
