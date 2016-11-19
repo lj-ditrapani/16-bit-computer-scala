@@ -17,11 +17,11 @@ object Main extends JFXApp {
 
   def printErrorHelpAndExit(message: String): Unit = {
     if (message != "Printing help text...") {
-      println(s"\n[ERROR] $message\n")
+      println(s"\n[ERROR] $message\n") // scalastyle:ignore regex
     }
     val input_stream = getClass.getResourceAsStream("/help.txt")
     val help_text = scala.io.Source.fromInputStream(input_stream).mkString
-    println(help_text)
+    println(help_text) // scalastyle:ignore regex
     System.exit(0)
   }
 
@@ -34,7 +34,9 @@ object Main extends JFXApp {
     val gc = makeGfxContext(config)
     val drawScene = makeSceneDrawer(config, gc)
 
+    @SuppressWarnings(Array("org.wartremover.warts.Var"))
     var computer: Computer = Computer.load(config.binary)
+    @SuppressWarnings(Array("org.wartremover.warts.Var"))
     var last_time = System.nanoTime()
 
     AnimationTimer(curr_time => {

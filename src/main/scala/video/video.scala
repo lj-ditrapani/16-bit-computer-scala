@@ -60,7 +60,7 @@ object Video {
     // actually should be loaded from resources like in game-of-life
     val path = "src/main/resources/tiles.bin"
     Try(Files.readAllBytes(Paths.get(path))) match {
-      // case Failure(exception) => println(exception)
+      // case Failure(exception) => printaln(exception) // scalastyle:ignore regex
       case Success(byte_array) => toRam(byte_array)
     }
   }
