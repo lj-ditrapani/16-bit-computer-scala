@@ -6,15 +6,15 @@ import scalafx.scene.paint.Color
 case class Computer(cpu: Cpu, ram: Vector[Char], video_obj: Video) {
   type VideoBuffer = video.VideoBuffer
 
-  def runFrame(key_press: Byte): (VideoBuffer, Computer) = {
-    val ram2 = addKeyPress(key_press)
+  def runFrame(key_presses: Byte): (VideoBuffer, Computer) = {
+    val ram2 = addKeyPresses(key_presses)
     val (ram3, new_cpu) = cpu.step(400000, ram2)
     val (new_video, ram4) = swapVideoRam(ram3)
     val new_computer = Computer(new_cpu, ram4, new_video)
     (new_video.buffer, new_computer)
   }
 
-  def addKeyPress(key_press: Byte): Vector[Char] = ram
+  def addKeyPresses(key_presses: Byte): Vector[Char] = ram
 
   def swapVideoRam(new_ram: Vector[Char]): (Video, Vector[Char]) =
     (video_obj, new_ram)
