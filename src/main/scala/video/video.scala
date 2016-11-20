@@ -26,6 +26,9 @@ case class Video(
 }
 
 object Video {
+  def init(video_roms: VideoRoms): Video =
+    Video(Vector.fill(640)(0.toChar), video_roms, false, false)
+
   def make(ram: Ram, video_roms: VideoRoms): Video = {
     assert(ram.size == 64 * 1024)
     val enable_bits = ram(0xFE80)

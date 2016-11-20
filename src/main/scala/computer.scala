@@ -37,6 +37,6 @@ object Computer {
       .padTo(video_rom_size, 0.toChar)
     val ram = binary.slice(ram_start, end).padTo(size64k, 0.toChar)
     val video_roms = VideoRoms.make(custom_video_rom)
-    Computer(Cpu(rom), video_roms, ram, Video.make(ram, video_roms))
+    Computer(Cpu(rom), video_roms, ram, Video.init(video_roms))
   }
 }
