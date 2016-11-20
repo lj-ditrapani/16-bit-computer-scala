@@ -20,5 +20,6 @@ java -jar ljd-16-bit-computer-x.x.x.jar --f=<file> [--m=<n>]
 Examples
 --------
 
-    java -jar ljd-16-bit-computer-x.x.x.jar --f=~/programs/hello.bin
+    java -jar ljd-16-bit-computer-x.x.x.jar --help
+    java -jar ljd-16-bit-computer-x.x.x.jar --f=programs/hello.bin
     java -jar ljd-16-bit-computer-x.x.x.jar --f=tic-tac-toe.bin --m=2
