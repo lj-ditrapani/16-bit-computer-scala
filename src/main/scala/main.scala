@@ -6,19 +6,23 @@ import scalafx.scene.Scene
 import scalafx.scene.paint.Color
 import scalafx.animation.AnimationTimer
 import scala.util.{Try, Success, Failure}
+import info.ditrapani.ljdcomputer.config.Config
 
 object Main extends JFXApp {
   type VideoBuffer = video.VideoBuffer
 
   Config.load(parameters.unnamed, Map(parameters.named.toSeq: _*)) match {
-    case Left(s) => printErrorHelpAndExit(s)
-    case Right(config) => loadAndRun(config)
+    case config.Help => printHelpAndExit()
+    case config.Error(message) => printErrorHelpAndExit(message)
+    case config.Good(config) => loadAndRun(config)
   }
 
   def printErrorHelpAndExit(message: String): Unit = {
-    if (message != "Printing help text...") {
-      println(s"\n[ERROR] $message\n") // scalastyle:ignore regex
-    }
+    println(s"\n[ERROR] $message\n") // scalastyle:ignore regex
+    printHelpAndExit()
+  }
+
+  def printHelpAndExit(): Unit = {
     val input_stream = getClass.getResourceAsStream("/help.txt")
     val help_text = scala.io.Source.fromInputStream(input_stream).mkString
     println(help_text) // scalastyle:ignore regex

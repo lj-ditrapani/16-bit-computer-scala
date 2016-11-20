@@ -1,6 +1,12 @@
-package info.ditrapani.ljdcomputer
+package info.ditrapani.ljdcomputer.config
 
 import scala.util.{Try, Success, Failure}
+import info.ditrapani.ljdcomputer.BinFileReader
+
+sealed abstract class Result
+case class Good(config: Config) extends Result
+case class Error(message: String) extends Result
+object Help extends Result
 
 case class Config(
   binary_set: Boolean,
@@ -14,20 +20,21 @@ object Config {
 
   val emptyConfig: Config = Config(false, Vector(), 4)
 
-  def load(help_params: Seq[String], params: Map[String,String]): IfConfig = {
+  def load(help_params: Seq[String], params: Map[String,String]): Result = {
     if (help_params.exists(p => p == "--help")) {
-      Left("Printing help text...")
+      Help
     } else if (!help_params.isEmpty) {
-      Left(s"Unknown command line parameter '${help_params.head}'")
+      Error(s"Unknown command line parameter '${help_params.head}'")
     } else {
       val if_config1: IfConfig = Right(Config.emptyConfig)
       val if_config2 = params.foldLeft(if_config1) { (if_config, kv) =>
         if_config.right.flatMap { addParams(kv, _) }
       }
-      if_config2.right.flatMap { (config) =>
-        config.binary_set match {
-          case false => Left("Must define a binary file to execute with --f")
-          case true => Right(config)
+      if_config2 match {
+        case Left(message) => Error(message)
+        case Right(config) => config.binary_set match {
+          case false => Error("Must define a binary file to execute with --f")
+          case true => Good(config)
         }
       }
     }
