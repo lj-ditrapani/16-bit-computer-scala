@@ -40,7 +40,12 @@ class ComputerSpec extends Spec {
           ram(0) shouldBe start_ram
           ram(ram_size_up_to_video_ram - 1) shouldBe mid_ram
           ram(ram_size_up_to_video_ram) shouldBe video_ram_value
-          ram(ram_size - 1) shouldBe video_ram_value
+          ram(ram_size_up_to_video_ram + video_ram_size - 1) shouldBe video_ram_value
+          ram(ram_size_up_to_video_ram + video_ram_size) shouldBe last_3_ram_value
+          ram(
+            ram_size_up_to_video_ram + video_ram_size +
+            game_pad_and_interrupt_ram_size - 1
+          ) shouldBe last_3_ram_value
           val cells = video.cells
           cells.size shouldBe 640
           cells(0) shouldBe video_ram_value
@@ -69,8 +74,8 @@ class ComputerSpec extends Spec {
         val tests: List[LoadTest] = List(
           (small_program, 0xFFF0, 0xFFF1, 0, 0, 0, 0, 0, 0, "small"),
           (rom_program, 2, 2, 2, 0, 0, 0, 0, 0, "rom"),
-          (mid_program_partial_video_ram, 2, 2, 2, 3, 4, 0, 0, 0, "medium"),
-          (mid_program_full_video_ram, 2, 2, 2, 3, 4, 4, 0, 0, "medium"),
+          (mid_program_partial_video_ram, 2, 2, 2, 3, 4, 0, 0, 0, "medium partial video"),
+          (mid_program_full_video_ram, 2, 2, 2, 3, 4, 4, 0, 0, "medium full video"),
           (large_program, 2, 2, 2, 3, 4, 4, 5, 6, "large")
         )
 
@@ -101,20 +106,21 @@ class ComputerSpec extends Spec {
         def runTest(test: FlagTest): Unit = {
           val (is_set, enable, custom_video_rom) = test
           val enable_bits: Char =
-            ((bool2int(custom_video_rom) << 2) +  (bool2int(enable) << 1)).toChar
+            ((bool2int(custom_video_rom) << 1) +  bool2int(enable)).toChar
           val binary =
             is_set match {
               case false => Vector(0.toChar, 0.toChar)
               case true =>
-                Vector.fill(rom_size)(8.toChar) ++
-                Vector.fill(0xDDF3)(7.toChar) ++
+                Vector.fill(rom_size)(9.toChar) ++
+                Vector.fill(video_rom_size)(8.toChar) ++
+                Vector.fill(0xFE80)(7.toChar) ++
                 Vector(enable_bits)
             }
           val computer: Computer = Computer.load(binary)
           val video = computer.video_obj
           it(s"is_set $is_set enable $enable custom_video_rom $custom_video_rom") {
             video.enable should === (enable)
-            video.custom_video_rom should === (custom_video_rom)
+            video.enable_custom_video_rom should === (custom_video_rom)
           }
         }
 

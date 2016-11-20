@@ -56,12 +56,15 @@ class VideoSpec extends Spec {
           val (enable, custom_video_rom) = test
           val enable_bits: Char =
             ((bool2int(custom_video_rom) << 1) +  bool2int(enable)).toChar
-          val ram = Vector.fill(0xFE80)(7.toChar) ++ Vector(enable_bits)
+          val ram =
+            Vector.fill(0xFE80)(7.toChar) ++
+            Vector(enable_bits) ++
+            Vector.fill(383)(8.toChar)
           val rom = Vector.fill(512 * 3 + 16)(0.toChar)
           val video: Video = Video.make(ram, rom)
           it(s"enable $enable custom_video_rom $custom_video_rom are set correctly") {
             video.enable shouldBe enable
-            video.custom_video_rom shouldBe custom_video_rom
+            video.enable_custom_video_rom shouldBe custom_video_rom
           }
         }
 
