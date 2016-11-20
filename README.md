@@ -21,8 +21,6 @@ TODO
 
 - video object built_in_tiles has a lot of duplicate parsing code with
   bin-file-reader.  Refactor
-- video object built_in_tiles actually should be loaded from resources
-  like in game-of-life.
 - Complete VideoState buffer method
 - Clean up Video buffer method
 - makes specs for buffer method?

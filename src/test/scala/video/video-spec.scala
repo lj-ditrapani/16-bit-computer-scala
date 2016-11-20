@@ -8,7 +8,8 @@ class VideoSpec extends Spec {
       it("returns all disabledBuffer if video is disabled") {
         val ram = Vector.fill(0x10000)(0.toChar)
         val rom = Vector.fill(512 * 3 + 16)(0.toChar)
-        val video = Video.make(ram, rom)
+        val video_roms = VideoRoms.make(rom)
+        val video = Video.make(ram, video_roms)
         val buffer = video.buffer
         buffer shouldBe Video.disabledBuffer
         buffer.size shouldBe 240
@@ -29,7 +30,8 @@ class VideoSpec extends Spec {
       it("sets video ram correctly") {
         val ram = Vector.fill(0x10000)(7.toChar)
         val rom = Vector.fill(512 * 3 + 16)(0.toChar)
-        val video: Video = Video.make(ram, rom)
+        val video_roms = VideoRoms.make(rom)
+        val video: Video = Video.make(ram, video_roms)
         val cells = video.cells
         cells.size shouldBe cells_size
         cells(0) shouldBe 7
@@ -61,7 +63,8 @@ class VideoSpec extends Spec {
             Vector(enable_bits) ++
             Vector.fill(383)(8.toChar)
           val rom = Vector.fill(512 * 3 + 16)(0.toChar)
-          val video: Video = Video.make(ram, rom)
+          val video_roms = VideoRoms.make(rom)
+          val video: Video = Video.make(ram, video_roms)
           it(s"enable $enable custom_video_rom $custom_video_rom are set correctly") {
             video.enable shouldBe enable
             video.enable_custom_video_rom shouldBe custom_video_rom

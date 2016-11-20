@@ -4,7 +4,9 @@ class ComputerSpec extends Spec {
   describe("Computer object") {
     type LoadTest = (Vector[Char], Int, Int, Int, Int, Int, Int, Int, Int, String)
     val rom_size = 64 * 1024
-    val video_rom_size = 512 * 3 + 16
+    val video_colors_size = 16
+    val video_tiles_size = 512 * 3
+    val video_rom_size = video_colors_size + video_tiles_size
     val ram_size = rom_size
     val video_ram_size = 1021
     val game_pad_and_interrupt_ram_size = 3
@@ -31,10 +33,15 @@ class ComputerSpec extends Spec {
           rom(0) shouldBe rom0
           rom(1) shouldBe rom1
           rom(rom_size - 1) shouldBe end_rom
-          val video_rom = video.custom_video_rom
-          video_rom.size shouldBe video_rom_size
-          video_rom(0) shouldBe video_rom_value
-          video_rom(video_rom_size - 1) shouldBe video_rom_value
+          val video_rom = computer.video_roms
+          val video_colors = video_rom.custom_colors
+          video_colors.size shouldBe video_colors_size
+          video_colors(0) shouldBe video_rom_value
+          video_colors(video_colors_size - 1) shouldBe video_rom_value
+          val video_tiles = video_rom.custom_tiles
+          video_tiles.size shouldBe video_tiles_size
+          video_tiles(0) shouldBe video_rom_value
+          video_tiles(video_tiles_size - 1) shouldBe video_rom_value
           val ram = computer.ram
           ram.size shouldBe ram_size
           ram(0) shouldBe start_ram
