@@ -22,9 +22,20 @@ case class Computer(cpu: Cpu, ram: Vector[Char], video_obj: Video) {
 
 object Computer {
   def load(binary: Vector[Char]): Computer = {
-    val end = 64 * 1024
-    val rom = binary.slice(0, end).padTo(end, 0.toChar)
-    val ram = binary.slice(end, binary.length).padTo(end, 0.toChar)
-    Computer(Cpu(rom), ram, Video.make(ram))
+    val end = 132624
+    assert(binary.size <= end)
+    val size64k = 64 * 1024
+    val video_rom_size = 512 * 3 + 16
+    val rom_start = 0
+    val video_rom_start = size64k
+    val ram_start = video_rom_start + video_rom_size
+    val rom = binary
+      .slice(0, video_rom_start)
+      .padTo(size64k, 0.toChar)
+    val custom_video_rom = binary
+      .slice(video_rom_start, ram_start)
+      .padTo(video_rom_size, 0.toChar)
+    val ram = binary.slice(ram_start, end).padTo(size64k, 0.toChar)
+    Computer(Cpu(rom), ram, Video.make(ram, custom_video_rom))
   }
 }

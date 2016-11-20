@@ -22,6 +22,8 @@ TODO
 - Remove use of === in specs
 - Only use apply method as aux constructors in companion objects
 
+- Config.load should return (Config | Error | Help) instead of Either
+
 - video object built_in_tiles has a lot of duplicate parsing code with
   bin-file-reader.  Refactor
 - video object built_in_tiles actually should be loaded from resources
@@ -31,7 +33,7 @@ TODO
 - makes specs for buffer method?
 
 Overall steps
-- video, built-in tiles
+- video, built-in video
 - video buffer
 - gamepad
 - cpu

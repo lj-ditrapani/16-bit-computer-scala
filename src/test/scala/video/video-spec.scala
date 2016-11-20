@@ -32,8 +32,8 @@ class VideoSpec extends Spec {
         video_ram(video_ram_size - 1) shouldBe 7
       }
 
-      describe("sets the enable & custom_tiles flags correctly") {
-        //               enable   custom_tiles
+      describe("sets the enable & custom_video_rom flags correctly") {
+        //               enable   custom_video_rom
         type FlagTest = (Boolean, Boolean)
 
         val tests: List[FlagTest] = List(
@@ -49,14 +49,14 @@ class VideoSpec extends Spec {
         }
 
         def runTest(test: FlagTest): Unit = {
-          val (enable, custom_tiles) = test
+          val (enable, custom_video_rom) = test
           val enable_bits: Char =
-            ((bool2int(custom_tiles) << 2) +  (bool2int(enable) << 1)).toChar
-          val ram = Vector.fill(0xF403)(7.toChar) ++ Vector(enable_bits)
+            ((bool2int(custom_video_rom) << 1) +  bool2int(enable)).toChar
+          val ram = Vector.fill(0xFE80)(7.toChar) ++ Vector(enable_bits)
           val video: Video = Video.make(ram)
-          it(s"enable $enable custom_tiles $custom_tiles are set correctly") {
+          it(s"enable $enable custom_video_rom $custom_video_rom are set correctly") {
             video.enable shouldBe enable
-            video.custom_tiles shouldBe custom_tiles
+            video.custom_video_rom shouldBe custom_video_rom
           }
         }
 

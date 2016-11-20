@@ -2,18 +2,21 @@ package info.ditrapani.ljdcomputer.video
 
 import scalafx.scene.paint.Color
 
-case class Video(video_ram: Ram, enable: Boolean, custom_tiles: Boolean) {
-  assert(video_ram.length == 2816)
+case class Video(
+  cells: Ram,
+  custom_video_rom: Ram,
+  enable: Boolean,
+  enable_custom_video_rom: Boolean) {
+  assert(custom_video_rom.length == 1552)
+  assert(cells.length == 640)
 
   def buffer: VideoBuffer =
     if (enable) {
-      val (cells, colors, ram_tiles) = split_ram
-      val tiles =
-        if (custom_tiles) {
-          ram_tiles
+      val (colors, tiles) =
+        if (enable_custom_video_rom) {
+          split_rom
         } else {
-          // ram_tiles
-          Video.built_in_tiles
+          (Video.built_in_colors, Video.built_in_tiles)
         }
       val video_state = VideoState.make(cells, colors, tiles)
       video_state.buffer
@@ -21,28 +24,47 @@ case class Video(video_ram: Ram, enable: Boolean, custom_tiles: Boolean) {
       Video.disabledBuffer
     }
 
-  def split_ram: (Ram, Ram, Ram) = {
-    val (cells, rest1) = video_ram.splitAt(640)
-    val (_, rest2) = rest1.splitAt(128)
-    val (colors, rest3) = rest2.splitAt(16)
-    val (_, tiles) = rest3.splitAt(496)
-    assert(cells.length == 640)
+  def split_rom: (Ram, Ram) = {
+    val (colors, cells) = custom_video_rom.splitAt(16)
     assert(colors.length == 16)
-    assert(tiles.length == 1536)
-    (cells, colors, tiles)
+    assert(cells.length == 640)
+    (cells, colors)
   }
 }
 
 object Video {
-  def make(ram: Ram): Video = {
-    val enable_bits = ram(0xF403)
-    val enable: Boolean = (enable_bits & 2) > 0
-    val custom_tiles: Boolean = (enable_bits & 4) > 0
-    val video_ram = ram.slice(0xF500, 0x10000)
-    Video(video_ram, enable, custom_tiles)
+  def make(ram: Ram, custom_video_rom: Ram): Video = {
+    assert(custom_video_rom.size == 1552)
+    assert(ram.size == 64 * 1024)
+    val enable_bits = ram(0xFE80)
+    val enable: Boolean = (enable_bits & 1) > 0
+    val enable_custom_video_rom: Boolean = (enable_bits & 2) > 0
+    val cells = ram.slice(0xFC00, 0xFE80)
+    Video(cells, custom_video_rom, enable, enable_custom_video_rom)
   }
 
   val disabledBuffer: VideoBuffer = Seq.fill(240, 256)(Color.rgb(0, 0, 0))
+
+  private def b(s: String): Char = Integer.parseInt(s, 2).toChar
+
+  val built_in_colors = Vector(
+    b("00000000"),  // 0    white
+    b("11111111"),  // 1    black
+    b("11100000"),  // 2    red
+    b("00011100"),  // 3    green
+    b("00000011"),  // 4    blue
+    b("11111100"),  // 5    yellow
+    b("11100011"),  // 6    magenta
+    b("00011111"),  // 7    cyan
+    b("11110010"),  // 8    light red
+    b("10011110"),  // 9    light green
+    b("10010011"),  // A    light blue
+    b("01000000"),  // B    dark red
+    b("00001000"),  // C    dark green
+    b("00000010"),  // D    dark blue
+    b("10010010"),  // E    light grey
+    b("01001001")   // F    dark grey
+  )
 
   val built_in_tiles: Ram = {
     import scala.util.{Try, Success, Failure}
