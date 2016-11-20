@@ -14,7 +14,6 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- Remove use of === in specs
 - Only use apply method as aux constructors in companion objects
 
 - Config.load should return (Config | Error | Help) instead of Either
