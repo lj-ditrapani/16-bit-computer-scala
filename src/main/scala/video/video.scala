@@ -25,9 +25,9 @@ case class Video(
     }
 
   def split_rom: (Ram, Ram) = {
-    val (colors, cells) = custom_video_rom.splitAt(16)
+    val (colors, tiles) = custom_video_rom.splitAt(16)
     assert(colors.length == 16)
-    assert(cells.length == 640)
+    assert(tiles.length == 1024 + 512)
     (cells, colors)
   }
 }

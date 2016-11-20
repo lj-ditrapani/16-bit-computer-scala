@@ -31,7 +31,7 @@ class ComputerSpec extends Spec {
           rom(0) shouldBe rom0
           rom(1) shouldBe rom1
           rom(rom_size - 1) shouldBe end_rom
-          val video_rom = video.video_rom
+          val video_rom = video.custom_video_rom
           video_rom.size shouldBe video_rom_size
           video_rom(0) shouldBe video_rom_value
           video_rom(video_rom_size - 1) shouldBe video_rom_value
@@ -41,11 +41,11 @@ class ComputerSpec extends Spec {
           ram(ram_size_up_to_video_ram - 1) shouldBe mid_ram
           ram(ram_size_up_to_video_ram) shouldBe video_ram_value
           ram(ram_size - 1) shouldBe video_ram_value
-          val video_ram = video.video_ram
-          video_ram.size shouldBe video_ram_size
-          video_ram(0) shouldBe video_ram_value
-          video_ram(video_ram_size - 1) shouldBe video_ram_value
-          video.custom_video_rom shouldBe false
+          val cells = video.cells
+          cells.size shouldBe 640
+          cells(0) shouldBe video_ram_value
+          cells(640 - 1) shouldBe video_ram_value
+          video.enable_custom_video_rom shouldBe false
         }
 
         val small_program =
@@ -57,10 +57,10 @@ class ComputerSpec extends Spec {
           Vector.fill(video_rom_size)(3.toChar)
         val mid_program_partial_video_ram =
           temp_program ++
-          Vector.fill(1)(4.toChar) ++
+          Vector.fill(1)(4.toChar)
         val mid_program_full_video_ram =
           temp_program ++
-          Vector.fill(ram_size_up_to_video_ram)(4.toChar) ++
+          Vector.fill(ram_size_up_to_video_ram)(4.toChar)
         val large_program =
           mid_program_full_video_ram ++
           Vector.fill(video_ram_size)(5.toChar) ++
@@ -69,12 +69,13 @@ class ComputerSpec extends Spec {
         val tests: List[LoadTest] = List(
           (small_program, 0xFFF0, 0xFFF1, 0, 0, 0, 0, 0, 0, "small"),
           (rom_program, 2, 2, 2, 0, 0, 0, 0, 0, "rom"),
-          (mid_program, 2, 2, 2, 3, 4, 0, 0, 0, "medium"),
+          (mid_program_partial_video_ram, 2, 2, 2, 3, 4, 0, 0, 0, "medium"),
+          (mid_program_full_video_ram, 2, 2, 2, 3, 4, 4, 0, 0, "medium"),
           (large_program, 2, 2, 2, 3, 4, 4, 5, 6, "large")
         )
 
         for (test <- tests) {
-          it(s"sets rom, ram & video_ram for ${test._12} program") {
+          it(s"sets rom, ram & video_ram for ${test._10} program") {
             runTest(test)
           }
         }
