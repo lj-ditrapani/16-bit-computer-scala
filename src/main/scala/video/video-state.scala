@@ -21,10 +21,10 @@ final case class VideoState(cells: CellGrid, colors: Colors, tiles: TileSet) {
   }
 
   def draw_cell(b: Buff, cell: Cell, j: Int, i: Int): Unit = {
-    val tile = tiles(cell.tile_index.toInt)
+    val tile = tiles.vector(cell.tile_index.toInt)
     val background = colors.vector(cell.background_color.toInt)
     val foreground = colors.vector(cell.foreground_color.toInt)
-    for ((row, y) <- tile.zip(j.to(j + 12))) {
+    for ((row, y) <- tile.rows.zip(j.to(j + 12))) {
       for ((pixel, x) <- row.zip(i.to(i + 8))) {
         val color: Color8 = pixel match {
           case false => background
@@ -39,7 +39,6 @@ final case class VideoState(cells: CellGrid, colors: Colors, tiles: TileSet) {
 object VideoState {
   def make(cells: Ram, colors: Colors, tiles: TileSet): VideoState = {
     assert(cells.size == 640)           // 32 * 20 * 1
-    assert(tiles.size == 1536)          // 256 * 6
     VideoState(CellGrid(cells), colors, tiles)
   }
 }

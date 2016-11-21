@@ -42,9 +42,9 @@ object VideoRoms {
     val (custom_colors, custom_tiles) = split_custom_rom(custom_rom)
     VideoRoms(
       new Colors(built_in_colors),
-      TileSet(built_in_tiles),
+      new TileSet(built_in_tiles),
       new Colors(custom_colors),
-      TileSet(custom_tiles)
+      new TileSet(custom_tiles)
     )
   }
 

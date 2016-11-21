@@ -44,10 +44,10 @@ class ComputerSpec extends Spec {
           video_colors(video_colors_size - 1) shouldBe Color8(
             0, 0, video_rom_value.toByte
           )
-          val video_tiles = video_rom.custom_tiles
+          val video_tiles = video_rom.custom_tiles.vector
           video_tiles.size shouldBe video_tiles_size
-          video_tiles(0)(1)(7) shouldBe (video_rom_value > 0)
-          video_tiles(video_tiles_size - 1)(1)(7) shouldBe (video_rom_value > 0)
+          video_tiles(0).rows(1)(7) shouldBe (video_rom_value > 0)
+          video_tiles(video_tiles_size - 1).rows(1)(7) shouldBe (video_rom_value > 0)
           val ram = computer.ram
           ram.size shouldBe ram_size
           ram(0) shouldBe start_ram
