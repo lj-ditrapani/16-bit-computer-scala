@@ -23,7 +23,7 @@ object BinFileReader {
         .check(evenNumberOfBytes)
 
       bytes_check.get match {
-        case None => Right(makeChars)
+        case None => Right(bytes2Chars(byte_array))
         case Some(msg) => Left(msg)
       }
     }
@@ -43,10 +43,10 @@ object BinFileReader {
 
       (byte_array.size % 2 == 0, msg)
     }
-
-    def makeChars: Vector[Char] =
-      byte_array.grouped(2).map(bytePair2Char).toVector
   }
+
+  def bytes2Chars(byte_array: Array[Byte]): Vector[Char] =
+    byte_array.grouped(2).map(bytePair2Char).toVector
 
   def bytePair2Char(pair: Array[Byte]): Char = {
     val int_pair = pair.map(_ & 0xFF)

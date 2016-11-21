@@ -1,5 +1,7 @@
 package info.ditrapani.ljdcomputer.video
 
+import info.ditrapani.ljdcomputer.BinFileReader
+
 case class VideoRoms(
   built_in_colors: Rom,
   built_in_tiles: Rom,
@@ -28,20 +30,9 @@ object VideoRoms {
   )
 
   val built_in_tiles: Rom = {
-    import scala.util.{Try, Success, Failure}
-
-    def bytePair2Char(pair: Array[Byte]): Char = {
-      val int_pair = pair.map(_ & 0xFF)
-      ((int_pair(0) << 8) + int_pair(1)).toChar
-    }
-
-    def toRam(byte_array: Array[Byte]): Rom = {
-      byte_array.grouped(2).map(bytePair2Char).toVector
-    }
-
     val input_stream = getClass.getResourceAsStream("/tiles.bin")
     val stream: Stream[Int] = Stream.continually(input_stream.read)
-    toRam(stream.takeWhile(_ != -1).map(_.toByte).toArray)
+    BinFileReader.bytes2Chars(stream.takeWhile(_ != -1).map(_.toByte).toArray)
   }
 
   private def b(s: String): Char = Integer.parseInt(s, 2).toChar

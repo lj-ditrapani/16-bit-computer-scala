@@ -14,10 +14,9 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
+- Warn an unused import compiler flag
 - Only use apply method as aux constructors in companion objects
 
-- video object built_in_tiles has a lot of duplicate parsing code with
-  bin-file-reader.  Refactor
 - Complete VideoState buffer method
 - Clean up Video buffer method
 - makes specs for buffer method?
