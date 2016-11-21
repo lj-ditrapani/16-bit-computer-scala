@@ -14,8 +14,6 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- convert video roms into domain objects on initialization (tiles & colors)
-- VideoRoms.make built_in_colors should be Vector[Color8], not Rom
 - create concrete types instead of type alias for collections
     - Colors as a class instead of alias to Vector[Color8]
 - make specs for buffer method
