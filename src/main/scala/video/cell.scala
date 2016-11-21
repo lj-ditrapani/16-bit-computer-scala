@@ -1,6 +1,6 @@
 package info.ditrapani.ljdcomputer.video
 
-case class Cell(
+final case class Cell(
   background_color: Byte,
   foreground_color: Byte,
   tile_index: Byte

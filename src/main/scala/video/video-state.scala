@@ -3,7 +3,7 @@ package info.ditrapani.ljdcomputer.video
 import scala.collection.mutable.ArraySeq
 import scalafx.scene.paint.Color
 
-case class VideoState(cells: CellGrid, colors: Vector[Color8], tiles: TileSet) {
+final case class VideoState(cells: CellGrid, colors: Vector[Color8], tiles: TileSet) {
   type Buff = ArraySeq[ArraySeq[Color]]
 
   def buffer: VideoBuffer = {
@@ -21,9 +21,9 @@ case class VideoState(cells: CellGrid, colors: Vector[Color8], tiles: TileSet) {
   }
 
   def draw_cell(b: Buff, cell: Cell, j: Int, i: Int): Unit = {
-    val tile = tiles(cell.tile_index)
-    val background = colors(cell.background_color)
-    val foreground = colors(cell.foreground_color)
+    val tile = tiles(cell.tile_index.toInt)
+    val background = colors(cell.background_color.toInt)
+    val foreground = colors(cell.foreground_color.toInt)
     for ((row, y) <- tile.zip(j.to(j + 12))) {
       for ((pixel, x) <- row.zip(i.to(i + 8))) {
         val color: Color8 = pixel match {

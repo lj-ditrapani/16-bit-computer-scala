@@ -1,32 +1,27 @@
 package info.ditrapani.ljdcomputer
 
+import org.scalatest.EitherValues._
+
 class BinFileReaderSpec extends Spec {
   describe("read") {
     it("returns Success(char_vector) if no issues") {
       val file = "src/test/resources/abcd.bin"
-      BinFileReader.read(file) match {
-        case Right(vector) => {
-          vector.length shouldBe 2
-          vector(0) shouldBe 24930.toChar
-        }
-      }
+      val vector = BinFileReader.read(file).right.value
+      vector.length shouldBe 2
+      vector(0) shouldBe 24930.toChar
     }
 
     it("returns Success(char_vector) if no issues (negative bytes)") {
       val file = "src/test/resources/0xFFFFAAAA.bin"
-      BinFileReader.read(file) match {
-        case Right(vector) => {
-          vector.length shouldBe 2
-          vector(0) shouldBe 0xFFFF.toChar
-          vector(1) shouldBe 0xAAAA.toChar
-        }
-      }
+      val vector = BinFileReader.read(file).right.value
+      vector.length shouldBe 2
+      vector(0) shouldBe 0xFFFF.toChar
+      vector(1) shouldBe 0xAAAA.toChar
     }
 
     it("returns Failure(exception) if issues arrise") {
-      BinFileReader.read("not_a_file") match {
-        case Left(msg) => msg should include ("NoSuchFileException")
-      }
+      val msg = BinFileReader.read("not_a_file").left.value
+      msg should include ("NoSuchFileException")
     }
   }
 
@@ -55,26 +50,20 @@ class ByteProcessorSpec extends Spec {
 
     it("returns Left if byte_array is greater than 256 KB") {
       val a: Array[Byte] = Array.fill[Byte](256 * 1024 + 1)(0)
-      process(a) match {
-        case Left(msg) => msg should include ("less than or equal to 256")
-      }
+      process(a).left.value should include ("less than or equal to 256")
     }
 
     it("returns Left if byte_array has odd number of bytes") {
-      process(Array(0x61)) match {
-        case Left(msg) => msg should include ("even number of bytes")
-      }
+      process(Array(0x61)).left.value should include ("even number of bytes")
     }
 
     it("returns Right if 256 KB byte_array passes all checks") {
       val a: Array[Byte] = Array.fill[Byte](256 * 1024)(0)
-      process(a) match { case Right(_) => Unit }
+      process(a).right.value.length shouldBe 128 * 1024
     }
 
     it("returns Right if byte_array passes all checks") {
-      process(Array(0x61, 0x62)) match {
-        case Right(Vector(x)) => x shouldBe 24930.toChar
-      }
+      process(Array(0x61, 0x62)).right.value shouldBe Vector(24930.toChar)
     }
   }
 }
@@ -101,11 +90,11 @@ class BinCheckSpec extends Spec {
 
     describe("check") {
       it("returns self on true") {
-        pass_check.check(true, "bar") shouldBe pass_check
+        pass_check.check((true, "bar")) shouldBe pass_check
       }
 
       it("returns Fail(msg) on false") {
-        pass_check.check(false, "foo") shouldBe fail_check
+        pass_check.check((false, "foo")) shouldBe fail_check
       }
     }
 

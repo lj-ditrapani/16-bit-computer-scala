@@ -2,7 +2,7 @@ package info.ditrapani.ljdcomputer.video
 
 import scalafx.scene.paint.Color
 
-case class Color8(red: Byte, green: Byte, blue: Byte) {
+final case class Color8(red: Byte, green: Byte, blue: Byte) {
   def toColor: Color = Color.rgb(
     Color8.convert3bitTo8bit(red),
     Color8.convert3bitTo8bit(green),

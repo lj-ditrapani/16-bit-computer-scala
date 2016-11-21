@@ -2,7 +2,7 @@ package info.ditrapani.ljdcomputer.video
 
 import scalafx.scene.paint.Color
 
-case class Video(
+final case class Video(
   cells: Ram,
   video_roms: VideoRoms,
   enable: Boolean,

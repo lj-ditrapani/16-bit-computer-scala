@@ -1,5 +1,7 @@
 package info.ditrapani.ljdcomputer.video
 
+import org.scalatest.OptionValues._
+
 class VideoCellSpec extends Spec {
   describe("Cell.apply") {
     it("creates a Cell") {
@@ -40,7 +42,7 @@ class VideoCellSpec extends Spec {
       val grid = CellGrid(ram)
       grid.size shouldBe 20
       grid(0).size shouldBe 32
-      grid.last.size shouldBe 32
+      grid.lastOption.value.size shouldBe 32
       val expected_cell = Cell(8, 4, 11)
       grid(0)(2) shouldBe expected_cell
       grid(1)(2) shouldBe expected_cell

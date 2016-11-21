@@ -2,7 +2,7 @@ package info.ditrapani.ljdcomputer.video
 
 import info.ditrapani.ljdcomputer.BinFileReader
 
-case class VideoRoms(
+final case class VideoRoms(
   built_in_colors: Rom,
   built_in_tiles: Rom,
   custom_colors: Rom,

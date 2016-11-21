@@ -1,5 +1,7 @@
 package info.ditrapani.ljdcomputer.video
 
+import org.scalatest.OptionValues._
+
 class VideoTileSpec extends Spec {
   def TestTileRam: Ram = {
     val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
@@ -61,8 +63,8 @@ class VideoTileSpec extends Spec {
       val ram = 0.until(256).flatMap((i) => TestTileRam).to[Vector]
       val tile_set = TileSet(ram)
       tile_set.size shouldBe 256
-      checkTile(tile_set.head)
-      checkTile(tile_set.last)
+      checkTile(tile_set.headOption.value)
+      checkTile(tile_set.lastOption.value)
     }
   }
 

@@ -4,11 +4,11 @@ import scala.util.{Try, Success, Failure}
 import info.ditrapani.ljdcomputer.BinFileReader
 
 sealed abstract class Result
-case class Good(config: Config) extends Result
-case class Error(message: String) extends Result
+final case class Good(config: Config) extends Result
+final case class Error(message: String) extends Result
 object Help extends Result
 
-case class Config(
+final case class Config(
   binary_set: Boolean,
   binary: Vector[Char],
   pixel_multiplier: Byte
@@ -20,6 +20,7 @@ object Config {
 
   val emptyConfig: Config = Config(false, Vector(), 4)
 
+  @SuppressWarnings(Array("org.wartremover.warts.TraversableOps"))
   def load(help_params: Seq[String], params: Map[String,String]): Result = {
     if (help_params.exists(p => p == "--help")) {
       Help

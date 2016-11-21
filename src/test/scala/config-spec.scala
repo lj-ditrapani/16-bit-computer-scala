@@ -2,6 +2,7 @@ package info.ditrapani.ljdcomputer.config
 
 import info.ditrapani.ljdcomputer.Spec
 
+@SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 class ConfigSpec extends Spec {
   describe("Config Class") {
     it("has instance values") {
@@ -41,23 +42,21 @@ class ConfigSpec extends Spec {
         }
 
         it("returns a Good(config) if --f and --m are set") {
-          Config.load(List(), Map("f" -> bin_path, "m" -> "2")) match {
-            case Good(Config(binary_set, binary, multiplier)) => {
-              binary_set shouldBe true
-              binary shouldBe Vector('\u6162', '\u6364')
-              multiplier shouldBe 2
-            }
-          }
+          val result = Config.load(List(), Map("f" -> bin_path, "m" -> "2"))
+          result shouldBe a [Good]
+          val config = result.asInstanceOf[Good].config
+          config.binary_set shouldBe true
+          config.binary shouldBe Vector('\u6162', '\u6364')
+          config.pixel_multiplier shouldBe 2
         }
 
         it("returns a Good(config) if --f is set") {
-          Config.load(List(), Map("f" -> bin_path)) match {
-            case Good(Config(binary_set, binary, multiplier)) => {
-              binary_set shouldBe true
-              binary shouldBe Vector('\u6162', '\u6364')
-              multiplier shouldBe 4
-            }
-          }
+          val result = Config.load(List(), Map("f" -> bin_path))
+          result shouldBe a [Good]
+          val config = result.asInstanceOf[Good].config
+          config.binary_set shouldBe true
+          config.binary shouldBe Vector('\u6162', '\u6364')
+          config.pixel_multiplier shouldBe 4
         }
 
         it("returns an Error if --f is not a file") {

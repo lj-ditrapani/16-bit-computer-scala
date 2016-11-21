@@ -14,7 +14,6 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- Warn an unused import compiler flag
 - Only use apply method as aux constructors in companion objects
 
 - Complete VideoState buffer method

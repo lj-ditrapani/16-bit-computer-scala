@@ -5,7 +5,6 @@ import scalafx.scene.canvas.{Canvas, GraphicsContext}
 import scalafx.scene.Scene
 import scalafx.scene.paint.Color
 import scalafx.animation.AnimationTimer
-import scala.util.{Try, Success, Failure}
 import info.ditrapani.ljdcomputer.config.Config
 
 object Main extends JFXApp {
@@ -56,8 +55,8 @@ object Main extends JFXApp {
   }
 
   def makeGfxContext(config: Config): GraphicsContext = {
-    val width = 256 * config.pixel_multiplier
-    val height = 240 * config.pixel_multiplier
+    val width = (256 * config.pixel_multiplier).toDouble
+    val height = (240 * config.pixel_multiplier).toDouble
     val canvas = new Canvas(width, height)
     val gc = canvas.graphicsContext2D
     canvas.translateX = 0
@@ -77,7 +76,7 @@ object Main extends JFXApp {
   }
 
   def makeSceneDrawer(config: Config, gc: GraphicsContext): VideoBuffer => Unit = {
-    val m = config.pixel_multiplier
+    val m = config.pixel_multiplier.toDouble
 
     (VideoBuffer) => {
       for ((row: Seq[Color], j: Int) <- VideoBuffer.zipWithIndex) {

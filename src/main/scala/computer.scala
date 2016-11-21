@@ -1,9 +1,8 @@
 package info.ditrapani.ljdcomputer
 
 import info.ditrapani.ljdcomputer.video.{Video, VideoRoms, Ram}
-import scalafx.scene.paint.Color
 
-case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: Video) {
+final case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: Video) {
   type VideoBuffer = video.VideoBuffer
 
   def runFrame(key_presses: Byte): (VideoBuffer, Computer) = {
@@ -26,7 +25,6 @@ object Computer {
     assert(binary.size <= end)
     val size64k = 64 * 1024
     val video_rom_size = 1024 + 512 + 16
-    val rom_start = 0
     val video_rom_start = size64k
     val ram_start = video_rom_start + video_rom_size
     val rom = binary
