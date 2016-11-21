@@ -11,8 +11,8 @@ final case class VideoRoms(
 
 object VideoRoms {
   val built_in_colors = Vector(
-    b("00000000"),  // 0    white
-    b("11111111"),  // 1    black
+    b("00000000"),  // 0    black
+    b("11111111"),  // 1    white
     b("11100000"),  // 2    red
     b("00011100"),  // 3    green
     b("00000011"),  // 4    blue
