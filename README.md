@@ -14,12 +14,12 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- create concrete types instead of type alias for collections
-    - Colors as a class instead of alias to Vector[Color8]
 - make specs for buffer method
 
 Overall steps
 - video, built-in video rom
 - video buffer
+- Computer step function
+    - swap ram
 - gamepad (multi-threaded?)
 - cpu
