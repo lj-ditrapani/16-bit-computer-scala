@@ -3,9 +3,9 @@ package info.ditrapani.ljdcomputer.video
 import info.ditrapani.ljdcomputer.BinFileReader
 
 final case class VideoRoms(
-  built_in_colors: Vector[Color8],
+  built_in_colors: Colors,
   built_in_tiles: TileSet,
-  custom_colors: Vector[Color8],
+  custom_colors: Colors,
   custom_tiles: TileSet
 )
 
@@ -41,9 +41,9 @@ object VideoRoms {
     assert(custom_rom.size == 1552)
     val (custom_colors, custom_tiles) = split_custom_rom(custom_rom)
     VideoRoms(
-      Colors.make(built_in_colors),
+      new Colors(built_in_colors),
       TileSet(built_in_tiles),
-      Colors.make(custom_colors),
+      new Colors(custom_colors),
       TileSet(custom_tiles)
     )
   }

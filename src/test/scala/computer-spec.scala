@@ -36,7 +36,7 @@ class ComputerSpec extends Spec {
           rom(1) shouldBe rom1
           rom(rom_size - 1) shouldBe end_rom
           val video_rom = computer.video_roms
-          val video_colors = video_rom.custom_colors
+          val video_colors = video_rom.custom_colors.vector
           video_colors.size shouldBe video_colors_size
           video_colors(0) shouldBe Color8(
             0, 0, video_rom_value.toByte

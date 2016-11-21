@@ -27,9 +27,7 @@ object Color8 {
     (byte << 6) + (byte << 4) + (byte << 2) + byte
 }
 
-object Colors {
-  def make(colors: Vector[Char]): Vector[Color8] = {
-    assert(colors.size == 16)
-    colors.map((char) => Color8(char.toInt))
-  }
+class Colors(rom: Rom) {
+  assert(rom.size == 16)
+  val vector = rom.map((char) => Color8(char.toInt))
 }

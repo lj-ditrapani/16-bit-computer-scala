@@ -20,7 +20,7 @@ class VideoRomsSpec extends Spec {
           Vector.fill(16)(7.toChar) ++
           Vector.fill(1024 + 512)(3.toChar)
         )
-        val built_in_colors = video_rom.built_in_colors
+        val built_in_colors = video_rom.built_in_colors.vector
         built_in_colors.size shouldBe 16
         built_in_colors(0) shouldBe Color8(0, 0, 0)
         built_in_colors(15) shouldBe Color8(2, 2, 1)
@@ -32,7 +32,7 @@ class VideoRomsSpec extends Spec {
         built_in_tiles(255)(1) shouldBe Vector(
           true, false, false, false, false, false, false, false
         )
-        val custom_colors = video_rom.custom_colors
+        val custom_colors = video_rom.custom_colors.vector
         custom_colors.size shouldBe 16
         custom_colors(0) shouldBe Color8(0,1,3)
         custom_colors(15) shouldBe Color8(0,1,3)

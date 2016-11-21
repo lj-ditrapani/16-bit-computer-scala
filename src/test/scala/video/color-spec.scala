@@ -76,16 +76,16 @@ class VideoColorSpec extends Spec {
     }
   }
 
-  describe("Colors.apply") {
+  describe("new Colors") {
     it("fails if ram size < 16") {
       an [AssertionError] should be thrownBy {
-        Colors.make(Vector.fill(15)(0.toChar))
+        new Colors(Vector.fill(15)(0.toChar))
       }
     }
 
     it("fails if ram size > 16") {
       an [AssertionError] should be thrownBy {
-        Colors.make(Vector.fill(17)(0.toChar))
+        new Colors(Vector.fill(17)(0.toChar))
       }
     }
 
@@ -96,7 +96,7 @@ class VideoColorSpec extends Spec {
       val char1 = Integer.parseInt(bits1, 2).toChar
       val char2 = Integer.parseInt(bits2, 2).toChar
       val ram = Vector.fill(16)(0.toChar).updated(1, char1).updated(14, char2)
-      val colors = Colors.make(ram)
+      val colors = new Colors(ram).vector
       colors.size shouldBe 16
       colors(1) shouldBe Color8(7, 6, 3)
       colors(14) shouldBe Color8(3, 2, 1)
