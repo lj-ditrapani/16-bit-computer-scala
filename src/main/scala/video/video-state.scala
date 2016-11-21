@@ -13,7 +13,7 @@ final case class VideoState(cells: CellGrid, colors: Colors, tiles: TileSet) {
   }
 
   def draw_cells(b: Buff): Unit = {
-    for ((row: Seq[Cell], j) <- cells.zipWithIndex) {
+    for ((row: Seq[Cell], j) <- cells.rows.zipWithIndex) {
       for ((cell: Cell, i) <- row.zipWithIndex) {
         draw_cell(b, cell, j * 12, i * 8)
       }
@@ -39,6 +39,6 @@ final case class VideoState(cells: CellGrid, colors: Colors, tiles: TileSet) {
 object VideoState {
   def make(cells: Ram, colors: Colors, tiles: TileSet): VideoState = {
     assert(cells.size == 640)           // 32 * 20 * 1
-    VideoState(CellGrid(cells), colors, tiles)
+    VideoState(new CellGrid(cells), colors, tiles)
   }
 }

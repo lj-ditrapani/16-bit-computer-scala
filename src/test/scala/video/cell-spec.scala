@@ -18,16 +18,16 @@ class VideoCellSpec extends Spec {
     }
   }
 
-  describe("CellGrid.apply") {
+  describe("new CellGrid") {
     it("fails if ram size < 640") {
       an [AssertionError] should be thrownBy {
-        CellGrid(Vector.fill(639)(0.toChar))
+        new CellGrid(Vector.fill(639)(0.toChar))
       }
     }
 
     it("fails if ram size > 640") {
       an [AssertionError] should be thrownBy {
-        CellGrid(Vector.fill(641)(0.toChar))
+        new CellGrid(Vector.fill(641)(0.toChar))
       }
     }
 
@@ -39,7 +39,7 @@ class VideoCellSpec extends Spec {
         .fill(640)(0.toChar)
         .updated(2, cell_word)
         .updated(34, cell_word)
-      val grid = CellGrid(ram)
+      val grid = new CellGrid(ram).rows
       grid.size shouldBe 20
       grid(0).size shouldBe 32
       grid.lastOption.value.size shouldBe 32
