@@ -37,10 +37,9 @@ final case class VideoState(cells: CellGrid, colors: Vector[Color8], tiles: Tile
 }
 
 object VideoState {
-  def make(cells: Ram, colors: Ram, tiles: Ram): VideoState = {
+  def make(cells: Ram, colors: Vector[Color8], tiles: TileSet): VideoState = {
     assert(cells.size == 640)           // 32 * 20 * 1
-    assert(colors.size == 16)           // 16 * 1
     assert(tiles.size == 1536)          // 256 * 6
-    VideoState(CellGrid(cells), Colors.make(colors), TileSet(tiles))
+    VideoState(CellGrid(cells), colors, tiles)
   }
 }
