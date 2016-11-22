@@ -42,14 +42,17 @@ object Main extends JFXApp {
     @SuppressWarnings(Array("org.wartremover.warts.Var"))
     var last_time = System.nanoTime()
 
+    drawScene(computer.renderVideoBuffer())
+    computer.runFrame()
+
     AnimationTimer(curr_time => {
       if (curr_time - last_time > time_delta) {
         last_time = curr_time
         // val key_press: Byte = get_key_press()
         val key_press: Byte = 0.toByte
-        val (video_buffer, new_computer) = computer.runFrame(key_press)
-        drawScene(video_buffer)
-        computer = new_computer
+        val swaped_computer = computer.swapRam(key_press)
+        drawScene(swaped_computer.renderVideoBuffer())
+        computer = swaped_computer.runFrame()
       }
     }).start()
   }

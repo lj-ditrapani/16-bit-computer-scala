@@ -5,18 +5,30 @@ import info.ditrapani.ljdcomputer.video.{Video, VideoRoms, Ram}
 final case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: Video) {
   type VideoBuffer = video.VideoBuffer
 
-  def runFrame(key_presses: Byte): (VideoBuffer, Computer) = {
-    val ram2 = addKeyPresses(key_presses)
-    val (ram3, new_cpu) = cpu.step(400000, ram2)
-    val (new_video, ram4) = swapVideoRam(ram3)
-    val new_computer = Computer(new_cpu, video_roms, ram4, new_video)
-    (new_video.buffer, new_computer)
+  def runFrame(): (Computer) = {
+    val (ram2, new_cpu) = cpu.step(400000, ram)
+    Computer(new_cpu, video_roms, ram2, video_obj)
   }
 
-  def addKeyPresses(key_presses: Byte): Vector[Char] = ram
+  def swapRam(key_presses: Byte): Computer = {
+    val ram2 = addKeyPresses(key_presses)
+    val (new_video, ram3) = swapVideoRam(ram2)
+    Computer(cpu, video_roms, ram3, new_video)
+  }
 
-  def swapVideoRam(new_ram: Vector[Char]): (Video, Vector[Char]) =
-    (video_obj, new_ram)
+  def renderVideoBuffer(): VideoBuffer = {
+    video_obj.buffer
+  }
+
+  private def addKeyPresses(key_presses: Byte): Vector[Char] = ram
+
+  private def swapVideoRam(old_ram: Vector[Char]): (Video, Vector[Char]) = {
+    val new_ram =
+      old_ram.slice(0, 0xFC00) ++
+      video_obj.getVideoRam ++
+      old_ram.slice(0xFFFD, old_ram.size)
+    (Video.make(old_ram, video_roms), new_ram)
+  }
 }
 
 object Computer {
