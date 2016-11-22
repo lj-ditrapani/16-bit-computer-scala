@@ -39,7 +39,7 @@ object VideoRoms {
 
   def make(custom_rom: Rom): VideoRoms = {
     assert(custom_rom.size == 1552)
-    val (custom_colors, custom_tiles) = split_custom_rom(custom_rom)
+    val (custom_colors, custom_tiles) = splitCustomRom(custom_rom)
     VideoRoms(
       new Colors(built_in_colors),
       new TileSet(built_in_tiles),
@@ -48,7 +48,7 @@ object VideoRoms {
     )
   }
 
-  def split_custom_rom(custom_rom: Rom): (Rom, Rom) = {
+  private def splitCustomRom(custom_rom: Rom): (Rom, Rom) = {
     val (colors, tiles) = custom_rom.splitAt(16)
     assert(colors.length == 16)
     assert(tiles.length == 1024 + 512)

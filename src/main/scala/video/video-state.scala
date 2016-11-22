@@ -8,19 +8,19 @@ final case class VideoState(cells: CellGrid, colors: Colors, tiles: TileSet) {
 
   def buffer: VideoBuffer = {
     val b = ArraySeq.fill(240, 256)(Color.rgb(0, 0, 0))
-    draw_cells(b)
+    drawCells(b)
     b
   }
 
-  def draw_cells(b: Buff): Unit = {
+  private def drawCells(b: Buff): Unit = {
     for ((row: Seq[Cell], j) <- cells.rows.zipWithIndex) {
       for ((cell: Cell, i) <- row.zipWithIndex) {
-        draw_cell(b, cell, j * 12, i * 8)
+        drawCell(b, cell, j * 12, i * 8)
       }
     }
   }
 
-  def draw_cell(b: Buff, cell: Cell, j: Int, i: Int): Unit = {
+  def drawCell(b: Buff, cell: Cell, j: Int, i: Int): Unit = {
     val tile = tiles.vector(cell.tile_index.toInt)
     val background = colors.vector(cell.background_color.toInt)
     val foreground = colors.vector(cell.foreground_color.toInt)
