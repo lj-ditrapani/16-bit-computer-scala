@@ -10,7 +10,7 @@ class VideoSpec extends Spec {
 
   describe("Video class") {
     describe("buffer") {
-      it("returns all disabledBuffer if video is disabled") {
+      it("returns disabledBuffer if video is disabled") {
         val ram = Vector.fill(0x10000)(0.toChar)
         val video = Video.make(ram, video_roms)
         val buffer = video.buffer

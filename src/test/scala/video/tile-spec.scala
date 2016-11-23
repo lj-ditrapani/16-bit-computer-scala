@@ -71,13 +71,13 @@ class VideoTileSpec extends Spec {
 
   describe("new Tile") {
     it("fails if tile_ram < 6") {
-      a [AssertionError] should be thrownBy {
+      an [AssertionError] should be thrownBy {
         new Tile(Vector.fill(5)(0.toChar))
       }
     }
 
     it("fails if tile_ram > 6") {
-      a [AssertionError] should be thrownBy {
+      an [AssertionError] should be thrownBy {
         new Tile(Vector.fill(7)(0.toChar))
       }
     }
