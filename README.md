@@ -14,6 +14,10 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
+- Fix Cell
+    - tile index is a byte; which .toInt does not return 0-255; (ex: 255 -> -1)
+    - Change class to store byte internally, but give api that returns proper int
+    - same for bg & fg colors
 - make specs for buffer method
 - make a nice test program with video
 
