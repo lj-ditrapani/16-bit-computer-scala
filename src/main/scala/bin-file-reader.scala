@@ -32,8 +32,8 @@ object BinFileReader {
       (!byte_array.isEmpty, "binary file must not be empty")
 
     def notTooBig: Result = {
-      val msg = "binary file must be less than or equal to 256 KB (128 KW)"
-      (byte_array.size <= (256 * 1024), msg)
+      val msg = "binary file must be less than or equal to 265,248 Bytes (132,624 W)"
+      (byte_array.size <= ((128 * 1024 + 1552) * 2), msg)
     }
 
     def evenNumberOfBytes: Result = {

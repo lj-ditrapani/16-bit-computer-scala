@@ -48,9 +48,9 @@ class ByteProcessorSpec extends Spec {
       process(Array()) shouldBe Left("binary file must not be empty")
     }
 
-    it("returns Left if byte_array is greater than 256 KB") {
-      val a: Array[Byte] = Array.fill[Byte](256 * 1024 + 1)(0)
-      process(a).left.value should include ("less than or equal to 256")
+    it("returns Left if byte_array is greater than 265,248 B") {
+      val a: Array[Byte] = Array.fill[Byte](265249)(0)
+      process(a).left.value should include ("less than or equal to 265,248")
     }
 
     it("returns Left if byte_array has odd number of bytes") {
