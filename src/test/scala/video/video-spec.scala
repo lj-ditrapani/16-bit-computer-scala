@@ -22,6 +22,44 @@ class VideoSpec extends Spec {
         buffer.lastOption.value.lastOption.value shouldBe Color.rgb(0, 0, 0)
       }
     }
+
+    describe("getVideoRam") {
+      type TestCase = (Int, Boolean, Boolean)
+
+      val tests = List(
+        (0, false, false),
+        (0xFF, true, true),
+        (0xA9, false, true),
+        (0x5D, true, false)
+      )
+
+      def bool2int(b: Boolean): Int = b match {
+        case false => 0
+        case true => 1
+      }
+
+      def runTest(test: TestCase): Unit = {
+        val (cell, enable, enable_custom_video_rom) = test
+        val test_name =
+          s"returns correct ram when the cells have value ${cell}," +
+          s" enbale is ${enable} and" +
+          s" enable_custom_video_rom is ${enable_custom_video_rom}"
+        it(test_name) {
+          val cells = Vector.fill(640)(cell.toChar)
+          val video = Video(cells, video_roms, enable, enable_custom_video_rom)
+          val video_ram = video.getVideoRam
+          val enable_bits = (bool2int(enable_custom_video_rom) << 1) + bool2int(enable)
+          video_ram.size shouldBe 1021
+          video_ram(0) shouldBe cell
+          video_ram(639) shouldBe cell
+          video_ram(640) shouldBe enable_bits
+          video_ram(641) shouldBe 0
+          video_ram(1020) shouldBe 0
+        }
+      }
+
+      for (test <- tests) runTest(test)
+    }
   }
 
   describe("Video object") {

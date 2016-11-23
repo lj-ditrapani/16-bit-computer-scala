@@ -14,8 +14,8 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- make specs for video.getVideoRam
 - make specs for buffer method
+- make a nice test program with video
 
 Overall steps
 - video, built-in video rom
