@@ -14,12 +14,7 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- Check green color conversion in spec for buffer method (8 bit -> 24 bit)
-- make a nice test program with video
-
 Overall steps
-- video, built-in video rom
-- video buffer
 - Computer step function
     - swap ram
 - gamepad (multi-threaded?)
