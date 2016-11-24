@@ -5,11 +5,11 @@ final case class Cell(
   private val foreground_color: Byte,
   private val tile_index: Byte
 ) {
-  def get_background_color: Int = background_color & 0xFF
+  def getBackgroundColor: Int = background_color & 0xFF
 
-  def get_foreground_color: Int = foreground_color & 0xFF
+  def getForegroundColor: Int = foreground_color & 0xFF
 
-  def get_tile_index: Int = tile_index & 0xFF
+  def getTileIndex: Int = tile_index & 0xFF
 }
 
 object Cell {

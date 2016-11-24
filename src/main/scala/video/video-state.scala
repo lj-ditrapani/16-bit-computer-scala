@@ -21,9 +21,9 @@ final case class VideoState(cells: CellGrid, colors: Colors, tiles: TileSet) {
   }
 
   def drawCell(b: Buff, cell: Cell, j: Int, i: Int): Unit = {
-    val tile = tiles.vector(cell.get_tile_index)
-    val background = colors.vector(cell.get_background_color)
-    val foreground = colors.vector(cell.get_foreground_color)
+    val tile = tiles.vector(cell.getTileIndex)
+    val background = colors.vector(cell.getBackgroundColor)
+    val foreground = colors.vector(cell.getForegroundColor)
     for ((row, y) <- tile.rows.zip(j.to(j + 12))) {
       for ((pixel, x) <- row.zip(i.to(i + 8))) {
         val color: Color8 = pixel match {
