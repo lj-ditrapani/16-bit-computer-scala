@@ -6,7 +6,7 @@ final case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: 
   type VideoBuffer = video.VideoBuffer
 
   def runFrame(): (Computer) = {
-    val (ram2, new_cpu) = cpu.step(400000, ram)
+    val (ram2, new_cpu) = cpu.run(400000, ram)
     Computer(new_cpu, video_roms, ram2, video_obj)
   }
 
@@ -49,6 +49,6 @@ object Computer {
       .slice(ram_start, end)
       .padTo(size64k, 0.toChar)
     val video_roms = VideoRoms.make(custom_video_rom)
-    Computer(Cpu(rom), video_roms, ram, Video.init(video_roms))
+    Computer(Cpu.initialize(rom), video_roms, ram, Video.init(video_roms))
   }
 }
