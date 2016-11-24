@@ -15,7 +15,9 @@ TODO
 ----
 
 Overall steps
-- Computer step function
-    - swap ram
-- gamepad (multi-threaded?)
 - cpu
+- Computer step function
+    - interrupt enable & vector (not double buffered)
+- gamepad (seperate thread?)
+- may need to put computation in a service or task
+  that runs in a seperate thtread?
