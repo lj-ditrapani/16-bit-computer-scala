@@ -15,9 +15,10 @@ TODO
 ----
 
 Overall steps
+- cpu needs carry & overflow flags (and Controller/Executor as well)
 - cpu
 - Computer step function
     - interrupt enable & vector (not double buffered)
-- gamepad (seperate thread?)
+- gamepad (separate thread?)
 - may need to put computation in a service or task
-  that runs in a seperate thtread?
+  that runs in a separate thread?
