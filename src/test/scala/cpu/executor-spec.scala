@@ -161,4 +161,23 @@ class ExecutorSpec extends Spec {
       }
     }
   }
+
+  describe("NOT") {
+    val tests = List(
+      (0x0000, 0xFFFF),
+      (0xFF00, 0x00FF),
+      (0x4955, 0xB6AA)
+    )
+
+    for (test <- tests) {
+      val (a, result) = test
+      it(s"NOT ${a} = ${result}") {
+        new Fixture {
+          registers(9) = a.toChar
+          executor.not(9, 5)
+          registers(5) shouldBe result.toChar
+        }
+      }
+    }
+  }
 }

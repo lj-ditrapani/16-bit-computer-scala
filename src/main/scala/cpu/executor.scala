@@ -41,7 +41,9 @@ final class Executor(registers: Array[Char], ram: Array[Char]) {
     registers(rd) = (registers(rs1) ^ registers(rs2)).toChar
   }
 
-  def not(rs1: Int, rd: Int): Unit = {}
+  def not(rs1: Int, rd: Int): Unit = {
+    registers(rd) = (registers(rs1) ^ 0xFFFF).toChar
+  }
 
   def shf(rs1: Int, da: Int, rd: Int): Unit = {}
 
