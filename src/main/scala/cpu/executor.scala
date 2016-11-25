@@ -9,7 +9,9 @@ final class Executor(registers: Array[Char], ram: Array[Char]) {
     registers(rd) = (immd8 << 8 | registers(rd) & 0xFF).toChar
   }
 
-  def lby(immd8: Int, rd: Int): Unit = {}
+  def lby(immd8: Int, rd: Int): Unit = {
+    registers(rd) = (registers(rd) & 0xFF00 | immd8).toChar
+  }
 
   def lod(rs1: Int, rd: Int): Unit = {}
 
