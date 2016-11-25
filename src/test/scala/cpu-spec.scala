@@ -32,8 +32,8 @@ class ExecutorSpec extends Spec {
       it(s"sets R${register} to ${final_value}") {
         val registers = Array.fill(16)(0.toChar)
         registers(register) = current_value.toChar
-        val executor = new Executor(0.toChar, registers, Array())
-        executor.hby(immediate, register) shouldBe true
+        val executor = new Executor(registers, Array())
+        executor.hby(immediate, register)
         registers(register) shouldBe final_value
       }
     }
@@ -47,20 +47,6 @@ class ExecutorSpec extends Spec {
     )
 
     testSetByteOperation(tests)
-
-    it("increments the instruction_counter") {
-      val registers = Array.fill(16)(0.toChar)
-      val executor = new Executor(0.toChar, registers, Array())
-      executor.hby(0xFF, 0)
-      executor.getInstructionCounter shouldBe 1.toChar
-    }
-
-    it("wraps the IC when it increments the instruction_counter") {
-      val registers = Array.fill(16)(0.toChar)
-      val executor = new Executor(0xFFFF.toChar, registers, Array())
-      executor.hby(0xFF, 0)
-      executor.getInstructionCounter shouldBe 0.toChar
-    }
   }
 }
 

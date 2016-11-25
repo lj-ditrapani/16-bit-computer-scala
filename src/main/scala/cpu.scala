@@ -21,9 +21,8 @@ object Cpu {
 
 final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
-  private val executor = new Executor(
-    cpu.instruction_counter, cpu.registers.vector.toArray, ramSnapshot.toArray
-  )
+  private var instruction_counter = cpu.instruction_counter
+  private val executor = new Executor(cpu.registers.vector.toArray, ramSnapshot.toArray)
 
   @tailrec
   def run(n: Int): Unit = {
@@ -37,87 +36,86 @@ final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
 
   def step(): Boolean = {
     val (op_code, a, b, c) = BitUtils.getNibbles(
-      cpu.rom(executor.getInstructionCounter.toInt)
+      cpu.rom(instruction_counter.toInt)
     )
     val immd8 = a << 8 | b
     op_code match {
       case 0x0 => false
-      case 0x1 => executor.hby(immd8, c)
-      case 0x2 => executor.lby(immd8, c)
-      case 0x3 => executor.lod(a, c)
-      case 0x4 => executor.str(a, b)
-      case 0x5 => executor.add(a, b, c)
-      case 0x6 => executor.sub(a, b, c)
-      case 0x7 => executor.adi(a, b, c)
-      case 0x8 => executor.sbi(a, b, c)
-      case 0x9 => executor.and(a, b, c)
-      case 0xA => executor.orr(a, b, c)
-      case 0xB => executor.xor(a, b, c)
-      case 0xC => executor.not(a, c)
-      case 0xD => executor.shf(a, b, c)
-      case 0xE => executor.brv(a, b, c)
-      case 0xF => executor.brf(b, c)
-      case _ => true
+      case _ => {
+        op_code match {
+          case x if x < 0xE => {
+            op_code match {
+              case 0x1 => executor.hby(immd8, c)
+              case 0x2 => executor.lby(immd8, c)
+              case 0x3 => executor.lod(a, c)
+              case 0x4 => executor.str(a, b)
+              case 0x5 => executor.add(a, b, c)
+              case 0x6 => executor.sub(a, b, c)
+              case 0x7 => executor.adi(a, b, c)
+              case 0x8 => executor.sbi(a, b, c)
+              case 0x9 => executor.and(a, b, c)
+              case 0xA => executor.orr(a, b, c)
+              case 0xB => executor.xor(a, b, c)
+              case 0xC => executor.not(a, c)
+              case 0xD => executor.shf(a, b, c)
+            }
+            instruction_counter = (instruction_counter + 1).toChar
+          }
+          case _ => {
+            instruction_counter = op_code match {
+              case 0xE => executor.brv(a, b, c)
+              case 0xF => executor.brf(b, c)
+            }
+          }
+        }
+        true
+      }
     }
   }
 
   def ramAsVector: Vector[Char] = executor.getRam.toVector
 
   def getCpu: Cpu = Cpu(
-    executor.getInstructionCounter, Registers(executor.getRegisters.toVector), cpu.rom
+    instruction_counter, Registers(executor.getRegisters.toVector), cpu.rom
   )
 }
 
-final class Executor(initial_i_c: Char, registers: Array[Char], ram: Array[Char]) {
-  @SuppressWarnings(Array("org.wartremover.warts.Var"))
-  private var instruction_counter = initial_i_c
-
-  def getInstructionCounter: Char = instruction_counter
-
+final class Executor(registers: Array[Char], ram: Array[Char]) {
   def getRegisters: Array[Char] = registers
 
   def getRam: Array[Char] = ram
 
-  def hby(immd8: Int, rd: Int): Boolean = {
+  def hby(immd8: Int, rd: Int): Unit = {
     registers(rd) = (immd8 << 8 | registers(rd) & 0xFF).toChar
-    inc_ic_and_continue()
   }
 
-  def lby(immd8: Int, rd: Int): Boolean = true
+  def lby(immd8: Int, rd: Int): Unit = {}
 
-  def lod(rs1: Int, rd: Int): Boolean = true
+  def lod(rs1: Int, rd: Int): Unit = {}
 
-  def str(rs1: Int, rs2: Int): Boolean = true
+  def str(rs1: Int, rs2: Int): Unit = {}
 
-  def add(rs1: Int, rs2: Int, rd: Int): Boolean = true
+  def add(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
-  def sub(rs1: Int, rs2: Int, rd: Int): Boolean = true
+  def sub(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
-  def adi(rs1: Int, rs2: Int, rd: Int): Boolean = true
+  def adi(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
-  def sbi(rs1: Int, rs2: Int, rd: Int): Boolean = true
+  def sbi(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
-  def and(rs1: Int, rs2: Int, rd: Int): Boolean = true
+  def and(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
-  def orr(rs1: Int, rs2: Int, rd: Int): Boolean = true
+  def orr(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
-  def xor(rs1: Int, rs2: Int, rd: Int): Boolean = true
+  def xor(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
-  def not(rs1: Int, rd: Int): Boolean = true
+  def not(rs1: Int, rd: Int): Unit = {}
 
-  def shf(rs1: Int, da: Int, rd: Int): Boolean = true
+  def shf(rs1: Int, da: Int, rd: Int): Unit = {}
 
-  def brv(rs1: Int, rs2: Int, cond_v: Int): Boolean = true
+  def brv(rs1: Int, rs2: Int, cond_v: Int): Char = 0.toChar
 
-  def brf(rs2: Int, cond_f: Int): Boolean = true
-
-  private def inc_instruction_counter(): Unit =
-    instruction_counter = (instruction_counter + 1).toChar
-
-  private def inc_ic_and_continue(): Boolean = {
-    inc_instruction_counter()
-    true
-  }
+  def brf(rs2: Int, cond_f: Int): Char = 0.toChar
 }
 
 object BitUtils {
