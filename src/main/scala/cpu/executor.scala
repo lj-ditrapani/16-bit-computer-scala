@@ -13,9 +13,13 @@ final class Executor(registers: Array[Char], ram: Array[Char]) {
     registers(rd) = (registers(rd) & 0xFF00 | immd8).toChar
   }
 
-  def lod(rs1: Int, rd: Int): Unit = {}
+  def lod(rs1: Int, rd: Int): Unit = {
+    registers(rd) = ram(registers(rs1).toInt)
+  }
 
-  def str(rs1: Int, rs2: Int): Unit = {}
+  def str(rs1: Int, rs2: Int): Unit = {
+    ram(registers(rs1).toInt) = registers(rs2)
+  }
 
   def add(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
