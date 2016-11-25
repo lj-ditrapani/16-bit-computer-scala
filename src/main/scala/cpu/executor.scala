@@ -29,11 +29,17 @@ final class Executor(registers: Array[Char], ram: Array[Char]) {
 
   def sbi(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
-  def and(rs1: Int, rs2: Int, rd: Int): Unit = {}
+  def and(rs1: Int, rs2: Int, rd: Int): Unit = {
+    registers(rd) = (registers(rs1) & registers(rs2)).toChar
+  }
 
-  def orr(rs1: Int, rs2: Int, rd: Int): Unit = {}
+  def orr(rs1: Int, rs2: Int, rd: Int): Unit = {
+    registers(rd) = (registers(rs1) | registers(rs2)).toChar
+  }
 
-  def xor(rs1: Int, rs2: Int, rd: Int): Unit = {}
+  def xor(rs1: Int, rs2: Int, rd: Int): Unit = {
+    registers(rd) = (registers(rs1) ^ registers(rs2)).toChar
+  }
 
   def not(rs1: Int, rd: Int): Unit = {}
 

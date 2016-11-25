@@ -99,4 +99,66 @@ class ExecutorSpec extends Spec {
       }
     }
   }
+
+  describe("AND") {
+    val tests = List(
+      (0x0000, 0x0000, 0x0000),
+      (0xFEED, 0xFFFF, 0xFEED),
+      (0xFEED, 0x0F0F, 0x0E0D),
+      (0x7BDC, 0xCCE3, 0x48C0)
+    )
+
+    for (test <- tests) {
+      val (a, b, result) = test
+      it(s"${a} AND ${b} = ${result}") {
+        new Fixture {
+          registers(0) = a.toChar
+          registers(1) = b.toChar
+          executor.and(0, 1, 2)
+          registers(2) shouldBe result.toChar
+        }
+      }
+    }
+  }
+
+  describe("ORR") {
+    val tests = List(
+      (0x0000, 0x0000, 0x0000),
+      (0xFEED, 0xFFFF, 0xFFFF),
+      (0xF000, 0x000F, 0xF00F),
+      (0xC8C6, 0x3163, 0xF9E7)
+    )
+
+    for (test <- tests) {
+      val (a, b, result) = test
+      it(s"${a} ORR ${b} = ${result}") {
+        new Fixture {
+          registers(15) = a.toChar
+          registers(14) = b.toChar
+          executor.orr(15, 14, 13)
+          registers(13) shouldBe result.toChar
+        }
+      }
+    }
+  }
+
+  describe("XOR") {
+    val tests = List(
+      (0x0000, 0x0000, 0x0000),
+      (0xFF00, 0x00FF, 0xFFFF),
+      (0x4955, 0x835A, 0xCA0F)
+    )
+
+    for (test <- tests) {
+      val (a, b, result) = test
+      it(s"${a} XOR ${b} = ${result}") {
+        new Fixture {
+          registers(14) = a.toChar
+          registers(7) = b.toChar
+          executor.xor(14, 7, 0)
+          registers(0) shouldBe result.toChar
+        }
+      }
+    }
+  }
 }
