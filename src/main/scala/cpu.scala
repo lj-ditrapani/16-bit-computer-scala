@@ -1,4 +1,4 @@
-package info.ditrapani.ljdcomputer
+package info.ditrapani.ljdcomputer.cpu
 
 import scala.annotation.tailrec
 
@@ -8,9 +8,9 @@ final case class Registers(vector: Vector[Char]) {
 
 final case class Cpu(instruction_counter: Char, registers: Registers, rom: Vector[Char]) {
   def run(n: Int, ram: Vector[Char]): (Vector[Char], Cpu) = {
-    val cpuAndRam = new CpuAndRam(this, ram)
-    cpuAndRam.run(n)
-    (cpuAndRam.ramAsVector, cpuAndRam.getCpu)
+    val controller = new Controller(this, ram)
+    controller.run(n)
+    (controller.ramAsVector, controller.getCpu)
   }
 }
 
@@ -19,11 +19,11 @@ object Cpu {
     Cpu(0.toChar, new Registers(Vector.fill(16)(0.toChar)), rom)
 }
 
-final class CpuAndRam(cpu: Cpu, ramSnapshot: Vector[Char]) {
+final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
-  var instruction_counter: Char = cpu.instruction_counter
-  val registers: Array[Char] = cpu.registers.vector.toArray
-  val ram: Array[Char] = ramSnapshot.toArray
+  private val executor = new Executor(
+    cpu.instruction_counter, cpu.registers.vector.toArray, ramSnapshot.toArray
+  )
 
   @tailrec
   def run(n: Int): Unit = {
@@ -36,32 +36,44 @@ final class CpuAndRam(cpu: Cpu, ramSnapshot: Vector[Char]) {
   }
 
   def step(): Boolean = {
-    val (op_code, a, b, c) = BitUtils.getNibbles(ram(instruction_counter.toInt))
+    val (op_code, a, b, c) = BitUtils.getNibbles(
+      cpu.rom(executor.getInstructionCounter.toInt)
+    )
     val immd8 = a << 8 | b
     op_code match {
       case 0x0 => false
-      case 0x1 => hby(immd8, c)
-      case 0x2 => lby(immd8, c)
-      case 0x3 => lod(a, c)
-      case 0x4 => str(a, b)
-      case 0x5 => add(a, b, c)
-      case 0x6 => sub(a, b, c)
-      case 0x7 => adi(a, b, c)
-      case 0x8 => sbi(a, b, c)
-      case 0x9 => and(a, b, c)
-      case 0xA => orr(a, b, c)
-      case 0xB => xor(a, b, c)
-      case 0xC => not(a, c)
-      case 0xD => shf(a, b, c)
-      case 0xE => brv(a, b, c)
-      case 0xF => brf(b, c)
+      case 0x1 => executor.hby(immd8, c)
+      case 0x2 => executor.lby(immd8, c)
+      case 0x3 => executor.lod(a, c)
+      case 0x4 => executor.str(a, b)
+      case 0x5 => executor.add(a, b, c)
+      case 0x6 => executor.sub(a, b, c)
+      case 0x7 => executor.adi(a, b, c)
+      case 0x8 => executor.sbi(a, b, c)
+      case 0x9 => executor.and(a, b, c)
+      case 0xA => executor.orr(a, b, c)
+      case 0xB => executor.xor(a, b, c)
+      case 0xC => executor.not(a, c)
+      case 0xD => executor.shf(a, b, c)
+      case 0xE => executor.brv(a, b, c)
+      case 0xF => executor.brf(b, c)
       case _ => true
     }
   }
 
-  def ramAsVector: Vector[Char] = ram.toVector
+  def ramAsVector: Vector[Char] = executor.getRam.toVector
 
-  def getCpu: Cpu = Cpu(instruction_counter, Registers(registers.toVector), cpu.rom)
+  def getCpu: Cpu = Cpu(
+    executor.getInstructionCounter, Registers(executor.getRegisters.toVector), cpu.rom
+  )
+}
+
+final class Executor(instruction_counter: Char, registers: Array[Char], ram: Array[Char]) {
+  def getInstructionCounter: Char = instruction_counter
+
+  def getRegisters: Array[Char] = registers
+
+  def getRam: Array[Char] = ram
 
   def hby(immd8: Int, c: Int): Boolean = true
 

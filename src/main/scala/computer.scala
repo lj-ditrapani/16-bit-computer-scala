@@ -1,6 +1,7 @@
 package info.ditrapani.ljdcomputer
 
 import info.ditrapani.ljdcomputer.video.{Video, VideoRoms, Ram}
+import info.ditrapani.ljdcomputer.cpu.Cpu
 
 final case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: Video) {
   type VideoBuffer = video.VideoBuffer
