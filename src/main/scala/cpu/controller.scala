@@ -2,23 +2,6 @@ package info.ditrapani.ljdcomputer.cpu
 
 import scala.annotation.tailrec
 
-final case class Registers(vector: Vector[Char]) {
-  assert(vector.size == 16)
-}
-
-final case class Cpu(instruction_counter: Char, registers: Registers, rom: Vector[Char]) {
-  def run(n: Int, ram: Vector[Char]): (Vector[Char], Cpu) = {
-    val controller = new Controller(this, ram)
-    controller.run(n)
-    (controller.ramAsVector, controller.getCpu)
-  }
-}
-
-object Cpu {
-  def initialize(rom: Vector[Char]): Cpu =
-    Cpu(0.toChar, new Registers(Vector.fill(16)(0.toChar)), rom)
-}
-
 final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
   private var instruction_counter = cpu.instruction_counter
@@ -78,52 +61,4 @@ final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   def getCpu: Cpu = Cpu(
     instruction_counter, Registers(executor.getRegisters.toVector), cpu.rom
   )
-}
-
-final class Executor(registers: Array[Char], ram: Array[Char]) {
-  def getRegisters: Array[Char] = registers
-
-  def getRam: Array[Char] = ram
-
-  def hby(immd8: Int, rd: Int): Unit = {
-    registers(rd) = (immd8 << 8 | registers(rd) & 0xFF).toChar
-  }
-
-  def lby(immd8: Int, rd: Int): Unit = {}
-
-  def lod(rs1: Int, rd: Int): Unit = {}
-
-  def str(rs1: Int, rs2: Int): Unit = {}
-
-  def add(rs1: Int, rs2: Int, rd: Int): Unit = {}
-
-  def sub(rs1: Int, rs2: Int, rd: Int): Unit = {}
-
-  def adi(rs1: Int, rs2: Int, rd: Int): Unit = {}
-
-  def sbi(rs1: Int, rs2: Int, rd: Int): Unit = {}
-
-  def and(rs1: Int, rs2: Int, rd: Int): Unit = {}
-
-  def orr(rs1: Int, rs2: Int, rd: Int): Unit = {}
-
-  def xor(rs1: Int, rs2: Int, rd: Int): Unit = {}
-
-  def not(rs1: Int, rd: Int): Unit = {}
-
-  def shf(rs1: Int, da: Int, rd: Int): Unit = {}
-
-  def brv(rs1: Int, rs2: Int, cond_v: Int): Char = 0.toChar
-
-  def brf(rs2: Int, cond_f: Int): Char = 0.toChar
-}
-
-object BitUtils {
-  def getNibbles(word: Char): (Int, Int, Int, Int) = {
-    val op_code = word >> 12
-    val a = word >> 8 & 0xF
-    val b = word >> 4 & 0xF
-    val c = word & 0xF
-    (op_code, a, b, c)
-  }
 }
