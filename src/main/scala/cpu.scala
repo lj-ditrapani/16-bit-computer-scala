@@ -68,16 +68,22 @@ final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   )
 }
 
-final class Executor(instruction_counter: Char, registers: Array[Char], ram: Array[Char]) {
+final class Executor(initial_i_c: Char, registers: Array[Char], ram: Array[Char]) {
+  @SuppressWarnings(Array("org.wartremover.warts.Var"))
+  private var instruction_counter = initial_i_c
+
   def getInstructionCounter: Char = instruction_counter
 
   def getRegisters: Array[Char] = registers
 
   def getRam: Array[Char] = ram
 
-  def hby(immd8: Int, c: Int): Boolean = true
+  def hby(immd8: Int, rd: Int): Boolean = {
+    registers(rd) = (immd8 << 8 | registers(rd) & 0xFF).toChar
+    inc_ic_and_continue()
+  }
 
-  def lby(immd8: Int, c: Int): Boolean = true
+  def lby(immd8: Int, rd: Int): Boolean = true
 
   def lod(rs1: Int, rd: Int): Boolean = true
 
@@ -104,6 +110,14 @@ final class Executor(instruction_counter: Char, registers: Array[Char], ram: Arr
   def brv(rs1: Int, rs2: Int, cond_v: Int): Boolean = true
 
   def brf(rs2: Int, cond_f: Int): Boolean = true
+
+  private def inc_instruction_counter(): Unit =
+    instruction_counter = (instruction_counter + 1).toChar
+
+  private def inc_ic_and_continue(): Boolean = {
+    inc_instruction_counter()
+    true
+  }
 }
 
 object BitUtils {
