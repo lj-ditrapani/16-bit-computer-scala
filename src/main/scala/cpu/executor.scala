@@ -1,7 +1,15 @@
 package info.ditrapani.ljdcomputer.cpu
 
-final class Executor(registers: Array[Char], ram: Array[Char]) {
-  def getRegisters: Array[Char] = registers
+final class Executor(
+    registers: Array[Char],
+    initial_carry: Boolean,
+    initial_overflow: Boolean,
+    ram: Array[Char]) {
+
+  private var carry = initial_carry
+  private var overflow = initial_overflow
+
+  def getRegisters: Registers = new Registers(registers.toVector, carry, overflow)
 
   def getRam: Array[Char] = ram
 
@@ -50,4 +58,12 @@ final class Executor(registers: Array[Char], ram: Array[Char]) {
   def brv(rs1: Int, rs2: Int, cond_v: Int): Char = 0.toChar
 
   def brf(rs2: Int, cond_f: Int): Char = 0.toChar
+}
+
+object Executor {
+  def make(registers_obj: Registers, ram: Array[Char]): Executor = {
+    new Executor(
+      registers_obj.vector.toArray, registers_obj.carry, registers_obj.overflow, ram
+    )
+  }
 }

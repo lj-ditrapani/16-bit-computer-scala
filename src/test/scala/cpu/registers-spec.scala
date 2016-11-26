@@ -3,21 +3,24 @@ package info.ditrapani.ljdcomputer.cpu
 import info.ditrapani.ljdcomputer.Spec
 
 class RegistersSpec extends Spec {
+  def makeRegisters(size: Int): Registers =
+    Registers(Vector.fill(size)(0.toChar), false, false)
+
   describe("apply") {
     it("fails if vector size < 16") {
       an [AssertionError] should be thrownBy {
-        Registers(Vector.fill(15)(0.toChar))
+        makeRegisters(15)
       }
     }
 
     it("fails if vector size > 16") {
       an [AssertionError] should be thrownBy {
-        Registers(Vector.fill(17)(0.toChar))
+        makeRegisters(17)
       }
     }
 
     it("creates registers") {
-      Registers(Vector.fill(16)(0.toChar)).vector.size shouldBe 16
+      makeRegisters(16).vector.size shouldBe 16
     }
   }
 }

@@ -6,13 +6,13 @@ class ExecutorSpec extends Spec {
   trait Fixture {
     val registers = Array.fill(16)(0.toChar)
     val ram = Array.fill(16)(0.toChar)
-    val executor = new Executor(registers, ram)
+    val executor = new Executor(registers, false, false, ram)
   }
 
   trait FullFixture {
     val registers = Array.fill(16)(0.toChar)
     val ram = Array.fill(64 * 1024)(0.toChar)
-    val executor = new Executor(registers, ram)
+    val executor = new Executor(registers, false, false, ram)
   }
 
 

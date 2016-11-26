@@ -10,5 +10,5 @@ final case class Cpu(instruction_counter: Char, registers: Registers, rom: Vecto
 
 object Cpu {
   def initialize(rom: Vector[Char]): Cpu =
-    Cpu(0.toChar, new Registers(Vector.fill(16)(0.toChar)), rom)
+    Cpu(0.toChar, Registers.initialize, rom)
 }

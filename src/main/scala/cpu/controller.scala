@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
   private var instruction_counter = cpu.instruction_counter
-  private val executor = new Executor(cpu.registers.vector.toArray, ramSnapshot.toArray)
+  private val executor = Executor.make(cpu.registers, ramSnapshot.toArray)
 
   @tailrec
   def run(n: Int): Unit = {
@@ -20,7 +20,7 @@ final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   def ramAsVector: Vector[Char] = executor.getRam.toVector
 
   def getCpu: Cpu = Cpu(
-    instruction_counter, Registers(executor.getRegisters.toVector), cpu.rom
+    instruction_counter, executor.getRegisters, cpu.rom
   )
 
   private def step(): Boolean = {
