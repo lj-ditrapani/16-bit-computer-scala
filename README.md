@@ -15,7 +15,7 @@ TODO
 ----
 
 Overall steps
-- cpu needs carry & overflow flags (and Controller/Executor as well)
+- refactor multiple implementations of bool2int
 - cpu
 - Computer step function
     - interrupt enable & vector (not double buffered)

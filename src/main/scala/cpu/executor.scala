@@ -6,8 +6,18 @@ final class Executor(
     initial_overflow: Boolean,
     ram: Array[Char]) {
 
+  @SuppressWarnings(Array("org.wartremover.warts.Var"))
   private var carry = initial_carry
+  @SuppressWarnings(Array("org.wartremover.warts.Var"))
   private var overflow = initial_overflow
+
+  private def basicAdd(a: Char, b: Char, c: Int, rd: Int): Unit = {
+    val int_sum = a + b + c
+    carry = int_sum >= 65536
+    val char_sum = int_sum.toChar
+    overflow = false
+    registers(rd) = char_sum
+  }
 
   def getRegisters: Registers = new Registers(registers.toVector, carry, overflow)
 
@@ -29,7 +39,8 @@ final class Executor(
     ram(registers(rs1).toInt) = registers(rs2)
   }
 
-  def add(rs1: Int, rs2: Int, rd: Int): Unit = {}
+  def add(rs1: Int, rs2: Int, rd: Int): Unit =
+    basicAdd(registers(rs1), registers(rs2), 0, rd)
 
   def sub(rs1: Int, rs2: Int, rd: Int): Unit = {}
 
@@ -50,7 +61,7 @@ final class Executor(
   }
 
   def not(rs1: Int, rd: Int): Unit = {
-    registers(rd) = (registers(rs1) ^ 0xFFFF).toChar
+    registers(rd) = (~ registers(rs1)).toChar
   }
 
   def shf(rs1: Int, da: Int, rd: Int): Unit = {}

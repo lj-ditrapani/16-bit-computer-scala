@@ -3,18 +3,37 @@ package info.ditrapani.ljdcomputer.cpu
 import info.ditrapani.ljdcomputer.Spec
 
 class ExecutorSpec extends Spec {
-  trait Fixture {
+  trait WithRegisters {
     val registers = Array.fill(16)(0.toChar)
+  }
+
+  trait Fixture extends WithRegisters {
     val ram = Array.fill(16)(0.toChar)
     val executor = new Executor(registers, false, false, ram)
   }
 
-  trait FullFixture {
-    val registers = Array.fill(16)(0.toChar)
+  class WithFlags(initial_carry: Boolean, initial_overflow: Boolean)
+    extends WithRegisters {
+    val ram = Array.fill(16)(0.toChar)
+    val executor = new Executor(registers, initial_carry, initial_overflow, ram)
+  }
+
+  trait FullFixture extends WithRegisters {
     val ram = Array.fill(64 * 1024)(0.toChar)
     val executor = new Executor(registers, false, false, ram)
   }
 
+  val flag_values = List(
+    (0, 0),
+    (0, 1),
+    (1, 0),
+    (1, 1)
+  )
+
+  def int2bool(i: Int): Boolean = i match {
+    case 0 => false
+    case _ => true
+  }
 
   describe("set byte operations") {
     def testSetByteOperation(
@@ -95,6 +114,42 @@ class ExecutorSpec extends Spec {
           registers(value_register) = value.toChar
           executor.str(address_register, value_register)
           ram(address) shouldBe value.toChar
+        }
+      }
+    }
+  }
+
+  describe("ADD") {
+    val tests = List(
+      (0x0000, 0x0000, 0x0000, 0, 0),
+      (0x00FF, 0xFF00, 0xFFFF, 0, 0),
+      (0xFFFF, 0x0001, 0x0000, 1, 0),
+      (0x0001, 0xFFFF, 0x0000, 1, 0),
+      (0xFFFF, 0xFFFF, 0xFFFE, 1, 0),
+      (0x8000, 0x8000, 0x0000, 1, 1),
+      (0x1234, 0x9876, 0xAAAA, 0, 0),
+      (0x1234, 0xDEAD, 0xF0E1, 0, 0),
+      (0x7FFF, 0x0001, 0x8000, 0, 1),
+      (0x0FFF, 0x7001, 0x8000, 0, 1),
+      (0x7FFE, 0x0001, 0x7FFF, 0, 0)
+    )
+
+    for (test <- tests; (initial_carry, initial_overflow) <- flag_values) {
+      val (a, b, result, final_carry, final_overflow) = test
+      val test_name = {
+        val initial_cv = s"${initial_carry}${initial_overflow}"
+        val final_cv = s"${final_carry}${final_overflow}"
+        s"${a} + ${b} = ${result} (cv ${initial_cv} -> ${final_cv})"
+      }
+      it(test_name) {
+        new WithFlags(int2bool(initial_carry), int2bool(initial_overflow)) {
+          registers(0) = a.toChar
+          registers(1) = b.toChar
+          executor.add(0, 1, 2)
+          registers(2) shouldBe result
+          val registers_obj = executor.getRegisters
+          registers_obj.carry shouldBe int2bool(final_carry)
+          registers_obj.overflow shouldBe int2bool(final_overflow)
         }
       }
     }
