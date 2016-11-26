@@ -15,7 +15,7 @@ final class Executor(
     val int_sum = a + b + c
     carry = int_sum >= 65536
     val char_sum = int_sum.toChar
-    overflow = false
+    overflow = BitUtils.hasOverflowedOnAdd(a, b, char_sum)
     registers(rd) = char_sum
   }
 

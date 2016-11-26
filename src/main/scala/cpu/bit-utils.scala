@@ -8,4 +8,15 @@ object BitUtils {
     val c = word & 0xF
     (op_code, a, b, c)
   }
+
+  def isPositiveOrZero(word: Char): Boolean = word < 32768
+
+  def isNegative(word: Char): Boolean = word >= 32768
+
+  def isTruePositive(word: Char): Boolean = word != 0 && isPositiveOrZero(word)
+
+  def hasOverflowedOnAdd(a: Char, b: Char, sum: Char): Boolean =
+  ((isNegative(a) && isNegative(b) && isPositiveOrZero(sum)) ||
+   (isPositiveOrZero(a) && isPositiveOrZero(b) && isNegative(sum)))
+
 }
