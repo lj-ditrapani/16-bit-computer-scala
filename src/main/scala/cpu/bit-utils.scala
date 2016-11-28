@@ -1,5 +1,9 @@
 package info.ditrapani.ljdcomputer.cpu
 
+sealed abstract class Direction
+object Left extends Direction
+object Right extends Direction
+
 object BitUtils {
   def getNibbles(word: Char): (Int, Int, Int, Int) = {
     val op_code = word >> 12
@@ -19,4 +23,9 @@ object BitUtils {
   ((isNegative(a) && isNegative(b) && isPositiveOrZero(sum)) ||
    (isPositiveOrZero(a) && isPositiveOrZero(b) && isNegative(sum)))
 
+  def positionOfLastBitShifted(direction: Direction, amount: Int): Int =
+    direction match {
+      case Left => 16 - amount
+      case Right => amount - 1
+    }
 }

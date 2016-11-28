@@ -92,4 +92,23 @@ class BitUtilsSpec extends Spec {
       }
     }
   }
+
+  describe("positionOfLastBitShifted") {
+    val tests = List(
+      (Left, 1, 15),
+      (Right, 1, 0),
+      (Left, 4, 12),
+      (Right, 4, 3),
+      (Left, 8, 8),
+      (Right, 8, 7)
+    )
+
+    for (test <- tests) {
+      val (direction, amount, position) = test
+      val direction_name = direction.getClass.getSimpleName.dropRight(1)
+      it(s"on shift ${direction_name} by ${amount} = ${position}") {
+        BitUtils.positionOfLastBitShifted(direction, amount) shouldBe position
+      }
+    }
+  }
 }
