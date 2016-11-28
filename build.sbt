@@ -24,10 +24,11 @@ libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.102-R11"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 
 wartremoverWarnings ++= Warts.allBut(
-  Wart.NonUnitStatements,
   Wart.Equals,
-  Wart.Nothing,
   Wart.MutableDataStructures,
+  Wart.NoNeedForMonad,
+  Wart.NonUnitStatements,
+  Wart.Nothing,
   Wart.Overloading
 )
 
