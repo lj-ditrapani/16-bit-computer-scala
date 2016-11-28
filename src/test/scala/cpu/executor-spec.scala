@@ -119,141 +119,114 @@ class ExecutorSpec extends Spec {
     }
   }
 
-  describe("ADD") {
-    val tests = List(
-      (0x0000, 0x0000, 0x0000, 0, 0),
-      (0x00FF, 0xFF00, 0xFFFF, 0, 0),
-      (0xFFFF, 0x0001, 0x0000, 1, 0),
-      (0x0001, 0xFFFF, 0x0000, 1, 0),
-      (0xFFFF, 0xFFFF, 0xFFFE, 1, 0),
-      (0x8000, 0x8000, 0x0000, 1, 1),
-      (0x1234, 0x9876, 0xAAAA, 0, 0),
-      (0x1234, 0xDEAD, 0xF0E1, 0, 0),
-      (0x7FFF, 0x0001, 0x8000, 0, 1),
-      (0x0FFF, 0x7001, 0x8000, 0, 1),
-      (0x7FFE, 0x0001, 0x7FFF, 0, 0)
-    )
+  describe("ADD/SUB/ADI/SBI instructions") {
+    type AddSubTest = (Int, Int, Int, Int, Int)
 
-    for (test <- tests; (initial_carry, initial_overflow) <- flag_values) {
-      val (a, b, result, final_carry, final_overflow) = test
-      val test_name = {
-        val initial_cv = s"${initial_carry}${initial_overflow}"
-        val final_cv = s"${final_carry}${final_overflow}"
-        s"ADD: ${a} + ${b} = ${result} (cv ${initial_cv} -> ${final_cv})"
-      }
-      it(test_name) {
-        new WithFlags(int2bool(initial_carry), int2bool(initial_overflow)) {
-          val (rs1, rs2, rd) = (0, 1, 2)
-          registers(rs1) = a.toChar
-          registers(rs2) = b.toChar
-          executor.add(rs1, rs2, rd)
-          registers(rd) shouldBe result
-          val registers_obj = executor.getRegisters
-          registers_obj.carry shouldBe int2bool(final_carry)
-          registers_obj.overflow shouldBe int2bool(final_overflow)
+    def testAddOrSub(name: String,symbol: String,tests: List[AddSubTest])
+                    (setup_and_run: (Int, Int, Array[Char], Executor) => Int): Unit = {
+      for (test <- tests; (initial_carry, initial_overflow) <- flag_values) {
+        val (a, b, result, final_carry, final_overflow) = test
+        val test_name = {
+          val initial_cv = s"${initial_carry}${initial_overflow}"
+          val final_cv = s"${final_carry}${final_overflow}"
+          s"${name}: ${a} ${symbol} ${b} = ${result} (cv ${initial_cv} -> ${final_cv})"
+        }
+        it(test_name) {
+          new WithFlags(int2bool(initial_carry), int2bool(initial_overflow)) {
+            val rd = setup_and_run(a, b, registers, executor)
+            registers(rd) shouldBe result
+            val registers_obj = executor.getRegisters
+            registers_obj.carry shouldBe int2bool(final_carry)
+            registers_obj.overflow shouldBe int2bool(final_overflow)
+          }
         }
       }
     }
-  }
 
-  describe("SUB") {
-    val tests = List(
-      (0x0000, 0x0000, 0x0000, 1, 0),
-      (0x0000, 0x0001, 0xFFFF, 0, 0),
-      (0x0005, 0x0007, 0xFFFE, 0, 0),
-      (0x7FFE, 0x7FFF, 0xFFFF, 0, 0),
-      (0xFFFF, 0xFFFF, 0x0000, 1, 0),
-      (0xFFFF, 0x0001, 0xFFFE, 1, 0),
-      (0x8000, 0x8000, 0x0000, 1, 0),
-      (0x8000, 0x7FFF, 0x0001, 1, 1),
-      (0xFFFF, 0x7FFF, 0x8000, 1, 0),
-      (0x7FFF, 0xFFFF, 0x8000, 0, 1),
-      (0x7FFF, 0x0001, 0x7FFE, 1, 0)
-    )
+    describe("ADD") {
+      val tests = List(
+        (0x0000, 0x0000, 0x0000, 0, 0),
+        (0x00FF, 0xFF00, 0xFFFF, 0, 0),
+        (0xFFFF, 0x0001, 0x0000, 1, 0),
+        (0x0001, 0xFFFF, 0x0000, 1, 0),
+        (0xFFFF, 0xFFFF, 0xFFFE, 1, 0),
+        (0x8000, 0x8000, 0x0000, 1, 1),
+        (0x1234, 0x9876, 0xAAAA, 0, 0),
+        (0x1234, 0xDEAD, 0xF0E1, 0, 0),
+        (0x7FFF, 0x0001, 0x8000, 0, 1),
+        (0x0FFF, 0x7001, 0x8000, 0, 1),
+        (0x7FFE, 0x0001, 0x7FFF, 0, 0)
+      )
 
-    for (test <- tests; (initial_carry, initial_overflow) <- flag_values) {
-      val (a, b, result, final_carry, final_overflow) = test
-      val test_name = {
-        val initial_cv = s"${initial_carry}${initial_overflow}"
-        val final_cv = s"${final_carry}${final_overflow}"
-        s"SUB: ${a} - ${b} = ${result} (cv ${initial_cv} -> ${final_cv})"
-      }
-      it(test_name) {
-        new WithFlags(int2bool(initial_carry), int2bool(initial_overflow)) {
-          val (rs1, rs2, rd) = (0, 1, 2)
-          registers(rs1) = a.toChar
-          registers(rs2) = b.toChar
-          executor.sub(rs1, rs2, rd)
-          registers(rd) shouldBe result
-          val registers_obj = executor.getRegisters
-          registers_obj.carry shouldBe int2bool(final_carry)
-          registers_obj.overflow shouldBe int2bool(final_overflow)
-        }
-      }
+      testAddOrSub("ADD", "+", tests)((a, b, registers, executor) => {
+        val (rs1, rs2, rd) = (0, 1, 2)
+        registers(rs1) = a.toChar
+        registers(rs2) = b.toChar
+        executor.add(rs1, rs2, rd)
+        rd
+      })
     }
-  }
 
-  describe("ADI") {
-    val tests = List(
-      (0x0000, 0x0000, 0x0000, 0, 0),
-      (0xFFFF, 0x0001, 0x0000, 1, 0),
-      (0x7FFF, 0x0001, 0x8000, 0, 1),
-      (0x7FFE, 0x0001, 0x7FFF, 0, 0),
-      (0xFFFE, 0x000F, 0x000D, 1, 0),
-      (0x7FFE, 0x000F, 0x800D, 0, 1),
-      (0xFEDF, 0x000E, 0xFEED, 0, 0)
-    )
+    describe("SUB") {
+      val tests = List(
+        (0x0000, 0x0000, 0x0000, 1, 0),
+        (0x0000, 0x0001, 0xFFFF, 0, 0),
+        (0x0005, 0x0007, 0xFFFE, 0, 0),
+        (0x7FFE, 0x7FFF, 0xFFFF, 0, 0),
+        (0xFFFF, 0xFFFF, 0x0000, 1, 0),
+        (0xFFFF, 0x0001, 0xFFFE, 1, 0),
+        (0x8000, 0x8000, 0x0000, 1, 0),
+        (0x8000, 0x7FFF, 0x0001, 1, 1),
+        (0xFFFF, 0x7FFF, 0x8000, 1, 0),
+        (0x7FFF, 0xFFFF, 0x8000, 0, 1),
+        (0x7FFF, 0x0001, 0x7FFE, 1, 0)
+      )
 
-    for (test <- tests; (initial_carry, initial_overflow) <- flag_values) {
-      val (a, b, result, final_carry, final_overflow) = test
-      val test_name = {
-        val initial_cv = s"${initial_carry}${initial_overflow}"
-        val final_cv = s"${final_carry}${final_overflow}"
-        s"ADI: ${a} + ${b} = ${result} (cv ${initial_cv} -> ${final_cv})"
-      }
-      it(test_name) {
-        new WithFlags(int2bool(initial_carry), int2bool(initial_overflow)) {
-          val (rs1, rd) = (0, 2)
-          registers(rs1) = a.toChar
-          executor.adi(rs1, b, rd)
-          registers(rd) shouldBe result
-          val registers_obj = executor.getRegisters
-          registers_obj.carry shouldBe int2bool(final_carry)
-          registers_obj.overflow shouldBe int2bool(final_overflow)
-        }
-      }
+      testAddOrSub("SUB", "-", tests)((a, b, registers, executor) => {
+        val (rs1, rs2, rd) = (15, 11, 9)
+        registers(rs1) = a.toChar
+        registers(rs2) = b.toChar
+        executor.sub(rs1, rs2, rd)
+        rd
+      })
     }
-  }
 
-  describe("SBI") {
-    val tests = List(
-      (0x0000, 0x0000, 0x0000, 1, 0),
-      (0x0000, 0x0001, 0xFFFF, 0, 0),
-      (0x8000, 0x0001, 0x7FFF, 1, 1),
-      (0x7FFF, 0x0001, 0x7FFE, 1, 0),
-      (0x000D, 0x000F, 0xFFFE, 0, 0),
-      (0x800D, 0x000F, 0x7FFE, 1, 1),
-      (0xFEED, 0x000E, 0xFEDF, 1, 0)
-    )
+    describe("ADI") {
+      val tests = List(
+        (0x0000, 0x0000, 0x0000, 0, 0),
+        (0xFFFF, 0x0001, 0x0000, 1, 0),
+        (0x7FFF, 0x0001, 0x8000, 0, 1),
+        (0x7FFE, 0x0001, 0x7FFF, 0, 0),
+        (0xFFFE, 0x000F, 0x000D, 1, 0),
+        (0x7FFE, 0x000F, 0x800D, 0, 1),
+        (0xFEDF, 0x000E, 0xFEED, 0, 0)
+      )
 
-    for (test <- tests; (initial_carry, initial_overflow) <- flag_values) {
-      val (a, b, result, final_carry, final_overflow) = test
-      val test_name = {
-        val initial_cv = s"${initial_carry}${initial_overflow}"
-        val final_cv = s"${final_carry}${final_overflow}"
-        s"SBI: ${a} - ${b} = ${result} (cv ${initial_cv} -> ${final_cv})"
-      }
-      it(test_name) {
-        new WithFlags(int2bool(initial_carry), int2bool(initial_overflow)) {
-          val (rs1, rd) = (0, 2)
-          registers(rs1) = a.toChar
-          executor.sbi(rs1, b, rd)
-          registers(rd) shouldBe result
-          val registers_obj = executor.getRegisters
-          registers_obj.carry shouldBe int2bool(final_carry)
-          registers_obj.overflow shouldBe int2bool(final_overflow)
-        }
-      }
+      testAddOrSub("ADI", "+", tests)((a, b, registers, executor) => {
+        val (rs1, rd) = (7, 13)
+        registers(rs1) = a.toChar
+        executor.adi(rs1, b, rd)
+        rd
+      })
+    }
+
+    describe("SBI") {
+      val tests = List(
+        (0x0000, 0x0000, 0x0000, 1, 0),
+        (0x0000, 0x0001, 0xFFFF, 0, 0),
+        (0x8000, 0x0001, 0x7FFF, 1, 1),
+        (0x7FFF, 0x0001, 0x7FFE, 1, 0),
+        (0x000D, 0x000F, 0xFFFE, 0, 0),
+        (0x800D, 0x000F, 0x7FFE, 1, 1),
+        (0xFEED, 0x000E, 0xFEDF, 1, 0)
+      )
+
+      testAddOrSub("SBI", "-", tests)((a, b, registers, executor) => {
+        val (rs1, rd) = (8, 5)
+        registers(rs1) = a.toChar
+        executor.sbi(rs1, b, rd)
+        rd
+      })
     }
   }
 
