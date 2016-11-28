@@ -15,8 +15,14 @@ TODO
 ----
 
 Overall steps
-- refactor multiple implementations of bool2int
 - cpu
+    - add/sub/adi/subi specs & implementation
+    - shift & branch helper methods
+    - shift & branch implementations
+    - Controller specs
+    - Cpu specs
+    - Whole program tests
+- refactor multiple implementations of bool2int
 - Computer step function
     - interrupt enable & vector (not double buffered)
 - gamepad (separate thread?)
