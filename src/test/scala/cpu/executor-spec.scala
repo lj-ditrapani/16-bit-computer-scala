@@ -341,4 +341,74 @@ class ExecutorSpec extends Spec {
       }
     }
   }
+
+  describe("Branching Instructions") {
+    val jump_addr = 0x00FF.toChar
+    val do_jump = TakeJump(jump_addr)
+
+    def b(s: String): Int = Integer.parseInt(s, 2)
+
+    describe("BRV") {
+      val tests = List(
+        //        NZP
+      (0xFFFF, "000", DontJump),
+      (0xFFFF, "111", do_jump),
+      (0xFFFF, "011", DontJump),
+      (0xFFFF, "100", do_jump),
+      (0x8000, "100", do_jump),
+      (0x0000, "110", do_jump),
+      (0x0000, "101", DontJump),
+      (0x0000, "010", do_jump),
+      (0x7FFF, "001", do_jump),
+      (0x7FFF, "110", DontJump),
+      (0x7FFF, "101", do_jump)
+    )
+
+      val (rs1, rs2) = (12, 0)
+
+      for ((value, cond, jump_result) <- tests) {
+        val value_str = "$" + Integer.toHexString(value).toUpperCase
+        it(s"value:${value_str} NZP:${cond} => ${jump_result}") {
+          new Fixture {
+            registers(rs1) = value.toChar
+            registers(rs2) = jump_addr
+            executor.brv(rs1, rs2, b(cond)) shouldBe jump_result
+          }
+        }
+      }
+    }
+
+    describe("BRF") {
+      val tests = List(
+        //      VC
+        (0, 0, "00", do_jump),
+        (1, 0, "00", DontJump),
+        (0, 1, "00", DontJump),
+        (1, 1, "00", DontJump),
+        (0, 0, "11", DontJump),
+        (0, 1, "11", do_jump),
+        (1, 0, "11", do_jump),
+        (1, 1, "11", do_jump),
+        (0, 0, "10", DontJump),
+        (0, 1, "10", DontJump),
+        (1, 0, "10", do_jump),
+        (1, 1, "10", do_jump),
+        (0, 0, "01", DontJump),
+        (0, 1, "01", do_jump),
+        (1, 0, "01", DontJump),
+        (1, 1, "01", do_jump)
+      )
+
+      val rs2 = 11
+
+      for ((overflow, carry, cond, jump_result) <- tests) {
+        it(s"overflow:${overflow} carry:${carry} VC:${cond} => ${jump_result}") {
+          new WithFlags(int2bool(carry), int2bool(overflow)) {
+            registers(rs2) = jump_addr
+            executor.brf(rs2, b(cond)) shouldBe jump_result
+          }
+        }
+      }
+    }
+  }
 }

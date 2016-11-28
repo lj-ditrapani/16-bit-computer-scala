@@ -1,5 +1,19 @@
 package info.ditrapani.ljdcomputer.cpu
 
+sealed abstract class JumpResult {
+  override def toString: String = this match {
+    case DontJump => {
+      "DontJump"
+    }
+    case TakeJump(address) => {
+      val s = Integer.toHexString(address.toInt).toUpperCase
+      "TakeJump($" + s"$s)"
+    }
+  }
+}
+final case class TakeJump(address: Char) extends JumpResult
+final object DontJump extends JumpResult
+
 final class Executor(
     registers: Array[Char],
     initial_carry: Boolean,
@@ -82,9 +96,21 @@ final class Executor(
     }).toChar
   }
 
-  def brv(rs1: Int, rs2: Int, cond_v: Int): Char = 0.toChar
+  def brv(rs1: Int, rs2: Int, cond_v: Int): JumpResult = {
+    val (value, jump_addr) = (registers(rs1), registers(rs2))
+    BitUtils.matchValue(value, cond_v & 7) match {
+      case false => DontJump
+      case true => TakeJump(jump_addr)
+    }
+  }
 
-  def brf(rs2: Int, cond_f: Int): Char = 0.toChar
+  def brf(rs2: Int, cond_f: Int): JumpResult = {
+    val jump_addr = registers(rs2)
+    BitUtils.matchFlags(overflow, carry, cond_f & 7) match {
+      case false => DontJump
+      case true => TakeJump(jump_addr)
+    }
+  }
 }
 
 object Executor {

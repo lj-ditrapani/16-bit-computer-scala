@@ -16,7 +16,8 @@ TODO
 
 Overall steps
 - cpu
-    - branch implementation
+    - JumpResult to seperate file; used by controller & executor
+    - branch specs & code refactor
     - Controller specs
       - end instruction stops cpu
       - sets the instruction_counter

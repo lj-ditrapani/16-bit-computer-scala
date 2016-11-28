@@ -30,14 +30,18 @@ final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
     op_code match {
       case 0x0 => false
       case _ => {
-        instruction_counter = op_code match {
+        val jump_result = op_code match {
           case x if x < 0xE => {
             doNormalInstruction(op_code, a, b, c)
-            (instruction_counter + 1).toChar
+            DontJump
           }
           case _ => {
             doBranchingInstruction(op_code, a, b, c)
           }
+        }
+        instruction_counter = jump_result match {
+          case DontJump => (instruction_counter + 1).toChar
+          case TakeJump(address) => address
         }
         true
       }
@@ -65,7 +69,11 @@ final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   }
   // scalastyle:on cyclomatic.complexity
 
-  private def doBranchingInstruction(op_code: Int, rs1: Int, rs2: Int, cond: Int): Char =
+  private def doBranchingInstruction(
+      op_code: Int,
+      rs1: Int,
+      rs2: Int,
+      cond: Int): JumpResult =
     op_code match {
       case 0xE => executor.brv(rs1, rs2, cond)
       case 0xF => executor.brf(rs2, cond)
