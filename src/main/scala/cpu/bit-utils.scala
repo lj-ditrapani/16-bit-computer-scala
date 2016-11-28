@@ -28,4 +28,35 @@ object BitUtils {
       case Left => 16 - amount
       case Right => amount - 1
     }
+
+  def oneBitWordMask(position: Int): Int = math.pow(2.0, position.toDouble).toInt
+
+  def getShiftCarry(value: Int, direction: Direction, amount: Int): Boolean = {
+    val position = positionOfLastBitShifted(direction, amount)
+    val mask = oneBitWordMask(position)
+    (value & mask) > 0
+  }
+
+  def matchValue(value: Char, cond: Int): Boolean =
+    if (((cond & 4) == 4) && isNegative(value)) {
+      true
+    } else if (((cond & 2) == 2) && (value == 0)) {
+      true
+    } else if (((cond & 1) == 1) && isTruePositive(value)) {
+      true
+    } else {
+      false
+    }
+
+
+  def matchFlags(overflow: Boolean, carry: Boolean, cond: Int): Boolean =
+    if ((cond >= 2) && overflow) {
+      true
+    } else if (((cond & 1) == 1) && carry) {
+      true
+    } else if ((cond == 0) && (!overflow) && (!carry)) {
+      true
+    } else {
+      false
+    }
 }

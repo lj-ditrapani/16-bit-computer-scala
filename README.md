@@ -16,12 +16,16 @@ TODO
 
 Overall steps
 - cpu
-    - shift & branch helper methods
     - shift & branch implementations
     - Controller specs
+      - end instruction stops cpu
+      - sets the instruction_counter
+        (branch to jump location, normal to instruction_counter + 1)
     - Cpu specs
     - Whole program tests
+    - cpu.runFrame should not take a n: Int parameter; hard code
 - refactor multiple implementations of bool2int
+- refactor multiple implementations of b("01010") => Int
 - Computer step function
     - interrupt enable & vector (not double buffered)
 - gamepad (separate thread?)

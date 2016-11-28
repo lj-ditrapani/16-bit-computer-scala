@@ -111,4 +111,96 @@ class BitUtilsSpec extends Spec {
       }
     }
   }
+
+  describe("oneBitWordMask") {
+    val tests = List(
+      (0, 0x0001),
+      (1, 0x0002),
+      (3, 0x0008),
+      (4, 0x0010),
+      (8, 0x0100),
+      (15, 0x8000),
+      (14, 0x4000)
+    )
+
+    for ((position, mask) <- tests) {
+      it(s"given position ${position} produces mask ${mask}") {
+        BitUtils.oneBitWordMask(position) shouldBe mask
+      }
+    }
+  }
+
+  describe("getShiftCarry") {
+    val tests = List(
+      (Left, 1, 0x8000, true),
+      (Left, 1, 0x7FFF, false),
+      (Right, 1, 0x0001, true),
+      (Right, 1, 0xFFFE, false),
+      (Left, 4, 0x1000, true),
+      (Right, 4, 0xFFF7, false),
+      (Left, 8, 0xFEFF, false),
+      (Right, 8, 0x0080, true)
+    )
+
+    for ((direction, amount, value, carry) <- tests) {
+      it(s"(${value}, ${direction}, ${amount}) => ${carry}") {
+        BitUtils.getShiftCarry(value, direction, amount) shouldBe carry
+      }
+    }
+  }
+
+  describe("match methods") {
+    def b(s: String): Int = Integer.parseInt(s, 2)
+
+    describe("matchValue") {
+      val tests = List(
+        // NZP
+        (b("000"), 0xFFFF, false),
+        (b("111"), 0xFFFF, true),
+        (b("011"), 0xFFFF, false),
+        (b("100"), 0xFFFF, true),
+        (b("100"), 0x8000, true),
+        (b("110"), 0x0000, true),
+        (b("101"), 0x0000, false),
+        (b("010"), 0x0000, true),
+        (b("001"), 0x7FFF, true),
+        (b("110"), 0x7FFF, false),
+        (b("101"), 0x7FFF, true)
+      )
+
+      for ((cond, value, result) <- tests) {
+        it(s"(cond:${cond}, value:${value}) => ${result}") {
+          BitUtils.matchValue(value.toChar, cond) shouldBe result
+        }
+      }
+    }
+
+    describe("matchFlags") {
+      val tests = List(
+        // VC
+        (b("00"), 0, 0, true),
+        (b("00"), 1, 0, false),
+        (b("00"), 0, 1, false),
+        (b("11"), 0, 1, true),
+        (b("11"), 1, 0, true),
+        (b("11"), 1, 1, true),
+        (b("11"), 0, 0, false),
+        (b("10"), 0, 0, false),
+        (b("10"), 0, 1, false),
+        (b("10"), 1, 0, true),
+        (b("10"), 1, 1, true),
+        (b("01"), 0, 0, false),
+        (b("01"), 0, 1, true),
+        (b("01"), 1, 0, false),
+        (b("01"), 1, 1, true)
+      )
+
+      for ((cond, int_overflow, int_carry, result) <- tests) {
+        val (overflow, carry) = (int2bool(int_overflow), int2bool(int_carry))
+        it(s"(cond:${cond}, overflow:${int_overflow}, carry:${int_carry}) => ${result}") {
+          BitUtils.matchFlags(overflow, carry, cond) shouldBe result
+        }
+      }
+    }
+  }
 }
