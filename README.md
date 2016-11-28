@@ -16,7 +16,7 @@ TODO
 
 Overall steps
 - cpu
-    - shift & branch implementations
+    - branch implementation
     - Controller specs
       - end instruction stops cpu
       - sets the instruction_counter

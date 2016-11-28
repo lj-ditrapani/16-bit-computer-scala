@@ -2,6 +2,28 @@ package info.ditrapani.ljdcomputer.cpu
 
 import info.ditrapani.ljdcomputer.Spec
 
+class DirectionSpec extends Spec {
+  describe("fromNibble") {
+    it("returns Left if high bit is 0") {
+      Direction.fromNibble(7) shouldBe Left
+    }
+
+    it("returns Right if high bit is 1") {
+      Direction.fromNibble(8) shouldBe Right
+    }
+  }
+
+  describe("toString") {
+    it("returns left for Left") {
+      Left.toString shouldBe "left"
+    }
+
+    it("returns right for Right") {
+      Right.toString shouldBe "right"
+    }
+  }
+}
+
 class BitUtilsSpec extends Spec {
   def int2bool(i: Int): Boolean = i match {
     case 0 => false
@@ -105,8 +127,7 @@ class BitUtilsSpec extends Spec {
 
     for (test <- tests) {
       val (direction, amount, position) = test
-      val direction_name = direction.getClass.getSimpleName.dropRight(1)
-      it(s"on shift ${direction_name} by ${amount} = ${position}") {
+      it(s"on shift ${direction} by ${amount} = ${position}") {
         BitUtils.positionOfLastBitShifted(direction, amount) shouldBe position
       }
     }
@@ -143,8 +164,8 @@ class BitUtilsSpec extends Spec {
     )
 
     for ((direction, amount, value, carry) <- tests) {
-      it(s"(${value}, ${direction}, ${amount}) => ${carry}") {
-        BitUtils.getShiftCarry(value, direction, amount) shouldBe carry
+      it(s"shift value ${value} ${direction} by ${amount} => carry is ${carry}") {
+        BitUtils.getShiftCarry(value.toChar, direction, amount) shouldBe carry
       }
     }
   }
@@ -154,7 +175,7 @@ class BitUtilsSpec extends Spec {
 
     describe("matchValue") {
       val tests = List(
-        // NZP
+        //  NZP
         (b("000"), 0xFFFF, false),
         (b("111"), 0xFFFF, true),
         (b("011"), 0xFFFF, false),
@@ -177,7 +198,7 @@ class BitUtilsSpec extends Spec {
 
     describe("matchFlags") {
       val tests = List(
-        // VC
+        //  VC
         (b("00"), 0, 0, true),
         (b("00"), 1, 0, false),
         (b("00"), 0, 1, false),

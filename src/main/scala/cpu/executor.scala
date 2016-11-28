@@ -71,7 +71,16 @@ final class Executor(
     registers(rd) = (~ registers(rs1)).toChar
   }
 
-  def shf(rs1: Int, da: Int, rd: Int): Unit = {}
+  def shf(rs1: Int, da: Int, rd: Int): Unit = {
+    val value = registers(rs1)
+    val direction = Direction.fromNibble(da)
+    val amount = (da & 7) + 1
+    carry = BitUtils.getShiftCarry(value, direction, amount)
+    registers(rd) = (direction match {
+      case Right => value >> amount
+      case Left => (value << amount) & 0xFFFF
+    }).toChar
+  }
 
   def brv(rs1: Int, rs2: Int, cond_v: Int): Char = 0.toChar
 

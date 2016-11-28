@@ -1,8 +1,19 @@
 package info.ditrapani.ljdcomputer.cpu
 
-sealed abstract class Direction
+sealed abstract class Direction {
+  override def toString: String = this match {
+    case Left => "left"
+    case Right => "right"
+  }
+}
 object Left extends Direction
 object Right extends Direction
+object Direction {
+  def fromNibble(immd4: Int): Direction = (immd4 >> 3) > 0 match {
+    case false => Left
+    case true => Right
+  }
+}
 
 object BitUtils {
   def getNibbles(word: Char): (Int, Int, Int, Int) = {
@@ -31,7 +42,7 @@ object BitUtils {
 
   def oneBitWordMask(position: Int): Int = math.pow(2.0, position.toDouble).toInt
 
-  def getShiftCarry(value: Int, direction: Direction, amount: Int): Boolean = {
+  def getShiftCarry(value: Char, direction: Direction, amount: Int): Boolean = {
     val position = positionOfLastBitShifted(direction, amount)
     val mask = oneBitWordMask(position)
     (value & mask) > 0
