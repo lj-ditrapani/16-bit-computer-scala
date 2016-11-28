@@ -16,7 +16,6 @@ TODO
 
 Overall steps
 - cpu
-    - add/sub/adi/subi specs & implementation
     - shift & branch helper methods
     - shift & branch implementations
     - Controller specs

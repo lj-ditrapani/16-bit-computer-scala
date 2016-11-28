@@ -42,11 +42,18 @@ final class Executor(
   def add(rs1: Int, rs2: Int, rd: Int): Unit =
     basicAdd(registers(rs1), registers(rs2), 0, rd)
 
-  def sub(rs1: Int, rs2: Int, rd: Int): Unit = {}
+  def sub(rs1: Int, rs2: Int, rd: Int): Unit = {
+    val not_b = (~ registers(rs2)).toChar
+    basicAdd(registers(rs1), not_b, 1, rd)
+  }
 
-  def adi(rs1: Int, rs2: Int, rd: Int): Unit = {}
+  def adi(rs1: Int, immd: Int, rd: Int): Unit =
+    basicAdd(registers(rs1), immd.toChar, 0, rd)
 
-  def sbi(rs1: Int, rs2: Int, rd: Int): Unit = {}
+  def sbi(rs1: Int, immd: Int, rd: Int): Unit = {
+    val not_b = (~ immd).toChar
+    basicAdd(registers(rs1), not_b, 1, rd)
+  }
 
   def and(rs1: Int, rs2: Int, rd: Int): Unit = {
     registers(rd) = (registers(rs1) & registers(rs2)).toChar
