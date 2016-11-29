@@ -84,18 +84,14 @@ final class Executor(
 
   def brv(rs1: Int, rs2: Int, cond_v: Int): JumpResult = {
     val (value, jump_addr) = (registers(rs1), registers(rs2))
-    BitUtils.matchValue(value, cond_v & 7) match {
-      case false => DontJump
-      case true => TakeJump(jump_addr)
-    }
+    val take_jump = BitUtils.matchValue(value, cond_v & 7)
+    JumpResult.fromBool(take_jump, jump_addr)
   }
 
   def brf(rs2: Int, cond_f: Int): JumpResult = {
     val jump_addr = registers(rs2)
-    BitUtils.matchFlags(overflow, carry, cond_f & 7) match {
-      case false => DontJump
-      case true => TakeJump(jump_addr)
-    }
+    val take_jump = BitUtils.matchFlags(overflow, carry, cond_f & 7)
+    JumpResult.fromBool(take_jump, jump_addr)
   }
 }
 

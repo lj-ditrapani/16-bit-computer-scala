@@ -16,15 +16,13 @@ TODO
 
 Overall steps
 - cpu
-    - branch specs & code refactor
-      - both brv brf match on jump_result
+    - cpu.runFrame should not take a n: Int parameter; hard code
     - Controller specs
       - end instruction stops cpu
       - sets the instruction_counter
         (branch to jump location, normal to instruction_counter + 1)
     - Cpu specs
     - Whole program tests
-    - cpu.runFrame should not take a n: Int parameter; hard code
 - refactor multiple implementations of bool2int
 - refactor multiple implementations of b("01010") => Int
 - refactor multiple implementations "$" + toHexString.toUpperCase

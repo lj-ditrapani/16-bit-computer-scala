@@ -13,3 +13,10 @@ sealed abstract class JumpResult {
 }
 final case class TakeJump(address: Char) extends JumpResult
 final object DontJump extends JumpResult
+
+object JumpResult {
+  def fromBool(b: Boolean, address: Char): JumpResult = b match {
+    case false => DontJump
+    case true => TakeJump(address)
+  }
+}
