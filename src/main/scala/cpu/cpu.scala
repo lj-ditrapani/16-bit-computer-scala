@@ -1,9 +1,9 @@
 package info.ditrapani.ljdcomputer.cpu
 
 final case class Cpu(instruction_counter: Char, registers: Registers, rom: Vector[Char]) {
-  def run(n: Int, ram: Vector[Char]): (Vector[Char], Cpu) = {
+  def run(ram: Vector[Char]): (Vector[Char], Cpu) = {
     val controller = new Controller(this, ram)
-    controller.run(n)
+    controller.run(400000)
     (controller.ramAsVector, controller.getCpu)
   }
 }
