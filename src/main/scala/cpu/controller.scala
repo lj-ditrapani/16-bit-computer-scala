@@ -2,10 +2,11 @@ package info.ditrapani.ljdcomputer.cpu
 
 import scala.annotation.tailrec
 
-final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
+final class Controller(cpu: Cpu, ram: Vector[Char]) {
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
   private var instruction_counter = cpu.instruction_counter
-  private val executor = Executor.make(cpu.registers, ramSnapshot.toArray)
+  private val executor = Executor.make(cpu.registers, ram.toArray)
+  private val rom = cpu.rom
 
   @tailrec
   def run(n: Int): Unit = {
@@ -20,12 +21,12 @@ final class Controller(cpu: Cpu, ramSnapshot: Vector[Char]) {
   def ramAsVector: Vector[Char] = executor.getRam.toVector
 
   def getCpu: Cpu = Cpu(
-    instruction_counter, executor.getRegisters, cpu.rom
+    instruction_counter, executor.getRegisters, rom
   )
 
   private def step(): Boolean = {
     val (op_code, a, b, c) = BitUtils.getNibbles(
-      cpu.rom(instruction_counter.toInt)
+      rom(instruction_counter.toInt)
     )
     op_code match {
       case 0x0 => false
