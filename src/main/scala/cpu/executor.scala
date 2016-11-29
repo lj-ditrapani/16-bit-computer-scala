@@ -77,8 +77,8 @@ final class Executor(
     val amount = (da & 7) + 1
     carry = BitUtils.getShiftCarry(value, direction, amount)
     registers(rd) = (direction match {
-      case Right => value >> amount
-      case Left => (value << amount) & 0xFFFF
+      case DRight => value >> amount
+      case DLeft => (value << amount) & 0xFFFF
     }).toChar
   }
 

@@ -304,14 +304,14 @@ class ExecutorSpec extends Spec {
 
   describe("SHF") {
     val tests = List(
-      (0x0704, Left,  0x4, 0x7040, 0),
-      (0x090F, Left,  0x1, 0x121E, 0),
-      (0x090F, Left,  0x3, 0x4878, 0),
-      (0x90F0, Right, 0x4, 0x090F, 0),
-      (0x90F1, Right, 0x1, 0x4878, 1),
-      (0x450A, Left,  0x7, 0x8500, 0),
-      (0x450A, Left,  0x8, 0x0A00, 1),
-      (0x450A, Right, 0x8, 0x0045, 0)
+      (0x0704, DLeft,  0x4, 0x7040, 0),
+      (0x090F, DLeft,  0x1, 0x121E, 0),
+      (0x090F, DLeft,  0x3, 0x4878, 0),
+      (0x90F0, DRight, 0x4, 0x090F, 0),
+      (0x90F1, DRight, 0x1, 0x4878, 1),
+      (0x450A, DLeft,  0x7, 0x8500, 0),
+      (0x450A, DLeft,  0x8, 0x0A00, 1),
+      (0x450A, DRight, 0x8, 0x0045, 0)
     )
 
     for ((value, direction, amount, result, carry) <- tests) {
@@ -320,8 +320,8 @@ class ExecutorSpec extends Spec {
           val (rs1, rd) = (14, 7)
           registers(rs1) = value.toChar
           val int_direction = direction match {
-            case Left => 0
-            case Right => 1
+            case DLeft => 0
+            case DRight => 1
           }
           val immd4 = int_direction * 8 + (amount - 1)
           executor.shf(rs1, immd4, rd)

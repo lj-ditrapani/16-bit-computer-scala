@@ -2,28 +2,6 @@ package info.ditrapani.ljdcomputer.cpu
 
 import info.ditrapani.ljdcomputer.Spec
 
-class DirectionSpec extends Spec {
-  describe("fromNibble") {
-    it("returns Left if high bit is 0") {
-      Direction.fromNibble(7) shouldBe Left
-    }
-
-    it("returns Right if high bit is 1") {
-      Direction.fromNibble(8) shouldBe Right
-    }
-  }
-
-  describe("toString") {
-    it("returns left for Left") {
-      Left.toString shouldBe "left"
-    }
-
-    it("returns right for Right") {
-      Right.toString shouldBe "right"
-    }
-  }
-}
-
 class BitUtilsSpec extends Spec {
   def int2bool(i: Int): Boolean = i match {
     case 0 => false
@@ -117,12 +95,12 @@ class BitUtilsSpec extends Spec {
 
   describe("positionOfLastBitShifted") {
     val tests = List(
-      (Left, 1, 15),
-      (Right, 1, 0),
-      (Left, 4, 12),
-      (Right, 4, 3),
-      (Left, 8, 8),
-      (Right, 8, 7)
+      (DLeft, 1, 15),
+      (DRight, 1, 0),
+      (DLeft, 4, 12),
+      (DRight, 4, 3),
+      (DLeft, 8, 8),
+      (DRight, 8, 7)
     )
 
     for (test <- tests) {
@@ -153,14 +131,14 @@ class BitUtilsSpec extends Spec {
 
   describe("getShiftCarry") {
     val tests = List(
-      (Left, 1, 0x8000, true),
-      (Left, 1, 0x7FFF, false),
-      (Right, 1, 0x0001, true),
-      (Right, 1, 0xFFFE, false),
-      (Left, 4, 0x1000, true),
-      (Right, 4, 0xFFF7, false),
-      (Left, 8, 0xFEFF, false),
-      (Right, 8, 0x0080, true)
+      (DLeft, 1, 0x8000, true),
+      (DLeft, 1, 0x7FFF, false),
+      (DRight, 1, 0x0001, true),
+      (DRight, 1, 0xFFFE, false),
+      (DLeft, 4, 0x1000, true),
+      (DRight, 4, 0xFFF7, false),
+      (DLeft, 8, 0xFEFF, false),
+      (DRight, 8, 0x0080, true)
     )
 
     for ((direction, amount, value, carry) <- tests) {
