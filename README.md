@@ -16,8 +16,8 @@ TODO
 
 Overall steps
 - cpu
-    - JumpResult to seperate file; used by controller & executor
     - branch specs & code refactor
+      - both brv brf match on jump_result
     - Controller specs
       - end instruction stops cpu
       - sets the instruction_counter
@@ -27,6 +27,7 @@ Overall steps
     - cpu.runFrame should not take a n: Int parameter; hard code
 - refactor multiple implementations of bool2int
 - refactor multiple implementations of b("01010") => Int
+- refactor multiple implementations "$" + toHexString.toUpperCase
 - Computer step function
     - interrupt enable & vector (not double buffered)
 - gamepad (separate thread?)

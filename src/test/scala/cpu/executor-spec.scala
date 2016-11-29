@@ -230,65 +230,56 @@ class ExecutorSpec extends Spec {
     }
   }
 
-  describe("AND") {
-    val tests = List(
-      (0x0000, 0x0000, 0x0000),
-      (0xFEED, 0xFFFF, 0xFEED),
-      (0xFEED, 0x0F0F, 0x0E0D),
-      (0x7BDC, 0xCCE3, 0x48C0)
-    )
+  describe("3 operand logic operations") {
+    type LogicTest = (Int, Int, Int)
 
-    for (test <- tests) {
-      val (a, b, result) = test
-      it(s"${a} AND ${b} = ${result}") {
-        new Fixture {
-          registers(0) = a.toChar
-          registers(1) = b.toChar
-          executor.and(0, 1, 2)
-          registers(2) shouldBe result.toChar
+    def runLogicTests(name: String, rs1: Int, rs2: Int, rd: Int, tests: List[LogicTest])
+                     (f: (Executor) => ((Int, Int, Int) => Unit)): Unit = {
+      for ((a, b, result) <- tests) {
+        val a_str = "$" + Integer.toHexString(a).toUpperCase
+        val b_str = "$" + Integer.toHexString(b).toUpperCase
+        val result_str = "$" + Integer.toHexString(result).toUpperCase
+        it(s"${a_str} ${name} ${b_str} = ${result_str}") {
+          new Fixture {
+            registers(rs1) = a.toChar
+            registers(rs2) = b.toChar
+            f(executor)(rs1, rs2, rd)
+            registers(rd) shouldBe result.toChar
+          }
         }
       }
     }
-  }
 
-  describe("ORR") {
-    val tests = List(
-      (0x0000, 0x0000, 0x0000),
-      (0xFEED, 0xFFFF, 0xFFFF),
-      (0xF000, 0x000F, 0xF00F),
-      (0xC8C6, 0x3163, 0xF9E7)
-    )
+    describe("AND") {
+      val tests = List(
+        (0x0000, 0x0000, 0x0000),
+        (0xFEED, 0xFFFF, 0xFEED),
+        (0xFEED, 0x0F0F, 0x0E0D),
+        (0x7BDC, 0xCCE3, 0x48C0)
+      )
 
-    for (test <- tests) {
-      val (a, b, result) = test
-      it(s"${a} ORR ${b} = ${result}") {
-        new Fixture {
-          registers(15) = a.toChar
-          registers(14) = b.toChar
-          executor.orr(15, 14, 13)
-          registers(13) shouldBe result.toChar
-        }
-      }
+      runLogicTests("AND", 0, 1, 2, tests)(_.and)
     }
-  }
 
-  describe("XOR") {
-    val tests = List(
-      (0x0000, 0x0000, 0x0000),
-      (0xFF00, 0x00FF, 0xFFFF),
-      (0x4955, 0x835A, 0xCA0F)
-    )
+    describe("ORR") {
+      val tests = List(
+        (0x0000, 0x0000, 0x0000),
+        (0xFEED, 0xFFFF, 0xFFFF),
+        (0xF000, 0x000F, 0xF00F),
+        (0xC8C6, 0x3163, 0xF9E7)
+      )
 
-    for (test <- tests) {
-      val (a, b, result) = test
-      it(s"${a} XOR ${b} = ${result}") {
-        new Fixture {
-          registers(14) = a.toChar
-          registers(7) = b.toChar
-          executor.xor(14, 7, 0)
-          registers(0) shouldBe result.toChar
-        }
-      }
+      runLogicTests("ORR", 15, 14, 13, tests)(_.orr)
+    }
+
+    describe("XOR") {
+      val tests = List(
+        (0x0000, 0x0000, 0x0000),
+        (0xFF00, 0x00FF, 0xFFFF),
+        (0x4955, 0x835A, 0xCA0F)
+      )
+
+      runLogicTests("XOR", 14, 7, 0, tests)(_.xor)
     }
   }
 
@@ -322,6 +313,7 @@ class ExecutorSpec extends Spec {
       (0x450A, Left,  0x8, 0x0A00, 1),
       (0x450A, Right, 0x8, 0x0045, 0)
     )
+
     for ((value, direction, amount, result, carry) <- tests) {
       it(s"SHF ${value} ${direction} by ${amount} = ${result}") {
         new Fixture {
