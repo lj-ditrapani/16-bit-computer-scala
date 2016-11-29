@@ -3,6 +3,41 @@ package info.ditrapani.ljdcomputer
 import info.ditrapani.ljdcomputer.video.Color8
 
 class ComputerSpec extends Spec {
+  describe("whole program tests") {
+    it("runs an adding program 27 + 73 = 100 and IC = 8") {
+      // RA (register 10) is used for all addresses
+      // A is stored in ram[0100]
+      // B is stored in ram[0101]
+      // Add A and B and store in ram[0102]
+      // Put A in R1
+      // Put B in R2
+      // Add A + B and put in R3
+      // Store R3 into ram[0102]
+      val program = Vector(
+        0x101A,    // HBY 0x01 RA
+        0x200A,    // LBY 0x00 RA
+        0x3A01,    // LOD RA R1
+        0x201A,    // LBY 0x01 RA
+        0x3A02,    // LOD RA R2
+        0x5123,    // ADD R1 R2 R3
+        0x202A,    // LBY 0x02 RA
+        0x4A30,    // STR RA R3
+        0x0000     // END
+      ).map(_.toChar)
+
+      val binary = {
+        val rom_filler = Vector.fill(64 * 1024 - program.size + 1552)(0.toChar)
+        val ram = Vector.fill(0x0100)(0.toChar) ++ Vector(27, 73).map(_.toChar)
+        program ++ rom_filler ++ ram
+      }
+
+      val computer = Computer.load(binary)
+      val computer2 = computer.runFrame()
+      computer2.ram(0x0102).toInt shouldBe 100
+      computer2.cpu.instruction_counter.toInt shouldBe 8
+    }
+  }
+
   describe("Computer object") {
     type LoadTest = (Vector[Char], Int, Int, Int, Int, Int, Int, Int, Int, String)
     val rom_size = 64 * 1024
