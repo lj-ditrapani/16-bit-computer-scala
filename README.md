@@ -15,8 +15,8 @@ TODO
 ----
 
 Overall steps
+- old whole program tests to controller specs
 - cpu
-    - cpu.runFrame should not take a n: Int parameter; hard code
     - Controller specs
       - end instruction stops cpu
       - sets the instruction_counter
