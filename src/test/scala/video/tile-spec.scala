@@ -3,7 +3,7 @@ package info.ditrapani.ljdcomputer.video
 import org.scalatest.OptionValues._
 
 class VideoTileSpec extends Spec {
-  def TestTileRam: Ram = {
+  def testTileRam: Ram = {
     val inc = "00" + "01" + "10" + "11"  // 0 1 2 3
     val dec = "11" + "10" + "01" + "00"  // 3 2 1 0
     val incThenDec = Integer.parseInt(inc + dec, 2).toChar
@@ -49,19 +49,19 @@ class VideoTileSpec extends Spec {
 
   describe("new TileSet") {
     it("fails if ram < 1,536") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         new TileSet(Vector.fill(1535)(0.toChar))
       }
     }
 
     it("fails if ram > 1,536") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         new TileSet(Vector.fill(1537)(0.toChar))
       }
     }
 
     it("creates a tile set") {
-      val ram = 0.until(256).flatMap((i) => TestTileRam).to[Vector]
+      val ram = 0.until(256).flatMap((i) => testTileRam).to[Vector]
       val tile_set = new TileSet(ram).vector
       tile_set.size shouldBe 256
       checkTile(tile_set.headOption.value)
@@ -71,19 +71,19 @@ class VideoTileSpec extends Spec {
 
   describe("new Tile") {
     it("fails if tile_ram < 6") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         new Tile(Vector.fill(5)(0.toChar))
       }
     }
 
     it("fails if tile_ram > 6") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         new Tile(Vector.fill(7)(0.toChar))
       }
     }
 
     it("returns an 8 x 12 tile of 1-bit per pixel values") {
-      val tile = new Tile(TestTileRam)
+      val tile = new Tile(testTileRam)
       checkTile(tile)
     }
   }

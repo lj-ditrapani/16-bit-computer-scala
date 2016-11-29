@@ -4,13 +4,13 @@ class VideoRomsSpec extends Spec {
   describe("VideoRoms object") {
     describe("make") {
       it("fails if custom rom size is less than 1,552 words") {
-        an [AssertionError] should be thrownBy {
+        an[AssertionError] should be thrownBy {
           VideoRoms.make(Vector.fill(1551)(0.toChar))
         }
       }
 
       it("fails if custom rom size is greater than 1,552 words") {
-        an [AssertionError] should be thrownBy {
+        an[AssertionError] should be thrownBy {
           VideoRoms.make(Vector.fill(1553)(0.toChar))
         }
       }

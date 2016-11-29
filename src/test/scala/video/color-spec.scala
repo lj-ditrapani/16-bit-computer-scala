@@ -78,13 +78,13 @@ class VideoColorSpec extends Spec {
 
   describe("new Colors") {
     it("fails if ram size < 16") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         new Colors(Vector.fill(15)(0.toChar))
       }
     }
 
     it("fails if ram size > 16") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         new Colors(Vector.fill(17)(0.toChar))
       }
     }

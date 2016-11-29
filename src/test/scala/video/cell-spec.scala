@@ -20,13 +20,13 @@ class VideoCellSpec extends Spec {
 
   describe("new CellGrid") {
     it("fails if ram size < 640") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         new CellGrid(Vector.fill(639)(0.toChar))
       }
     }
 
     it("fails if ram size > 640") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         new CellGrid(Vector.fill(641)(0.toChar))
       }
     }

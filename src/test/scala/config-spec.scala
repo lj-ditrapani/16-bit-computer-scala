@@ -43,7 +43,7 @@ class ConfigSpec extends Spec {
 
         it("returns a Good(config) if --f and --m are set") {
           val result = Config.load(List(), Map("f" -> bin_path, "m" -> "2"))
-          result shouldBe a [Good]
+          result shouldBe a[Good]
           val config = result.asInstanceOf[Good].config
           config.binary_set shouldBe true
           config.binary shouldBe Vector('\u6162', '\u6364')
@@ -52,7 +52,7 @@ class ConfigSpec extends Spec {
 
         it("returns a Good(config) if --f is set") {
           val result = Config.load(List(), Map("f" -> bin_path))
-          result shouldBe a [Good]
+          result shouldBe a[Good]
           val config = result.asInstanceOf[Good].config
           config.binary_set shouldBe true
           config.binary shouldBe Vector('\u6162', '\u6364')

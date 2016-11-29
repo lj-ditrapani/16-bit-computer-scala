@@ -8,13 +8,13 @@ class RegistersSpec extends Spec {
 
   describe("apply") {
     it("fails if vector size < 16") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         makeRegisters(15)
       }
     }
 
     it("fails if vector size > 16") {
-      an [AssertionError] should be thrownBy {
+      an[AssertionError] should be thrownBy {
         makeRegisters(17)
       }
     }

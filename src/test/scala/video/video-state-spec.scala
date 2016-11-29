@@ -9,13 +9,13 @@ class VideoStateSpec extends Spec {
   describe("VideoState object") {
     describe("make") {
       it("fails if cells size is less than 640 words") {
-        an [AssertionError] should be thrownBy {
+        an[AssertionError] should be thrownBy {
           VideoState.make(Vector.fill(639)(0.toChar), colors, tiles)
         }
       }
 
       it("fails if cells size is greater than 640 words") {
-        an [AssertionError] should be thrownBy {
+        an[AssertionError] should be thrownBy {
           VideoState.make(Vector.fill(641)(0.toChar), colors, tiles)
         }
       }
