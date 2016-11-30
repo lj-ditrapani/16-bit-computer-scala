@@ -51,7 +51,7 @@ final class Controller(cpu: Cpu, ram: Vector[Char]) {
 
   // scalastyle:off cyclomatic.complexity
   private def doNormalInstruction(op_code: Int, a: Int, b: Int, c: Int): Unit = {
-    val immd8 = a << 8 | b
+    val immd8 = a << 4 | b
     op_code match {
       case 0x1 => executor.hby(immd8, c)
       case 0x2 => executor.lby(immd8, c)
