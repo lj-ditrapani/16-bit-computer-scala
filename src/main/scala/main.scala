@@ -51,8 +51,9 @@ object Main extends JFXApp {
         // val key_press: Byte = get_key_press()
         val key_press: Byte = 0.toByte
         val swaped_computer = computer.swapRam(key_press)
-        drawScene(swaped_computer.renderVideoBuffer())
-        computer = swaped_computer.runFrame()
+        val computer_with_ic = swaped_computer.setInstructionCounterIfInterruptEnable()
+        drawScene(computer_with_ic.renderVideoBuffer())
+        computer = computer_with_ic.runFrame()
       }
     }).start()
   }

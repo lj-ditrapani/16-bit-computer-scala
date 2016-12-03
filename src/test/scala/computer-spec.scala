@@ -3,6 +3,32 @@ package info.ditrapani.ljdcomputer
 import info.ditrapani.ljdcomputer.video.Color8
 
 class ComputerSpec extends Spec {
+  describe("setInstructionCounterIfInterruptEnable") {
+    it("does nothing if enable is false") {
+      val binary = {
+        val rom = Vector.fill(64 * 1024)(0.toChar)
+        val video_rom = Vector.fill(1552)(0.toChar)
+        val ram = Vector.fill(0xFFFE)(0.toChar) ++ Vector(0, 0xFACE).map(_.toChar)
+        rom ++ video_rom ++ ram
+      }
+      val computer = Computer.load(binary)
+      val new_computer = computer.setInstructionCounterIfInterruptEnable()
+      new_computer.cpu.instruction_counter.toInt shouldBe 0
+    }
+
+    it("sets the instruction_counter to the interrupt_vector if enable is true") {
+      val binary = {
+        val rom = Vector.fill(64 * 1024)(0.toChar)
+        val video_rom = Vector.fill(1552)(0.toChar)
+        val ram = Vector.fill(0xFFFE)(0.toChar) ++ Vector(0xFF01, 0xFACE).map(_.toChar)
+        rom ++ video_rom ++ ram
+      }
+      val computer = Computer.load(binary)
+      val new_computer = computer.setInstructionCounterIfInterruptEnable()
+      new_computer.cpu.instruction_counter.toInt shouldBe 0xFACE
+    }
+  }
+
   describe("whole program tests") {
     it("runs an adding program where 27 + 73 = 100 and IC = 8") {
       // RA (register 10) is used for all addresses
@@ -190,7 +216,7 @@ class ComputerSpec extends Spec {
        * 32766 + 1
        * BRF V to END (does not take branch)
        * 32767 + 1
-       * BRF V 
+       * BRF V
        * END   (gets skipped over)
        * 65534 + 1
        * BRF C to END (does not take branch)

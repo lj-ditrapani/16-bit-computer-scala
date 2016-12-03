@@ -14,8 +14,6 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- Computer step function
-    - interrupt enable & vector (not double buffered)
 - better visual test that manipulates screen (simple animation in loop?)
 - gamepad (separate thread?)
 - may need to put computation in a service or task

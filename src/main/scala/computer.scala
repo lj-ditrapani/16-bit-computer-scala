@@ -17,6 +17,17 @@ final case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: 
     Computer(cpu, video_roms, ram3, new_video)
   }
 
+  def setInstructionCounterIfInterruptEnable(): Computer = {
+    val (interrupt_enable, interrupt_vector) = getInterruptValues(ram)
+    interrupt_enable match {
+      case false =>
+        this
+      case true =>
+        val new_cpu = cpu.copy(instruction_counter = interrupt_vector)
+        Computer(new_cpu, video_roms, ram, video_obj)
+    }
+  }
+
   def renderVideoBuffer(): VideoBuffer = {
     video_obj.buffer
   }
@@ -29,6 +40,11 @@ final case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: 
       video_obj.getVideoRam ++
       old_ram.slice(0xFFFD, old_ram.size)
     (Video.make(old_ram, video_roms), new_ram)
+  }
+
+  private def getInterruptValues(ram: Ram): (Boolean, Char) = {
+    val enable = (ram(0xFFFE) & 1) == 1
+    (enable, ram(0xFFFF))
   }
 }
 
