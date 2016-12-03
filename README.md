@@ -18,10 +18,12 @@ TODO
     - Whole program tests
       - carry & overflow (32 bit add?)
       - shf with carry
-- better visual test that manipulates screen (simple animation in loop?)
-- automated full program test that manipulates screen
+- automated full program test that manipulates screen (single-frame)
+    - should replace need to do manual visual test
 - Computer step function
     - interrupt enable & vector (not double buffered)
+- better visual test that manipulates screen (simple animation in loop?)
+- automated full program test that manipulates screen (multi-frame)
 - gamepad (separate thread?)
 - may need to put computation in a service or task
   that runs in a separate thread?
