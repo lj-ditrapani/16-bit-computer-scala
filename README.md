@@ -14,16 +14,13 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- cpu
-    - Whole program tests
-      - carry & overflow (32 bit add?)
-      - shf with carry
-- automated full program test that manipulates screen (single-frame)
-    - should replace need to do manual visual test
+- add arrows to video rom tiles
 - Computer step function
     - interrupt enable & vector (not double buffered)
 - better visual test that manipulates screen (simple animation in loop?)
-- automated full program test that manipulates screen (multi-frame)
 - gamepad (separate thread?)
 - may need to put computation in a service or task
   that runs in a separate thread?
+- automated full program test that manipulates screen (single-frame)
+    - should replace need to do manual visual test
+- automated full program test that manipulates screen (multi-frame)

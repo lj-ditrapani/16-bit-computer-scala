@@ -112,12 +112,13 @@ class ComputerSpec extends Spec {
     }
 
     it("runs a program with a while loop that outputs 0xDOA8 (#{0xD0A8}) and IC is 16") {
-      // Run a complete program
-      // Uses storage I/O
-      //   - input/read $E800
-      //   - output/write $EC00
-      // Input: n followed by a list of n integers
-      // Output: -2 * sum(list of n integers)
+      /* Run a complete program
+       * Uses storage I/O
+       * - input/read $E800
+       *   - output/write $EC00
+       * Input: n followed by a list of n integers
+       * Output: -2 * sum(list of n integers)
+       */
       val program = Vector(
         // R0 gets address of beginning of input from storage space
         0x1E80,      // 0 HBY 0xE8 R0       0xE8 -> Upper(R0)
@@ -164,11 +165,12 @@ class ComputerSpec extends Spec {
 
       val computer = Computer.load(binary)
       val computer2 = computer.runFrame()
-      // n = length(10..110) = 101
-      // sum(10..110) = 6060
-      // -2 * 6060 = -12120
-      // 16-bit hex(+12120) = 0x2F58
-      // 16-bit hex(-12120) = 0xD0A8
+      /* n = length(10..110) = 101
+       * sum(10..110) = 6060
+       * -2 * 6060 = -12120
+       * 16-bit hex(+12120) = 0x2F58
+       * 16-bit hex(-12120) = 0xD0A8
+       */
       computer2.cpu.rom.length shouldBe math.pow(2, 16)
       computer2.ram.length shouldBe  math.pow(2, 16)
       computer2.ram(0xE800).toInt shouldBe 101
@@ -176,6 +178,83 @@ class ComputerSpec extends Spec {
       computer2.ram(0xE800 + 101).toInt shouldBe 110
       computer2.ram(0xEC00).toInt shouldBe 0xD0A8
       computer2.cpu.instruction_counter.toInt shouldBe 16
+    }
+
+    it("runs a program that adds/subtracs/shifts with carries & overflows") {
+      /*
+       * load word $4005 in to R0
+       * shf left 2 (causes carry to be set)
+       * store result in $0000 (should get $0014)
+       * BRF C (branch if carry set)
+       * END   (gets skipped over)
+       * 32766 + 1
+       * BRF V to END (does not take branch)
+       * 32767 + 1
+       * BRF V 
+       * END   (gets skipped over)
+       * 65534 + 1
+       * BRF C to END (does not take branch)
+       * 65535 + 1
+       * BRF C
+       * END   (gets skipped over)
+       * store $FACE in $0001
+       */
+      val program = Vector(
+        // Shift & branch on carry
+        0x1400,     // 00 HBY 0x40 R0       0x40 -> Upper(R0)
+        0x2050,     // 01 LBY 0x05 R0       0x05 -> Lower(R0)
+        0xD010,     // 02 SHF R0 Left by 2 -> R0
+        0x100A,     // 03 HBY 0x00 RA
+        0x200A,     // 04 LBY 0x00 RA
+        0x4A00,     // 05 STR R0 -> M[RA]   shifted value -> M[$0000]
+        0x209A,     // 06 LBY 0x09 RA       RA = 0x0009
+        0xF0A1,     // 07 BRF RA C          Jump to 0x0009 if carry set
+        0x0000,     // 08 END               Gets skipped
+
+        // Add & branch on overflow
+        // R0 = 0x7FFE
+        0x17F0,     // 09 HBY 0x7F R0       0x7F -> Upper(R0)
+        0x2FE0,     // 0A LBY 0xFE R0       0xFE -> Lower(R0)
+        0x7010,     // 0B ADI R0 1 R0       R0 = 0x7FFE + 1
+        0x208A,     // 0C LBY 0x08 RA       RA = 0x0008
+        0xF0A2,     // 0D BRF RA V          Do not jump, overflow not set
+        0x7010,     // 0E ADI R0 1 R0       R0 = 0x7FFF + 1
+        0x212A,     // 0F LBY 0x12 RA       RA = 0x0012
+        0xF0A2,     // 10 BRF RA V          Jump
+        0x0000,     // 11 END               Gets skipped
+
+        // Add & branch on carry
+        // R0 = 0xFFFE
+        0x1FF0,     // 12 HBY 0xFF R0       0xFF -> Upper(R0)
+        0x2FE0,     // 13 LBY 0xFE R0       0xFE -> Lower(R0)
+        0x7010,     // 14 ADI R0 1 R0       R0 = 0xFFFE + 1
+        0x208A,     // 15 LBY 0x08 RA       RA = 0x0008
+        0xF0A1,     // 16 BRF RA C          Jump to 0x0008 if carry set
+        0x7010,     // 17 ADI R0 1 R0       R0 = 0xFFFF + 1
+        0x21BA,     // 18 LBY 0x1B RA       RA = 0x001B
+        0xF0A1,     // 19 BRF RA C          Jump to 0x001B if carry set
+        0x0000,     // 1A END               Gets skipped
+        // R0 = 0xFACE
+        0x1FA0,     // 1B HBY 0xFA R0
+        0x2CE0,     // 1C LBY 0xCE R0
+        0x201A,     // 1D LBY 0x01 RA       RA = 0x0001
+        0x4A00,     // 1E STR R0 -> M[RA]   0xFACE -> M[$0001]
+        0x0000      // 1F END
+      ).map(_.toChar)
+
+      val binary = {
+        val rom_filler = Vector.fill(64 * 1024 - program.size + 1552)(0.toChar)
+        val ram = Vector.fill(0x0100)(0.toChar)
+        program ++ rom_filler ++ ram
+      }
+
+      val computer = Computer.load(binary)
+      val computer2 = computer.runFrame()
+      computer2.cpu.instruction_counter.toInt shouldBe 0x001F
+      val registers = Vector.fill(16)(0).updated(0, 0xFACE).updated(0xA, 1)
+      computer2.cpu.registers.vector.map(_.toInt) shouldBe registers
+      computer2.ram(0x0000).toInt shouldBe 0x0014
+      computer2.ram(0x0001).toInt shouldBe 0xFACE
     }
   }
 
