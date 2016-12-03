@@ -14,7 +14,6 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- add arrows to video rom tiles
 - Computer step function
     - interrupt enable & vector (not double buffered)
 - better visual test that manipulates screen (simple animation in loop?)
