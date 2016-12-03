@@ -396,7 +396,7 @@ class ExecutorSpec extends Spec {
         it(s"overflow:${overflow} carry:${carry} VC:${cond} => ${jump_result}") {
           new WithFlags(int2bool(carry), int2bool(overflow)) {
             registers(rs2) = jump_addr
-            executor.brf(rs2, b(cond)) shouldBe jump_result
+            executor.brf(rs2, BitHelper.b(cond)) shouldBe jump_result
           }
         }
       }
