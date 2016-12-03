@@ -1,13 +1,15 @@
 package info.ditrapani.ljdcomputer.cpu
 
+import info.ditrapani.ljdcomputer.BitHelper
+
 sealed abstract class JumpResult {
   override def toString: String = this match {
     case DontJump => {
       "DontJump"
     }
     case TakeJump(address) => {
-      val s = Integer.toHexString(address.toInt).toUpperCase
-      "TakeJump($" + s"$s)"
+      val s = BitHelper.pprint(address.toInt)
+      s"TakeJump($s)"
     }
   }
 }

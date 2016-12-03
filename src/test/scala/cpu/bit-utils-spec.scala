@@ -1,6 +1,6 @@
 package info.ditrapani.ljdcomputer.cpu
 
-import info.ditrapani.ljdcomputer.Spec
+import info.ditrapani.ljdcomputer.{BitHelper, Spec}
 
 class BitUtilsSpec extends Spec {
   def int2bool(i: Int): Boolean = i match {
@@ -149,7 +149,7 @@ class BitUtilsSpec extends Spec {
   }
 
   describe("match methods") {
-    def b(s: String): Int = Integer.parseInt(s, 2)
+    import BitHelper.b
 
     describe("matchValue") {
       val tests = List(

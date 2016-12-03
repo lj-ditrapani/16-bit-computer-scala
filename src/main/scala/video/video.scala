@@ -1,5 +1,6 @@
 package info.ditrapani.ljdcomputer.video
 
+import info.ditrapani.ljdcomputer.BitHelper.bool2int
 import scalafx.scene.paint.Color
 
 final case class Video(
@@ -27,11 +28,6 @@ final case class Video(
   def getVideoRam: Ram = {
     val enable_cell = (bool2int(enable_custom_video_rom) << 1) + bool2int(enable)
     cells ++ Vector(enable_cell.toChar) ++ Vector.fill(380)(0.toChar)
-  }
-
-  private def bool2int(b: Boolean): Int = b match {
-    case false => 0
-    case true => 1
   }
 }
 

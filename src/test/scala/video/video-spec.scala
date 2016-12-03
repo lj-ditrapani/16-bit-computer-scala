@@ -1,5 +1,6 @@
 package info.ditrapani.ljdcomputer.video
 
+import info.ditrapani.ljdcomputer.BitHelper.bool2int
 import org.scalatest.OptionValues._
 
 import scalafx.scene.paint.Color
@@ -32,11 +33,6 @@ class VideoSpec extends Spec {
         (0xA9, false, true),
         (0x5D, true, false)
       )
-
-      def bool2int(b: Boolean): Int = b match {
-        case false => 0
-        case true => 1
-      }
 
       def runTest(test: TestCase): Unit = {
         val (cell, enable, enable_custom_video_rom) = test
@@ -85,11 +81,6 @@ class VideoSpec extends Spec {
           (false, true),
           (true, true)
         )
-
-        def bool2int(b: Boolean): Int = b match {
-          case true => 1
-          case false => 0
-        }
 
         def runTest(test: FlagTest): Unit = {
           val (enable, custom_video_rom) = test

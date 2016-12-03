@@ -1,5 +1,6 @@
 package info.ditrapani.ljdcomputer.cpu
 
+import info.ditrapani.ljdcomputer.BitHelper
 import info.ditrapani.ljdcomputer.Spec
 
 class ExecutorSpec extends Spec {
@@ -236,9 +237,9 @@ class ExecutorSpec extends Spec {
     def runLogicTests(name: String, rs1: Int, rs2: Int, rd: Int, tests: List[LogicTest])
                      (f: (Executor) => ((Int, Int, Int) => Unit)): Unit = {
       for ((a, b, result) <- tests) {
-        val a_str = "$" + Integer.toHexString(a).toUpperCase
-        val b_str = "$" + Integer.toHexString(b).toUpperCase
-        val result_str = "$" + Integer.toHexString(result).toUpperCase
+        val a_str = BitHelper.pprint(a)
+        val b_str = BitHelper.pprint(b)
+        val result_str = BitHelper.pprint(result)
         it(s"${a_str} ${name} ${b_str} = ${result_str}") {
           new Fixture {
             registers(rs1) = a.toChar
@@ -338,8 +339,6 @@ class ExecutorSpec extends Spec {
     val jump_addr = 0x00FF.toChar
     val do_jump = TakeJump(jump_addr)
 
-    def b(s: String): Int = Integer.parseInt(s, 2)
-
     describe("BRV") {
       val tests = List(
         //        NZP
@@ -359,12 +358,12 @@ class ExecutorSpec extends Spec {
       val (rs1, rs2) = (12, 0)
 
       for ((value, cond, jump_result) <- tests) {
-        val value_str = "$" + Integer.toHexString(value).toUpperCase
+        val value_str = BitHelper.pprint(value)
         it(s"value:${value_str} NZP:${cond} => ${jump_result}") {
           new Fixture {
             registers(rs1) = value.toChar
             registers(rs2) = jump_addr
-            executor.brv(rs1, rs2, b(cond)) shouldBe jump_result
+            executor.brv(rs1, rs2, BitHelper.b(cond)) shouldBe jump_result
           }
         }
       }

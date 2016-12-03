@@ -1,6 +1,6 @@
 package info.ditrapani.ljdcomputer.video
 
-import info.ditrapani.ljdcomputer.BinFileReader
+import info.ditrapani.ljdcomputer.{BitHelper, BinFileReader}
 
 final case class VideoRoms(
   built_in_colors: Colors,
@@ -35,7 +35,7 @@ object VideoRoms {
     BinFileReader.bytes2Chars(stream.takeWhile(_ != -1).map(_.toByte).toArray)
   }
 
-  private def b(s: String): Char = Integer.parseInt(s, 2).toChar
+  private def b(s: String): Char = BitHelper.b(s).toChar
 
   def make(custom_rom: Rom): VideoRoms = {
     assert(custom_rom.size == 1552)

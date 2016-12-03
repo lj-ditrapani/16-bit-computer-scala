@@ -15,18 +15,9 @@ TODO
 ----
 
 - cpu
-    - Controller specs
-      - end instruction stops cpu
-      - sets the instruction_counter
-        (branch to jump location, normal to instruction_counter + 1)
-      - immd8
-    - Cpu specs
     - Whole program tests
       - carry & overflow (32 bit add?)
       - shf with carry
-- refactor multiple implementations of bool2int
-- refactor multiple implementations of b("01010") => Int
-- refactor multiple implementations "$" + toHexString.toUpperCase
 - better visual test that manipulates screen (simple animation in loop?)
 - automated full program test that manipulates screen
 - Computer step function
