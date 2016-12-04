@@ -14,7 +14,6 @@ See the help text for usage [src/main/resources/help.txt](src/main/resources/hel
 TODO
 ----
 
-- better visual test that manipulates screen (simple animation in loop?)
 - gamepad (separate thread?)
 - may need to put computation in a service or task
   that runs in a separate thread?
