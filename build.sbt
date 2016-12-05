@@ -1,6 +1,6 @@
 lazy val root = (project in file(".")).settings(
   name := "16-bit-computer",
-  version := "0.1.0",
+  version := "1.0.0",
   scalaVersion := "2.12.0",
   organization := "ditrapani.info",
   // Fork a new JVM for 'run' and 'test:run', to

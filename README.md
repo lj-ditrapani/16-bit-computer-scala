@@ -14,6 +14,12 @@ on the virtual screen.  The gamepad will be implemented next.
 Storage and networking are not implemented.
 
 
+Download
+--------
+
+<http://ditrapani.info/resources/ljd-16-bit-computer-1.0.0.jar>
+
+
 Usage
 -----
 
