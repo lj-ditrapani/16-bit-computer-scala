@@ -20,14 +20,3 @@ Usage
 Start this program from the command line.
 
 See the help text for usage [src/main/resources/help.txt](src/main/resources/help.txt)
-
-
-TODO
-----
-
-- gamepad (separate thread?)
-- may need to put computation in a service or task
-  that runs in a separate thread?
-- automated full program test that manipulates screen (single-frame)
-    - should replace need to do manual visual test
-- automated full program test that manipulates screen (multi-frame)
