@@ -11,7 +11,7 @@ final case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: 
     Computer(new_cpu, video_roms, ram2, video_obj)
   }
 
-  def swapRam(key_presses: Byte): Computer = {
+  def swapRam(key_presses: Char): Computer = {
     val ram2 = addKeyPresses(key_presses)
     val (new_video, ram3) = swapVideoRam(ram2)
     Computer(cpu, video_roms, ram3, new_video)
@@ -32,7 +32,8 @@ final case class Computer(cpu: Cpu, video_roms: VideoRoms, ram: Ram, video_obj: 
     video_obj.buffer
   }
 
-  private def addKeyPresses(key_presses: Byte): Vector[Char] = ram
+  private def addKeyPresses(key_presses: Char): Vector[Char] =
+    ram.slice(0, 0xFFFD) ++ Vector(key_presses) ++ ram.slice(0xFFFE, 0x10000)
 
   private def swapVideoRam(old_ram: Vector[Char]): (Video, Vector[Char]) = {
     val new_ram =

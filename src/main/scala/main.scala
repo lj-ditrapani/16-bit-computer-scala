@@ -48,9 +48,8 @@ object Main extends JFXApp {
     AnimationTimer(curr_time => {
       if (curr_time - last_time > time_delta) {
         last_time = curr_time
-        // val key_press: Byte = get_key_press()
-        val key_presses: Byte = 0.toByte
-        val swaped_computer = computer.swapRam(key_presses)
+        val swaped_computer = computer.swapRam(Gamepad.getKeyPresses())
+        Gamepad.clear()
         val computer_with_ic = swaped_computer.setInstructionCounterIfInterruptEnable()
         drawScene(computer_with_ic.renderVideoBuffer())
         computer = computer_with_ic.runFrame()
