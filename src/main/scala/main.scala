@@ -1,12 +1,9 @@
 package info.ditrapani.ljdcomputer
 
 import info.ditrapani.ljdcomputer.config.Config
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
 import scalafx.application.JFXApp
 import scalafx.scene.canvas.{Canvas, GraphicsContext}
 import scalafx.scene.Scene
-import scalafx.scene.input.KeyCode
 import scalafx.scene.paint.Color
 import scalafx.animation.AnimationTimer
 
@@ -52,8 +49,8 @@ object Main extends JFXApp {
       if (curr_time - last_time > time_delta) {
         last_time = curr_time
         // val key_press: Byte = get_key_press()
-        val key_press: Byte = 0.toByte
-        val swaped_computer = computer.swapRam(key_press)
+        val key_presses: Byte = 0.toByte
+        val swaped_computer = computer.swapRam(key_presses)
         val computer_with_ic = swaped_computer.setInstructionCounterIfInterruptEnable()
         drawScene(computer_with_ic.renderVideoBuffer())
         computer = computer_with_ic.runFrame()
@@ -76,21 +73,7 @@ object Main extends JFXApp {
       content = canvas
     }
 
-    the_scene.onKeyReleased = new EventHandler[KeyEvent]() {
-      override def handle(event: KeyEvent) = {
-        KeyCode.jfxEnum2sfx(event.getCode()) match {
-          case KeyCode.Up | KeyCode.K => println("Up!")
-          case KeyCode.Down | KeyCode.J => println("Down!")
-          case KeyCode.Left | KeyCode.H => println("Left!")
-          case KeyCode.Right | KeyCode.L => println("Right!")
-          case KeyCode.A => println("A")
-          case KeyCode.S | KeyCode.O => println("S")
-          case KeyCode.D | KeyCode.E => println("Cancel")
-          case KeyCode.F | KeyCode.U => println("Select")
-          case _ => println(event)
-        }
-      }
-    }
+    the_scene.onKeyReleased = Gamepad
 
     stage = new JFXApp.PrimaryStage {
       title = "ljd 16-bit computer by L. J. Di Trapani"
