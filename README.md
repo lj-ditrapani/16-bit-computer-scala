@@ -4,6 +4,8 @@ LJD 16-bit Computer in Scala & JavaFX
 Based on the LJD 16-bit Computer
 [Specification](https://github.com/lj-ditrapani/16-bit-computer-specification).
 
+![ljd-16-bit-computer-screen.gif](http://ditrapani.info/resources/ljd-16-bit-computer-screen.gif)
+
 
 Download
 --------
