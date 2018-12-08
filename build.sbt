@@ -1,7 +1,7 @@
 lazy val root = (project in file(".")).settings(
   name := "16-bit-computer",
   version := "1.0.0",
-  scalaVersion := "2.12.4",
+  scalaVersion := "2.12.8",
   organization := "ditrapani.info",
   // Fork a new JVM for 'run' and 'test:run', to
   // avoid JavaFX double initialization problems
@@ -20,8 +20,8 @@ scalacOptions ++= Seq(
   "-Ywarn-numeric-widen"
 )
 
-libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.144-R12"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.181-R13"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
 wartremoverWarnings ++= Warts.allBut(
   Wart.Equals,

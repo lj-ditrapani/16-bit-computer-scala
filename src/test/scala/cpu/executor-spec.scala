@@ -15,8 +15,8 @@ class ExecutorSpec extends Spec {
 
   class WithFlags(initial_carry: Boolean, initial_overflow: Boolean)
     extends WithRegisters {
-    val ram = Array.fill(16)(0.toChar)
-    val executor = new Executor(registers, initial_carry, initial_overflow, ram)
+    val ram: Array[Char] = Array.fill(16)(0.toChar)
+    val executor: Executor = new Executor(registers, initial_carry, initial_overflow, ram)
   }
 
   trait FullFixture extends WithRegisters {
@@ -24,7 +24,7 @@ class ExecutorSpec extends Spec {
     val executor = new Executor(registers, false, false, ram)
   }
 
-  val flag_values = List(
+  private val flag_values = List(
     (0, 0),
     (0, 1),
     (1, 0),

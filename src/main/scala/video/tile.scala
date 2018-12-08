@@ -2,12 +2,12 @@ package info.ditrapani.ljdcomputer.video
 
 class TileSet(ram: Ram) {
   assert(ram.size == 1024 + 512)
-  val vector = ram.grouped(6).map(new Tile(_)).to[Vector]
+  val vector: Vector[Tile] = ram.grouped(6).map(new Tile(_)).to[Vector]
 }
 
 class Tile(tile_ram: Ram) {
   assert(tile_ram.size == 6)
-  val rows = tile_ram.flatMap {
+  val rows: Vector[Vector[Boolean]] = tile_ram.flatMap {
     (char) => Vector(toPixelRow(char >> 8), toPixelRow(char >> 0))
   }.toVector
 

@@ -29,5 +29,5 @@ object Color8 {
 
 class Colors(rom: Rom) {
   assert(rom.size == 16)
-  val vector = rom.map((char) => Color8(char.toInt))
+  val vector: Vector[Color8] = rom.map((char) => Color8(char.toInt))
 }

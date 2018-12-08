@@ -61,7 +61,7 @@ class VideoTileSpec extends Spec {
     }
 
     it("creates a tile set") {
-      val ram = 0.until(256).flatMap((i) => testTileRam).to[Vector]
+      val ram = 0.until(256).flatMap(_ => testTileRam).to[Vector]
       val tile_set = new TileSet(ram).vector
       tile_set.size shouldBe 256
       checkTile(tile_set.headOption.value)

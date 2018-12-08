@@ -10,7 +10,7 @@ final case class VideoRoms(
 )
 
 object VideoRoms {
-  val built_in_colors = Vector(
+  val built_in_colors: Rom = Vector(
     b("00000000"),  // 0    black
     b("11111111"),  // 1    white
     b("11100000"),  // 2    red

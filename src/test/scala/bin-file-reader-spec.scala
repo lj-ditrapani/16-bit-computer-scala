@@ -69,7 +69,7 @@ class ByteProcessorSpec extends Spec {
 }
 
 class BinCheckSpec extends Spec {
-  val fail_check = BinFileReader.Fail("foo")
+  private val fail_check = BinFileReader.Fail("foo")
 
   describe("Fail class") {
     describe("check") {

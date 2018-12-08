@@ -6,8 +6,8 @@ import org.scalatest.OptionValues._
 import scalafx.scene.paint.Color
 
 class VideoSpec extends Spec {
-  val rom = Vector.fill(512 * 3 + 16)(0.toChar)
-  val video_roms = VideoRoms.make(rom)
+  private val rom = Vector.fill(512 * 3 + 16)(0.toChar)
+  private val video_roms = VideoRoms.make(rom)
 
   describe("Video class") {
     describe("buffer") {

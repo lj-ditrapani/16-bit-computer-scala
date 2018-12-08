@@ -33,6 +33,10 @@ Run tests
 
     sbt test
 
+Test coverage
+
+    sbt clean coverage test coverageReport
+
 Generate jar from source
 
     sbt assembly

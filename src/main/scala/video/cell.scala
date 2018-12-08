@@ -29,5 +29,5 @@ object Cell {
 
 class CellGrid(ram: Ram) {
   assert(ram.size == 640)
-  val rows = ram.map(Cell(_)).grouped(32).to[Vector]
+  val rows: Vector[Vector[Cell]] = ram.map(Cell(_)).grouped(32).to[Vector]
 }

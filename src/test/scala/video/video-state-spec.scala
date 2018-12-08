@@ -3,8 +3,8 @@ package info.ditrapani.ljdcomputer.video
 import scalafx.scene.paint.Color
 
 class VideoStateSpec extends Spec {
-  val colors = new Colors(VideoRoms.built_in_colors)
-  val tiles = new TileSet(VideoRoms.built_in_tiles)
+  private val colors = new Colors(VideoRoms.built_in_colors)
+  private val tiles = new TileSet(VideoRoms.built_in_tiles)
 
   describe("VideoState object") {
     describe("make") {
